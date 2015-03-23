@@ -38,8 +38,7 @@ public class RoomManagerImpl implements RoomManager{
             throw new IllegalArgumentException("DataSource is not ser");
         }
     }
-    
-    
+      
     @Override
     public void createRoom(Room r) {
         checkDataSource();
@@ -216,7 +215,7 @@ public class RoomManagerImpl implements RoomManager{
         result.setCapacity(rs.getInt("capacity"));
         result.setPricePerNight(rs.getBigDecimal("price_per_night"));
         result.setBathroom(rs.getBoolean("bathroom"));
-        result.setType(RoomType.valueOf(rs.getString("room_type"))); //pretypovanie !?
+        result.setType(RoomType.valueOf(rs.getString("room_type"))); // praca enum
         return result;
     }
     
