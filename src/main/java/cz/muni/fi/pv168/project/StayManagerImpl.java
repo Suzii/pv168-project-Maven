@@ -7,6 +7,9 @@ package cz.muni.fi.pv168.project;
 
 import java.time.LocalDate;
 import java.util.List;
+import javax.sql.DataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -14,6 +17,15 @@ import java.util.List;
  */
 public class StayManagerImpl implements StayManager{
 
+    //Logger
+    private final static Logger logger = LoggerFactory.getLogger(GuestManagerImpl.class);
+    //DataSource
+    private final DataSource dataSource;
+
+    public StayManagerImpl(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+    
     @Override
     public void createStay(Stay stay) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

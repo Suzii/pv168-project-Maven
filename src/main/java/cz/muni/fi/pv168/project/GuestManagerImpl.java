@@ -5,6 +5,7 @@
  */
 package cz.muni.fi.pv168.project;
 
+import cz.muni.fi.pv168.project.common.ServiceFailureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.sql.*;
@@ -28,24 +29,17 @@ public class GuestManagerImpl implements GuestManager {
     //Logger
     private final static Logger logger = LoggerFactory.getLogger(GuestManagerImpl.class);
     //DataSource
-    private DataSource dataSource;
+    private final DataSource dataSource;
 
-    public void setDataSource(DataSource dataSource) {
+    public GuestManagerImpl(DataSource dataSource) {
         this.dataSource = dataSource;
-    }
-
-    public void checkDataSource() {
-        if (dataSource == null) {
-            throw new IllegalArgumentException("DataSource is not ser");
-        }
     }
 
     @Override
     public void createGuest(Guest guest) {
-        checkDataSource();
         validate(guest);
         if (guest.getId() != null) {
-            throw new ValidationException("guest id already set");
+            throw new IllegalArgumentException("guest id already set");
         }
 
         try (Connection conn = dataSource.getConnection()) {
@@ -96,7 +90,6 @@ public class GuestManagerImpl implements GuestManager {
 
     @Override
     public Guest getGuestById(Long id) throws ServiceFailureException {
-        checkDataSource();
         if (id == null) {
             throw new IllegalArgumentException("id must not be null");
         }
@@ -113,10 +106,9 @@ public class GuestManagerImpl implements GuestManager {
 
     @Override
     public void updateGuest(Guest guest) {
-        checkDataSource();
         validate(guest);
         if (guest.getId() == null) {
-            throw new ValidationException("guest id must not be null when updating");
+            throw new IllegalArgumentException("guest id must not be null when updating");
         }
         try (Connection conn = dataSource.getConnection()) {
             try (PreparedStatement st = conn.prepareStatement("UPDATE guest SET name = ?, passport_no = ?, email = ?, phone = ?, date_of_birth = ? WHERE id = ?")) {
@@ -139,10 +131,9 @@ public class GuestManagerImpl implements GuestManager {
 
     @Override
     public void deleteGuest(Guest guest) {
-        checkDataSource();
         validate(guest);
         if (guest.getId() == null) {
-            throw new ValidationException("guest id must not be null when deleting");
+            throw new IllegalArgumentException("guest id must not be null when deleting");
         }
         try (Connection conn = dataSource.getConnection()) {
             try (PreparedStatement st = conn.prepareStatement("DELETE FROM guest WHERE id = ?")) {
@@ -172,7 +163,6 @@ public class GuestManagerImpl implements GuestManager {
 
     @Override
     public List<Guest> findGuestByName(String name) {
-        checkDataSource();
         if (name == null) {
             throw new IllegalArgumentException("name must not be null");
         }
@@ -235,10 +225,10 @@ public class GuestManagerImpl implements GuestManager {
             throw new IllegalArgumentException("guest is null");
         }
         if (guest.getName() == null) {
-            throw new ValidationException("guest name must not be null");
+            throw new IllegalArgumentException("guest name must not be null");
         }
         if (guest.getName().equals("")) {
-            throw new ValidationException("guest name must not be empty");
+            throw new IllegalArgumentException("guest name must not be empty");
         }
     }
 }

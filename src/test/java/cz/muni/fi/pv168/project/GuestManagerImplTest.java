@@ -13,6 +13,10 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import java.time.LocalDate;
+import javax.sql.DataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
+import cz.muni.fi.pv168.project.common.DBUtils;
+import org.junit.After;
 
 /**
  *
@@ -21,10 +25,26 @@ import java.time.LocalDate;
 public class GuestManagerImplTest {
 
     private GuestManager manager;
+    private DataSource ds;
 
+    private static DataSource prepareDataSource() throws SQLException {
+        BasicDataSource ds = new BasicDataSource();
+        //we will use in memory database
+        ds.setUrl("jdbc:derby:memory:guestmgr-test;create=true");
+        return ds;
+    }
+    
     @Before
     public void setUp() throws SQLException {
-        manager = new GuestManagerImpl();
+        ds = prepareDataSource();
+        manager = new GuestManagerImpl(ds);
+        //create tables!!
+        DBUtils.executeSqlScript(ds,GuestManager.class.getResourceAsStream("/createTables.sql"));
+    }
+    
+    @After
+    public void tearDown() throws SQLException {
+        DBUtils.executeSqlScript(ds,GuestManager.class.getResourceAsStream("/dropTables.sql"));
     }
 
     @Test

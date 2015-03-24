@@ -20,7 +20,9 @@
  */
 package cz.muni.fi.pv168.project;
 
+import cz.muni.fi.pv168.project.common.DBUtils;
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -31,9 +33,11 @@ import static org.junit.Assert.*;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Arrays;
+import javax.sql.DataSource;
 import org.junit.Rule;
 import org.junit.internal.runners.statements.ExpectException;
 import org.junit.rules.ExpectedException;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 /**
  * @author Zuzana
@@ -49,11 +53,23 @@ public class StayManagerImplTest {
     private Guest goodGuest;
     private Room goodRoom;
 
+    private DataSource ds;
+
+    private static DataSource prepareDataSource() throws SQLException {
+        BasicDataSource ds = new BasicDataSource();
+        //we will use in memory database
+        ds.setUrl("jdbc:derby:memory:guestmgr-test;create=true");
+        return ds;
+    }
+    
     @Before
-    public void setUp() {
-        manager = new StayManagerImpl();
-        guestManager = new GuestManagerImpl();
-        roomManager = new RoomManagerImpl();
+    public void setUp() throws SQLException {
+        ds = prepareDataSource();
+        //create tables!!
+        DBUtils.executeSqlScript(ds,StayManager.class.getResourceAsStream("/createTables.sql"));
+        manager = new StayManagerImpl(ds);
+        guestManager = new GuestManagerImpl(ds);
+        roomManager = new RoomManagerImpl(ds);
         stayBuilder = new StayBuilder();
         guestBuilder = new GuestBuilder();
         roomBuilder = new RoomBuilder();

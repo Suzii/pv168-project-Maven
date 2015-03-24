@@ -5,7 +5,7 @@
  */
 package cz.muni.fi.pv168.project;
 
-
+import cz.muni.fi.pv168.project.common.ServiceFailureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
@@ -19,19 +19,18 @@ import java.util.List;
 import javax.sql.DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 
-
 //import java.sql.*;
-
 /**
  *
  * @author pato
  */
-public class RoomManagerImpl implements RoomManager{
+public class RoomManagerImpl implements RoomManager {
+
     //Logger
     //private static final Logger logger = Logger.getLogger(GuestManagerImpl.class.getName());
     //DataSource
-    private DataSource dataSource;
 
+    private DataSource dataSource;
 
     public RoomManagerImpl(DataSource dataSource) { //asi takyto nazov metody
         this.dataSource = dataSource;
@@ -39,10 +38,10 @@ public class RoomManagerImpl implements RoomManager{
 
     public void checkDataSource() {
         if (dataSource == null) {
-            throw new IllegalArgumentException("DataSource is not ser");
+            throw new IllegalArgumentException("DataSource is not set");
         }
     }
-      
+
     @Override
     public void createRoom(Room r) {
         checkDataSource();
@@ -74,7 +73,7 @@ public class RoomManagerImpl implements RoomManager{
             throw new ServiceFailureException("Error when creatig new room", ex);
         }
     }
-    
+
     private Long getKey(ResultSet keyRS, Room room) throws ServiceFailureException, SQLException {
         if (keyRS.next()) {
             if (keyRS.getMetaData().getColumnCount() != 1) {
@@ -94,8 +93,8 @@ public class RoomManagerImpl implements RoomManager{
                     + "retriving failed when trying to insert guest " + room
                     + " - no key found");
         }
-    }    
-    
+    }
+
     @Override
     public Room getRoomById(Long id) {
         checkDataSource();
@@ -135,8 +134,8 @@ public class RoomManagerImpl implements RoomManager{
             }
         } catch (SQLException ex) {
             //logger.error("db connection problem", ex);
-            throw new ServiceFailureException("Error when updating room" , ex);
-        } 
+            throw new ServiceFailureException("Error when updating room", ex);
+        }
     }
 
     @Override
@@ -188,7 +187,7 @@ public class RoomManagerImpl implements RoomManager{
             throw new ServiceFailureException("Error when retrieving room with number" + n, ex);
         }
     }
-    
+
     static Room executeQueryForSingleRoom(PreparedStatement st) throws SQLException, ServiceFailureException {
         ResultSet rs = st.executeQuery();
         Room result = null;
@@ -201,8 +200,8 @@ public class RoomManagerImpl implements RoomManager{
             }
         }
         return result;
-    }    
-    
+    }
+
     static List<Room> executeQueryForMultipleRooms(PreparedStatement st) throws SQLException, ServiceFailureException {
         ResultSet rs = st.executeQuery();
         List<Room> result = new ArrayList<Room>();
@@ -211,7 +210,7 @@ public class RoomManagerImpl implements RoomManager{
         }
         return result;
     }
-    
+
     private static Room rowToRoom(ResultSet rs) throws SQLException {
         Room result = new Room();
         result.setId(rs.getLong("id"));
@@ -222,10 +221,10 @@ public class RoomManagerImpl implements RoomManager{
         result.setType(RoomType.valueOf(rs.getString("room_type"))); // praca enum
         return result;
     }
-    
+
     /**
-     * Validates passed room object. It must not be null, number must must not be
-     * null nor empty, capacity and pricePerNight must be positive,
+     * Validates passed room object. It must not be null, number must must not
+     * be null nor empty, capacity and pricePerNight must be positive,
      *
      * Integrity of Id attribute needs to be checked separately since, different
      * states are expected for different methods.
@@ -233,28 +232,23 @@ public class RoomManagerImpl implements RoomManager{
      * @param room room to be checked for validity
      */
     private static void validate(Room room) {
-       try{ if (room == null) {
+        if (room == null) {
             throw new IllegalArgumentException("room is null");
         }
         if (room.getCapacity() <= 0) {
-            throw new ValidationException("room must have positive capacity");
+            throw new IllegalArgumentException("room must have positive capacity");
         }
         if (room.getNumber() == null) {
-            throw new ValidationException("room number must not be null");
+            throw new IllegalArgumentException("room number must not be null");
         }
         if (room.getNumber().equals("")) {
-            throw new ValidationException("room number must not be empty");
+            throw new IllegalArgumentException("room number must not be empty");
         }
         if (room.getNumber().length() < 4) {
-            throw new ValidationException("room number must have some format");
+            throw new IllegalArgumentException("room number must have some format");
         }
-        if (room.getPricePerNight().signum() < 1){ //testuje ci je to zaporne
-            throw new ValidationException("price per night must be positive");
-        }      
-       }
-       catch (ValidationException e){
-           throw new IllegalArgumentException("Validation failed ",e);
-       }
+        if (room.getPricePerNight().signum() < 1) { //testuje ci je to zaporne
+            throw new IllegalArgumentException("price per night must be positive");
+        }
     }
 }
-

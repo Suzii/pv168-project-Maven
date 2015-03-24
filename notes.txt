@@ -1,0 +1,2 @@
+tomcat dbcp pridat ako maven dependency, <scope> test</scope>
+datasource do konštruktoru a final atribut, žiadna set metoda, a netreba check

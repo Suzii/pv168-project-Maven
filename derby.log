@@ -1,11 +1,24 @@
 ----------------------------------------------------------------
-Tue Mar 24 17:45:18 CET 2015:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.11.1.1 - (1616546): instance a816c00e-014c-4cac-8b9c-000006429df0 
-on database directory memory:C:\MUNI\sem4-dok\pv168-project-Maven\RoomManagerTest with class loader sun.misc.Launcher$AppClassLoader@6bc7c054 
-Loaded from file:/C:/Users/pato/.m2/repository/org/apache/derby/derby/10.11.1.1/derby-10.11.1.1.jar
+Tue Mar 24 19:32:16 CET 2015:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.11.1.1 - (1616546): instance a816c00e-014c-4d0e-775c-000002edabf8 
+on database directory memory:C:\Users\Zuzana\Disk Google\prg\pv168\pv168-project-Maven\gravemgr-test with class loader sun.misc.Launcher$AppClassLoader@6bc7c054 
+Loaded from file:/C:/Users/Zuzana/.m2/repository/org/apache/derby/derby/10.11.1.1/derby-10.11.1.1.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.8.0_31-b13
-user.dir=C:\MUNI\sem4-dok\pv168-project-Maven
+user.dir=C:\Users\Zuzana\Disk Google\prg\pv168\pv168-project-Maven
+os.name=Windows 8.1
+os.arch=amd64
+os.version=6.3
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Tue Mar 24 19:32:17 CET 2015:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.11.1.1 - (1616546): instance f55fc0a6-014c-4d0e-775c-000002edabf8 
+on database directory memory:C:\Users\Zuzana\Disk Google\prg\pv168\pv168-project-Maven\RoomManagerTest with class loader sun.misc.Launcher$AppClassLoader@6bc7c054 
+Loaded from file:/C:/Users/Zuzana/.m2/repository/org/apache/derby/derby/10.11.1.1/derby-10.11.1.1.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_31-b13
+user.dir=C:\Users\Zuzana\Disk Google\prg\pv168\pv168-project-Maven
 os.name=Windows 8.1
 os.arch=amd64
 os.version=6.3
