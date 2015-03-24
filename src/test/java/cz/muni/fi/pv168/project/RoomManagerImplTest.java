@@ -338,7 +338,7 @@ public class RoomManagerImplTest {
     public void findRoomByNumber() {
         assertNull(manager.findRoomByNumber("1"));
         
-        Room room = newRoom("A721",2,new BigDecimal("0"),false,RoomType.STANDARD);
+        Room room = newRoom("A721",2,new BigDecimal("10"),false,RoomType.STANDARD);
         manager.createRoom(room);
         Room result = manager.findRoomByNumber("A721");
         

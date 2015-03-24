@@ -248,7 +248,7 @@ public class RoomManagerImpl implements RoomManager{
         if (room.getNumber().length() < 4) {
             throw new ValidationException("room number must have some format");
         }
-        if (room.getPricePerNight().signum() < 0){ //testuje ci je to zaporne
+        if (room.getPricePerNight().signum() < 1){ //testuje ci je to zaporne
             throw new ValidationException("price per night must be positive");
         }      
        }
