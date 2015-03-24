@@ -168,11 +168,11 @@ public class RoomManagerImplTest {
         manager.createRoom(room);
     }
 
-    
+    // BigDecimalScale
     @Test
     public void updateRoom() {
-        Room room = newRoom("A721",2,new BigDecimal("10"),false,RoomType.STANDARD);
-        Room r2 = newRoom("B721",2,new BigDecimal("80"),true,RoomType.STUDIO );
+        Room room = newRoom("A721",2,new BigDecimal("10").setScale(2),false,RoomType.STANDARD);
+        Room r2 = newRoom("B721",2,new BigDecimal("80").setScale(2),true,RoomType.STUDIO );
         manager.createRoom(room);
         manager.createRoom(r2);
         Long roomId = room.getId();
@@ -181,16 +181,16 @@ public class RoomManagerImplTest {
         room.setNumber("A121");
         manager.updateRoom(room);        
         assertEquals("A121", room.getNumber());
-        assertEquals(new BigDecimal("10"), room.getPricePerNight());
+        assertEquals(new BigDecimal("10").setScale(2), room.getPricePerNight());
         assertEquals(2, room.getCapacity());
         assertEquals(false, room.hasBathroom());
         assertEquals(RoomType.STANDARD,room.getType());
 
         room = manager.getRoomById(roomId);
-        room.setPricePerNight(new BigDecimal(9));
+        room.setPricePerNight(new BigDecimal("9").setScale(2));
         manager.updateRoom(room);        
         assertEquals("A121", room.getNumber());
-        assertEquals(new BigDecimal("9"), room.getPricePerNight());
+        assertEquals(new BigDecimal("9").setScale(2), room.getPricePerNight());
         assertEquals(2, room.getCapacity());
         assertEquals(false, room.hasBathroom());
         assertEquals(RoomType.STANDARD,room.getType());
@@ -199,7 +199,7 @@ public class RoomManagerImplTest {
         room.setCapacity(3);
         manager.updateRoom(room);        
         assertEquals("A121", room.getNumber());
-        assertEquals(new BigDecimal("9"), room.getPricePerNight());
+        assertEquals(new BigDecimal("9").setScale(2), room.getPricePerNight());
         assertEquals(3, room.getCapacity());
         assertEquals(false, room.hasBathroom());
         assertEquals(RoomType.STANDARD,room.getType());
@@ -208,7 +208,7 @@ public class RoomManagerImplTest {
         room.setBathroom(true);
         manager.updateRoom(room);        
         assertEquals("A121", room.getNumber());
-        assertEquals(new BigDecimal("9"), room.getPricePerNight());
+        assertEquals(new BigDecimal("9").setScale(2), room.getPricePerNight());
         assertEquals(3, room.getCapacity());
         assertEquals(true, room.hasBathroom());
         assertEquals(RoomType.STANDARD,room.getType());
@@ -217,7 +217,7 @@ public class RoomManagerImplTest {
         room.setType(RoomType.APARTMENT);
         manager.updateRoom(room);        
         assertEquals("A121", room.getNumber());
-        assertEquals(new BigDecimal("9"), room.getPricePerNight());
+        assertEquals(new BigDecimal("9").setScale(2), room.getPricePerNight());
         assertEquals(3, room.getCapacity());
         assertEquals(true, room.hasBathroom());
         assertEquals(RoomType.APARTMENT,room.getType());
@@ -347,11 +347,11 @@ public class RoomManagerImplTest {
         
     }
     @Test(expected = IllegalArgumentException.class)
-    public void findRoomWithWrongNumberFormat() {
+    public void findRoomWithWrongNullNumber() {
         assertNull(manager.findRoomByNumber("1"));       
         Room room = newRoom("A721",2,new BigDecimal("10"),false,RoomType.STANDARD);
         manager.createRoom(room);
-        manager.findRoomByNumber("FFF");
+        manager.findRoomByNumber(null);
     }
 
         
@@ -377,7 +377,7 @@ public class RoomManagerImplTest {
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getCapacity(), actual.getCapacity());
         assertEquals(expected.getNumber(), actual.getNumber());
-        assertEquals(expected.getPricePerNight(), actual.getPricePerNight());
+        assertEquals(expected.getPricePerNight().setScale(2), actual.getPricePerNight());
         assertEquals(expected.hasBathroom(), actual.hasBathroom());
         assertEquals(expected.getType(), actual.getType());
     }

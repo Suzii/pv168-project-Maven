@@ -25,34 +25,31 @@ import org.apache.commons.dbcp2.BasicDataSource;
 /**
  *
  * @author pato
+ * BigDecimal with scaling 2!!!!
  */
 public class RoomManagerImpl implements RoomManager{
     //Logger
     //private static final Logger logger = Logger.getLogger(GuestManagerImpl.class.getName());
     //DataSource
-    private DataSource dataSource;
+    private final DataSource dataSource;
 
 
     public RoomManagerImpl(DataSource dataSource) { //asi takyto nazov metody
-        this.dataSource = dataSource;
-    }
-
-    public void checkDataSource() {
         if (dataSource == null) {
             throw new IllegalArgumentException("DataSource is not ser");
         }
+        this.dataSource = dataSource;
     }
-      
+     
     @Override
     public void createRoom(Room r) {
-        checkDataSource();
         validate(r);
         if (r.getId() != null) {
             throw new IllegalArgumentException("room id already set");
         }
 
-        try (Connection conn = dataSource.getConnection()) {
-            try (PreparedStatement st = conn.prepareStatement(
+        try (Connection conn = dataSource.getConnection();
+                PreparedStatement st = conn.prepareStatement(
                     "INSERT INTO ROOM (number, capacity, price_per_night, bathroom, room_type) "
                     + "VALUES(?,?,?,?,?)",
                     Statement.RETURN_GENERATED_KEYS)) {
@@ -67,8 +64,6 @@ public class RoomManagerImpl implements RoomManager{
                 }
                 ResultSet keyRS = st.getGeneratedKeys();
                 r.setId(getKey(keyRS, r));
-            }
-
         } catch (SQLException ex) {
             //logger.error("db connection problem", ex);
             throw new ServiceFailureException("Error when creatig new room", ex);
@@ -98,7 +93,6 @@ public class RoomManagerImpl implements RoomManager{
     
     @Override
     public Room getRoomById(Long id) {
-        checkDataSource();
         if (id == null) {
             throw new IllegalArgumentException("id must not be null");
         }
@@ -115,7 +109,6 @@ public class RoomManagerImpl implements RoomManager{
 
     @Override
     public void updateRoom(Room r) {
-        checkDataSource();
         validate(r);
         if (r.getId() == null) {
             throw new IllegalArgumentException("room id must not be null when updating");
@@ -141,7 +134,6 @@ public class RoomManagerImpl implements RoomManager{
 
     @Override
     public void deleteRoom(Room r) {
-        checkDataSource();
         validate(r);
         if (r.getId() == null) {
             throw new IllegalArgumentException("room id must not be null when deleting");
@@ -174,7 +166,6 @@ public class RoomManagerImpl implements RoomManager{
 
     @Override
     public Room findRoomByNumber(String n) {
-        checkDataSource();
         if (n == null) {
             throw new IllegalArgumentException("name must not be null");
         }
@@ -233,28 +224,24 @@ public class RoomManagerImpl implements RoomManager{
      * @param room room to be checked for validity
      */
     private static void validate(Room room) {
-       try{ if (room == null) {
+        if (room == null) {
             throw new IllegalArgumentException("room is null");
         }
         if (room.getCapacity() <= 0) {
-            throw new ValidationException("room must have positive capacity");
+            throw new IllegalArgumentException("room must have positive capacity");
         }
         if (room.getNumber() == null) {
-            throw new ValidationException("room number must not be null");
+            throw new IllegalArgumentException("room number must not be null");
         }
         if (room.getNumber().equals("")) {
-            throw new ValidationException("room number must not be empty");
+            throw new IllegalArgumentException("room number must not be empty");
         }
         if (room.getNumber().length() < 4) {
-            throw new ValidationException("room number must have some format");
+            throw new IllegalArgumentException("room number must have some format");
         }
         if (room.getPricePerNight().signum() < 1){ //testuje ci je to zaporne
-            throw new ValidationException("price per night must be positive");
+            throw new IllegalArgumentException("price per night must be positive");
         }      
-       }
-       catch (ValidationException e){
-           throw new IllegalArgumentException("Validation failed ",e);
-       }
     }
 }
 
