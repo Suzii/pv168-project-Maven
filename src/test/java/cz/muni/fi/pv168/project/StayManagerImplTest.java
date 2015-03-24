@@ -66,7 +66,7 @@ public class StayManagerImplTest {
     public void setUp() throws SQLException {
         ds = prepareDataSource();
         //create tables!!
-        DBUtils.executeSqlScript(ds,StayManager.class.getResourceAsStream("/createTables.sql"));
+        DBUtils.executeSqlScript(ds, StayManager.class.getResourceAsStream("/createTables.sql"));
         manager = new StayManagerImpl(ds);
         guestManager = new GuestManagerImpl(ds);
         roomManager = new RoomManagerImpl(ds);
@@ -82,6 +82,11 @@ public class StayManagerImplTest {
         goodRoom = roomBuilder.build();
         roomManager.createRoom(goodRoom);
     }
+    
+    @After
+    public void tearDown() throws SQLException {
+        DBUtils.executeSqlScript(ds,GuestManager.class.getResourceAsStream("/dropTables.sql"));
+    }
 
     /**
      * Pato
@@ -89,7 +94,10 @@ public class StayManagerImplTest {
     @Test
     public void createStay() {
 
-        Stay stay = stayBuilder.build();
+        Stay stay = stayBuilder
+                .guest(goodGuest)
+                .room(goodRoom)
+                .build();
         manager.createStay(stay);
 
         Long stayId = stay.getId();
@@ -160,7 +168,7 @@ public class StayManagerImplTest {
         Stay stay = stayBuilder
                 .guest(goodGuest)
                 .room(goodRoom)
-                .minibarCosts(new BigDecimal("-5"))
+                .minibarCosts(new BigDecimal("-5.00"))
                 .build();
 
         manager.createStay(stay);
@@ -173,7 +181,10 @@ public class StayManagerImplTest {
     public void getStayById() {
         assertNull(manager.getStayById(1l));
 
-        Stay stay = stayBuilder.build();
+        Stay stay = stayBuilder
+                .guest(goodGuest)
+                .room(goodRoom)
+                .build();
         manager.createStay(stay);
         Long stayId = stay.getId();
         Stay result = manager.getStayById(stayId);
@@ -184,7 +195,7 @@ public class StayManagerImplTest {
     /**
      * Zuzana
      */
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void getStayByIdWithIdNull() {
         Stay stay = stayBuilder
                 .guest(goodGuest)
@@ -261,8 +272,8 @@ public class StayManagerImplTest {
         assertDeepEquals(s1, stay);
 
         stay = manager.getStayById(stayId);
-        stay.setMinibarCosts(new BigDecimal("1.1"));
-        s1.setMinibarCosts(new BigDecimal("1.1"));
+        stay.setMinibarCosts(new BigDecimal("1.10"));
+        s1.setMinibarCosts(new BigDecimal("1.10"));
         manager.updateStay(stay);
         assertDeepEquals(s1, stay);
 
@@ -383,7 +394,7 @@ public class StayManagerImplTest {
                 .room(goodRoom)
                 .build();
         manager.createStay(stay);
-        stay.setMinibarCosts(new BigDecimal("-1"));
+        stay.setMinibarCosts(new BigDecimal("-1.00"));
         manager.updateStay(stay);
     }
 
@@ -1550,7 +1561,7 @@ public class StayManagerImplTest {
         private LocalDate realEndDate = null;
         private Guest guest = null;//new GuestBuilder().build();
         private Room room = null;//new RoomBuilder().build();
-        private BigDecimal minibarCosts = new BigDecimal("100.5");
+        private BigDecimal minibarCosts = new BigDecimal("100.50");
 
         public StayBuilder guest(Guest guest) {
             this.guest = guest;
@@ -1599,7 +1610,7 @@ public class StayManagerImplTest {
         private String passportNo = "222";
         private String email = "johnny@english.uk";
         private String phone = "+00221133";
-        private LocalDate dateOfBirth = LocalDate.of(1990, 20, 3);
+        private LocalDate dateOfBirth = LocalDate.of(1990, 2, 3);
 
         public GuestBuilder id(Long id) {
             this.id = id;
@@ -1641,7 +1652,7 @@ public class StayManagerImplTest {
         private Long id;
         private String number = "A721";
         private int capacity = 2;
-        private BigDecimal pricePerNight = new BigDecimal("50");
+        private BigDecimal pricePerNight = new BigDecimal("50.00");
         private boolean bathroom = false;
         private RoomType type = RoomType.STANDARD;
 

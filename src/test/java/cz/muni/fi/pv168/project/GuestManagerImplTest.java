@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import javax.sql.DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 import cz.muni.fi.pv168.project.common.DBUtils;
+import java.util.Collections;
 import org.junit.After;
 
 /**
@@ -82,13 +83,17 @@ public class GuestManagerImplTest {
 
         Guest g1 = newGuest("Johnny English", "001", "johnny@english.uk", "123", LocalDate.of(1970, 1, 1));
         Guest g2 = newGuest("James Bond", "007", "james@bond.uk", "234", LocalDate.of(1970, 1, 3));
-
+        Guest g3 = newGuest("James Bond JR.", "007", "james@bond.uk", "234", LocalDate.of(1970, 1, 3));
+        
         manager.createGuest(g2);
         manager.createGuest(g1);
+        manager.createGuest(g3);
 
-        List<Guest> expected = Arrays.asList(g1, g2);
+        List<Guest> expected = Arrays.asList(g1, g2, g3);
         List<Guest> actual = manager.findAllGuests();
 
+        Collections.sort(actual, idComparator);
+        Collections.sort(expected, idComparator);
         assertEquals(expected, actual);
         assertDeepEquals(expected, actual);
     }
@@ -265,7 +270,6 @@ public class GuestManagerImplTest {
         guest = manager.getGuestById(guestId);
         guest.setId(null);
         manager.deleteGuest(guest);
-
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -326,8 +330,8 @@ public class GuestManagerImplTest {
     }
 
     private void assertDeepEquals(List<Guest> expectedList, List<Guest> actualList) {
-        expectedList.sort(idComparator);
-        actualList.sort(idComparator);
+        //expectedList.sort(idComparator);
+        //actualList.sort(idComparator);
 
         for (int i = 0; i < expectedList.size(); i++) {
             Guest expected = expectedList.get(i);

@@ -5,6 +5,7 @@
  */
 package cz.muni.fi.pv168.project;
 
+import cz.muni.fi.pv168.project.common.DBUtils;
 import java.sql.SQLException;
 import java.util.List;
 import org.junit.Before;
@@ -24,50 +25,77 @@ import org.junit.After;
  * @author pato
  */
 public class RoomManagerImplTest {
-    
+
     private RoomManagerImpl manager;
-    private DataSource dataSource;
-    
+    private DataSource ds;
+
+    private static DataSource prepareDataSource() throws SQLException {
+        BasicDataSource ds = new BasicDataSource();
+        //we will use in memory database
+        ds.setUrl("jdbc:derby:memory:guestmgr-test;create=true");
+        return ds;
+    }
+
     @Before
-    public void setUp() throws SQLException{
-        BasicDataSource bds = new BasicDataSource();
-        bds.setUrl("jdbc:derby:memory:RoomManagerTest;create=true");
-        this.dataSource = bds;
-        //create new empty table before every test
-        try (Connection conn = bds.getConnection()) {
-            conn.prepareStatement("CREATE TABLE ROOM (" 
-            + "ID BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY, "
-            + "NUMBER VARCHAR(10) NOT NULL "
-            + "CHECK(NUMBER = UPPER(NUMBER)), "
-            + "CAPACITY INTEGER  NOT NULL"
-            + " CHECK(CAPACITY > 0), "
-            + "PRICE_PER_NIGHT DECIMAL(12,2) NOT NULL "
-            + "CHECK(PRICE_PER_NIGHT > 0), "
-            + "BATHROOM BOOLEAN NOT NULL, "
-            + "ROOM_TYPE VARCHAR(255)) " 
-            //+ "FOREIGNKEY(ROOM_TYPE) REFERENCES ROOM_TYPE(TYPE))"
-                ).executeUpdate();
-            /*conn.prepareStatement("CREATE TABLE ROOM_TYPE ("
-            +"TYPE VARCHAR(255) PRIMARY KEY )"
-            ).executeUpdate();*/
-        }
-        manager = new RoomManagerImpl(bds);
+    public void setUp() throws SQLException {
+        ds = prepareDataSource();
+        manager = new RoomManagerImpl(ds);
+        //create tables!!
+        DBUtils.executeSqlScript(ds, GuestManager.class.getResourceAsStream("/createTables.sql"));
     }
 
     @After
     public void tearDown() throws SQLException {
-        try (Connection con = dataSource.getConnection()) {
-            con.prepareStatement("DROP TABLE ROOM").executeUpdate();
-        }
+        DBUtils.executeSqlScript(ds, GuestManager.class.getResourceAsStream("/dropTables.sql"));
     }
+
+    /*
+     @Before
+     public void setUp() throws SQLException{
+     BasicDataSource bds = new BasicDataSource();
+     bds.setUrl("jdbc:derby:memory:RoomManagerTest;create=true");
+     this.dataSource = bds;
+     //create new empty table before every test
+     try (Connection conn = bds.getConnection()) {
+     conn.prepareStatement("CREATE TABLE ROOM (" 
+     + "ID BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY, "
+     + "NUMBER VARCHAR(10) NOT NULL "
+     + "CHECK(NUMBER = UPPER(NUMBER)), "
+     + "CAPACITY INTEGER  NOT NULL"
+     + " CHECK(CAPACITY > 0), "
+     + "PRICE_PER_NIGHT DECIMAL(12,2) NOT NULL "
+     + "CHECK(PRICE_PER_NIGHT > 0), "
+     + "BATHROOM BOOLEAN NOT NULL, "
+     + "ROOM_TYPE VARCHAR(255)) " 
+     //+ "FOREIGNKEY(ROOM_TYPE) REFERENCES ROOM_TYPE(TYPE))"
+     ).executeUpdate();
+     /*conn.prepareStatement("CREATE TABLE ROOM_TYPE ("
+     +"TYPE VARCHAR(255) PRIMARY KEY )"
+     ).executeUpdate();*/
+    /*       }
+     manager = new RoomManagerImpl(bds);
+     }
+
+     @After
+     public void tearDown() throws SQLException {
+     DBUtils.executeSqlScript(dataSource,GuestManager.class.getResourceAsStream("/dropTables.sql"));
+     }
+     /*
+     @After
+     public void tearDown() throws SQLException {
+     try (Connection con = dataSource.getConnection()) {
+     con.prepareStatement("DROP TABLE ROOM").executeUpdate();
+     }
+     }
+     */
     /**
      * Test of createRoom method, of class RoomManagerImpl.
      */
     @Test
     public void createRoom() {
-        Room room = newRoom("A721",2,new BigDecimal("10"),false,RoomType.STANDARD);
+        Room room = newRoom("A721", 2, new BigDecimal("10"), false, RoomType.STANDARD);
         manager.createRoom(room);
-        
+
         Long roomId = room.getId();
         assertNotNull(roomId);
         Room result = manager.getRoomById(roomId);
@@ -76,27 +104,27 @@ public class RoomManagerImplTest {
         assertDeepEquals(room, result);
 
     }
-    
-    @Test 
-    public void createRoom2(){
+
+    @Test
+    public void createRoom2() {
         // these variants should be ok
-        Room room = newRoom("A101",2,new BigDecimal("10"),false,RoomType.STANDARD); //100 nie je ale 101 ano
+        Room room = newRoom("A101", 2, new BigDecimal("10"), false, RoomType.STANDARD); //100 nie je ale 101 ano
         manager.createRoom(room);
-        Room result = manager.getRoomById(room.getId()); 
+        Room result = manager.getRoomById(room.getId());
         assertNotNull(result);
 
-        room = newRoom("A101",1,new BigDecimal("10"),false,RoomType.STANDARD); //minimalna capacita
+        room = newRoom("A101", 1, new BigDecimal("10"), false, RoomType.STANDARD); //minimalna capacita
         manager.createRoom(room);
-        result = manager.getRoomById(room.getId()); 
+        result = manager.getRoomById(room.getId());
         assertNotNull(result);
     }
-    
+
     @Test
     public void getRoomById() {
-        
+
         assertNull(manager.getRoomById(1l));
 
-        Room room = newRoom("A721",2,new BigDecimal("10"),false,RoomType.STANDARD);
+        Room room = newRoom("A721", 2, new BigDecimal("10"), false, RoomType.STANDARD);
         manager.createRoom(room);
         Long roomId = room.getId();
 
@@ -110,117 +138,117 @@ public class RoomManagerImplTest {
 
         assertTrue(manager.findAllRooms().isEmpty());
 
-        Room r1 = newRoom("A721",2,new BigDecimal("10"),false,RoomType.STANDARD);
-        Room r2 = newRoom("B721",2,new BigDecimal("80"),true,RoomType.STUDIO );
+        Room r1 = newRoom("A721", 2, new BigDecimal("10"), false, RoomType.STANDARD);
+        Room r2 = newRoom("B721", 2, new BigDecimal("80"), true, RoomType.STUDIO);
 
         manager.createRoom(r1);
         manager.createRoom(r2);
 
-        List<Room> expected = Arrays.asList(r1,r2);
+        List<Room> expected = Arrays.asList(r1, r2);
         List<Room> actual = manager.findAllRooms();
 
-        Collections.sort(actual,idComparator);
-        Collections.sort(expected,idComparator);
+        Collections.sort(actual, idComparator);
+        Collections.sort(expected, idComparator);
 
         assertEquals(expected, actual);
         assertDeepEquals(expected, actual);
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void createRoomWithNonExistingRoom() {
-            manager.createRoom(null);
+        manager.createRoom(null);
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void createRoomWithNonExistingID() {
-        Room room = newRoom("A721",2,new BigDecimal("10"),false,RoomType.STANDARD);
-        room.setId(1l);   
+        Room room = newRoom("A721", 2, new BigDecimal("10"), false, RoomType.STANDARD);
+        room.setId(1l);
         manager.createRoom(room);
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void createRoomWithNumberNull() {
-        Room room = newRoom(null,2,new BigDecimal("10"),false,RoomType.STANDARD);  
+        Room room = newRoom(null, 2, new BigDecimal("10"), false, RoomType.STANDARD);
         manager.createRoom(room);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void createRoomWithWrongCapacity() {
-        Room room = newRoom("A721",0,new BigDecimal("10"),false,RoomType.STANDARD);   
+        Room room = newRoom("A721", 0, new BigDecimal("10"), false, RoomType.STANDARD);
         manager.createRoom(room);
-    }      
+    }
 
     @Test(expected = IllegalArgumentException.class)
     public void createRoomWithWrongPricePetNightNegative() {
-        Room room = newRoom("A721",0,new BigDecimal("-0.5"),false,RoomType.STANDARD);   
-        manager.createRoom(room);
-    }
-    
-    @Test(expected = IllegalArgumentException.class)
-    public void createRoomWithWrongPricePetNightZero() {
-        Room room = newRoom("A721",0,new BigDecimal("0"),false,RoomType.STANDARD);   
-        manager.createRoom(room);
-    }
-       
-    @Test(expected = IllegalArgumentException.class)
-    public void createRoomWithWrongNumber() {
-        Room room = newRoom("1",0,new BigDecimal("0"),false,RoomType.STANDARD);   
+        Room room = newRoom("A721", 0, new BigDecimal("-0.5"), false, RoomType.STANDARD);
         manager.createRoom(room);
     }
 
-    
+    @Test(expected = IllegalArgumentException.class)
+    public void createRoomWithWrongPricePetNightZero() {
+        Room room = newRoom("A721", 0, new BigDecimal("0"), false, RoomType.STANDARD);
+        manager.createRoom(room);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void createRoomWithWrongNumber() {
+        Room room = newRoom("1", 0, new BigDecimal("0"), false, RoomType.STANDARD);
+        manager.createRoom(room);
+    }
+
+    // BigDecimalScale
     @Test
     public void updateRoom() {
-        Room room = newRoom("A721",2,new BigDecimal("10"),false,RoomType.STANDARD);
-        Room r2 = newRoom("B721",2,new BigDecimal("80"),true,RoomType.STUDIO );
+        Room room = newRoom("A721", 2, new BigDecimal("10").setScale(2), false, RoomType.STANDARD);
+        Room r2 = newRoom("B721", 2, new BigDecimal("80").setScale(2), true, RoomType.STUDIO);
         manager.createRoom(room);
         manager.createRoom(r2);
         Long roomId = room.getId();
 
         room = manager.getRoomById(roomId);
         room.setNumber("A121");
-        manager.updateRoom(room);        
+        manager.updateRoom(room);
         assertEquals("A121", room.getNumber());
-        assertEquals(new BigDecimal("10"), room.getPricePerNight());
+        assertEquals(new BigDecimal("10").setScale(2), room.getPricePerNight());
         assertEquals(2, room.getCapacity());
         assertEquals(false, room.hasBathroom());
-        assertEquals(RoomType.STANDARD,room.getType());
+        assertEquals(RoomType.STANDARD, room.getType());
 
         room = manager.getRoomById(roomId);
-        room.setPricePerNight(new BigDecimal(9));
-        manager.updateRoom(room);        
+        room.setPricePerNight(new BigDecimal("9").setScale(2));
+        manager.updateRoom(room);
         assertEquals("A121", room.getNumber());
-        assertEquals(new BigDecimal("9"), room.getPricePerNight());
+        assertEquals(new BigDecimal("9").setScale(2), room.getPricePerNight());
         assertEquals(2, room.getCapacity());
         assertEquals(false, room.hasBathroom());
-        assertEquals(RoomType.STANDARD,room.getType());
+        assertEquals(RoomType.STANDARD, room.getType());
 
         room = manager.getRoomById(roomId);
         room.setCapacity(3);
-        manager.updateRoom(room);        
+        manager.updateRoom(room);
         assertEquals("A121", room.getNumber());
-        assertEquals(new BigDecimal("9"), room.getPricePerNight());
+        assertEquals(new BigDecimal("9").setScale(2), room.getPricePerNight());
         assertEquals(3, room.getCapacity());
         assertEquals(false, room.hasBathroom());
-        assertEquals(RoomType.STANDARD,room.getType());
+        assertEquals(RoomType.STANDARD, room.getType());
 
         room = manager.getRoomById(roomId);
         room.setBathroom(true);
-        manager.updateRoom(room);        
+        manager.updateRoom(room);
         assertEquals("A121", room.getNumber());
-        assertEquals(new BigDecimal("9"), room.getPricePerNight());
+        assertEquals(new BigDecimal("9").setScale(2), room.getPricePerNight());
         assertEquals(3, room.getCapacity());
         assertEquals(true, room.hasBathroom());
-        assertEquals(RoomType.STANDARD,room.getType());
-        
+        assertEquals(RoomType.STANDARD, room.getType());
+
         room = manager.getRoomById(roomId);
         room.setType(RoomType.APARTMENT);
-        manager.updateRoom(room);        
+        manager.updateRoom(room);
         assertEquals("A121", room.getNumber());
-        assertEquals(new BigDecimal("9"), room.getPricePerNight());
+        assertEquals(new BigDecimal("9").setScale(2), room.getPricePerNight());
         assertEquals(3, room.getCapacity());
         assertEquals(true, room.hasBathroom());
-        assertEquals(RoomType.APARTMENT,room.getType());
+        assertEquals(RoomType.APARTMENT, room.getType());
 
         // Check if updates didn't affected other records
         assertDeepEquals(r2, manager.getRoomById(r2.getId()));
@@ -228,14 +256,14 @@ public class RoomManagerImplTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void updateRoomWithNonExistingRoom() {
-        Room room = newRoom("A721",2,new BigDecimal("10"),false,RoomType.STANDARD);
-        manager.createRoom(room);  
+        Room room = newRoom("A721", 2, new BigDecimal("10"), false, RoomType.STANDARD);
+        manager.createRoom(room);
         manager.updateRoom(null);
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void updateRoomWithIdNull() {
-        Room room = newRoom("A721",2,new BigDecimal("10"),false,RoomType.STANDARD);
+        Room room = newRoom("A721", 2, new BigDecimal("10"), false, RoomType.STANDARD);
         manager.createRoom(room);
         room.setId(null);
         manager.updateRoom(room);
@@ -243,7 +271,7 @@ public class RoomManagerImplTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void updateRoomWithNonExistingId() {
-        Room room = newRoom("A721",2,new BigDecimal("10"),false,RoomType.STANDARD);
+        Room room = newRoom("A721", 2, new BigDecimal("10"), false, RoomType.STANDARD);
         manager.createRoom(room);
         Long roomId = room.getId();
         room.setId(roomId + 1);
@@ -252,14 +280,15 @@ public class RoomManagerImplTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void updateRoomWithWrongNumber() {
-        Room room = newRoom("A721",2,new BigDecimal("10"),false,RoomType.STANDARD);
+        Room room = newRoom("A721", 2, new BigDecimal("10"), false, RoomType.STANDARD);
         manager.createRoom(room);
         room.setNumber("-1");
         manager.updateRoom(room);
     }
+
     @Test(expected = IllegalArgumentException.class)
     public void updateRoomWithNullNumber() {
-        Room room = newRoom("A721",2,new BigDecimal("10"),false,RoomType.STANDARD);
+        Room room = newRoom("A721", 2, new BigDecimal("10"), false, RoomType.STANDARD);
         manager.createRoom(room);
         room.setNumber(null);
         manager.updateRoom(room);
@@ -267,69 +296,67 @@ public class RoomManagerImplTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void updateRoomWithWrongCapacity() {
-        Room room = newRoom("A721",2,new BigDecimal("10"),false,RoomType.STANDARD);
+        Room room = newRoom("A721", 2, new BigDecimal("10"), false, RoomType.STANDARD);
         manager.createRoom(room);
         room.setCapacity(0);
         manager.updateRoom(room);
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void updateRoomWithNegativePricePerNight() {
-        Room room = newRoom("A721",2,new BigDecimal("10"),false,RoomType.STANDARD);
+        Room room = newRoom("A721", 2, new BigDecimal("10"), false, RoomType.STANDARD);
         manager.createRoom(room);
         room.setPricePerNight(new BigDecimal("-10"));
         manager.updateRoom(room);
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void updateRoomWithZeroPricePerNight() {
-        Room room = newRoom("A721",2,new BigDecimal("10"),false,RoomType.STANDARD);
+        Room room = newRoom("A721", 2, new BigDecimal("10"), false, RoomType.STANDARD);
         manager.createRoom(room);
         room.setPricePerNight(new BigDecimal("0"));
         manager.updateRoom(room);
     }
-        
 
     /**
      * Test of deleteRoom method, of class RoomManagerImpl.
      */
     @Test
     public void deleteRoom() {
-        Room r1 = newRoom("A721",2,new BigDecimal("50"),false,RoomType.STANDARD);
-        Room r2 = newRoom("B721",2,new BigDecimal("80"),true,RoomType.STUDIO );
+        Room r1 = newRoom("A721", 2, new BigDecimal("50"), false, RoomType.STANDARD);
+        Room r2 = newRoom("B721", 2, new BigDecimal("80"), true, RoomType.STUDIO);
 
         manager.createRoom(r1);
         manager.createRoom(r2);
-        
+
         assertNotNull(manager.getRoomById(r1.getId()));
         assertNotNull(manager.getRoomById(r2.getId()));
 
         manager.deleteRoom(r1);
-        
+
         assertNull(manager.getRoomById(r1.getId()));
         assertNotNull(manager.getRoomById(r2.getId()));
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void deleteRoomWithNonExistingRoom() {
-        Room room = newRoom("A721",2,new BigDecimal("0"),false,RoomType.STANDARD);
+        Room room = newRoom("A721", 2, new BigDecimal("0"), false, RoomType.STANDARD);
         manager.deleteRoom(null);
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void deleteRoomWithIdNull() {
-        Room room = newRoom("A721",2,new BigDecimal("0"),false,RoomType.STANDARD);
+        Room room = newRoom("A721", 2, new BigDecimal("0"), false, RoomType.STANDARD);
         room.setId(null);
         manager.deleteRoom(room);
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void deleteRoomWithNonExistingId() {
-        Room room = newRoom("A721",2,new BigDecimal("0"),false,RoomType.STANDARD);
+        Room room = newRoom("A721", 2, new BigDecimal("0"), false, RoomType.STANDARD);
         room.setId(1l);
         manager.deleteRoom(room);
     }
-
 
     /**
      * Test of findRoomByNumber method, of class RoomManagerImpl.
@@ -337,24 +364,24 @@ public class RoomManagerImplTest {
     @Test
     public void findRoomByNumber() {
         assertNull(manager.findRoomByNumber("1"));
-        
-        Room room = newRoom("A721",2,new BigDecimal("10"),false,RoomType.STANDARD);
+
+        Room room = newRoom("A721", 2, new BigDecimal("10"), false, RoomType.STANDARD);
         manager.createRoom(room);
         Room result = manager.findRoomByNumber("A721");
-        
+
         assertEquals(room, result);
         assertDeepEquals(room, result);
-        
-    }
-    @Test(expected = IllegalArgumentException.class)
-    public void findRoomWithWrongNumberFormat() {
-        assertNull(manager.findRoomByNumber("1"));       
-        Room room = newRoom("A721",2,new BigDecimal("10"),false,RoomType.STANDARD);
-        manager.createRoom(room);
-        manager.findRoomByNumber("FFF");
+
     }
 
-        
+    @Test(expected = IllegalArgumentException.class)
+    public void findRoomWithWrongNullNumber() {
+        assertNull(manager.findRoomByNumber("1"));
+        Room room = newRoom("A721", 2, new BigDecimal("10"), false, RoomType.STANDARD);
+        manager.createRoom(room);
+        manager.findRoomByNumber(null);
+    }
+
     private static Room newRoom(String num, int capacity, BigDecimal costs, boolean bath, RoomType type) {
         Room room = new Room();
         room.setNumber(num);
@@ -377,7 +404,7 @@ public class RoomManagerImplTest {
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getCapacity(), actual.getCapacity());
         assertEquals(expected.getNumber(), actual.getNumber());
-        assertEquals(expected.getPricePerNight(), actual.getPricePerNight());
+        assertEquals(expected.getPricePerNight().setScale(2), actual.getPricePerNight());
         assertEquals(expected.hasBathroom(), actual.hasBathroom());
         assertEquals(expected.getType(), actual.getType());
     }
@@ -389,5 +416,5 @@ public class RoomManagerImplTest {
             return Long.valueOf(o1.getId()).compareTo(Long.valueOf(o2.getId()));
         }
     };
-    
+
 }

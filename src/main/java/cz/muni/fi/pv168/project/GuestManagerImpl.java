@@ -32,6 +32,9 @@ public class GuestManagerImpl implements GuestManager {
     private final DataSource dataSource;
 
     public GuestManagerImpl(DataSource dataSource) {
+        if (dataSource == null) {
+            throw new IllegalArgumentException("DataSource is not set");
+        }
         this.dataSource = dataSource;
     }
 
@@ -61,10 +64,9 @@ public class GuestManagerImpl implements GuestManager {
             }
 
         } catch (SQLException ex) {
-            logger.error("db connection problem", ex);
+            logger.error("db connection problem when creating guest: " + guest, ex);
             throw new ServiceFailureException("Error when creatig new guest", ex);
         }
-
     }
 
     private Long getKey(ResultSet keyRS, Guest guest) throws ServiceFailureException, SQLException {
@@ -94,12 +96,12 @@ public class GuestManagerImpl implements GuestManager {
             throw new IllegalArgumentException("id must not be null");
         }
         try (Connection conn = dataSource.getConnection()) {
-            try (PreparedStatement st = conn.prepareStatement("SELECT id, name, passport_id, email, phone, date_of_birth FROM guest WHERE id = ?")) {
+            try (PreparedStatement st = conn.prepareStatement("SELECT id, name, passport_no, email, phone, date_of_birth FROM guest WHERE id = ?")) {
                 st.setLong(1, id);
                 return executeQueryForSingleGuest(st);
             }
         } catch (SQLException ex) {
-            logger.error("db connection problem", ex);
+            logger.error("db connection problem when retrieving guest by id. Id: " + id, ex);
             throw new ServiceFailureException("Error when retrieving guest with id " + id, ex);
         }
     }
@@ -120,11 +122,11 @@ public class GuestManagerImpl implements GuestManager {
                 st.setLong(6, guest.getId());
                 int updatedRows = st.executeUpdate();
                 if (updatedRows != 1) {
-                    throw new ServiceFailureException("Internal Error: More rows updated when one was expected.");
+                    throw new IllegalArgumentException("Internal Error: More rows updated when one was expected.");
                 }
             }
         } catch (SQLException ex) {
-            //logger.error("db connection problem", ex);
+            logger.error("db connection problem when updating guest: " + guest, ex);
             throw new ServiceFailureException("Error when updating guest", ex);
         }
     }
@@ -138,13 +140,13 @@ public class GuestManagerImpl implements GuestManager {
         try (Connection conn = dataSource.getConnection()) {
             try (PreparedStatement st = conn.prepareStatement("DELETE FROM guest WHERE id = ?")) {
                 st.setLong(1, guest.getId());
-                int removerRows = st.executeUpdate();
-                if (removerRows != 1) {
-                    throw new ServiceFailureException("Internal Error: More rows removed when one was expected, id = " + guest.getId());
+                int removedRows = st.executeUpdate();
+                if (removedRows != 1) {
+                    throw new IllegalArgumentException("Internal Error: More rows removed when one was expected, id = " + guest.getId());
                 }
             }
         } catch (SQLException ex) {
-            logger.error("db connection problem", ex);
+            logger.error("db connection problem when deleting guest: " + guest, ex);
             throw new ServiceFailureException("Error when deleting guest", ex);
         }
     }
@@ -152,11 +154,11 @@ public class GuestManagerImpl implements GuestManager {
     @Override
     public List<Guest> findAllGuests() {
         try (Connection conn = dataSource.getConnection()) {
-            try (PreparedStatement st = conn.prepareStatement("SELECT id, name, passport_id, email, phone, date_of_birth FROM guest")) {
+            try (PreparedStatement st = conn.prepareStatement("SELECT id, name, passport_no, email, phone, date_of_birth FROM guest")) {
                 return executeQueryForMultipleGuests(st);
             }
         } catch (SQLException ex) {
-            logger.error("db connection problem", ex);
+            logger.error("db connection problem when retrieving all guests", ex);
             throw new ServiceFailureException("Error when retrieving all guests", ex);
         }
     }
@@ -167,12 +169,12 @@ public class GuestManagerImpl implements GuestManager {
             throw new IllegalArgumentException("name must not be null");
         }
         try (Connection conn = dataSource.getConnection()) {
-            try (PreparedStatement st = conn.prepareStatement("SELECT id, name, passport_id, email, phone, date_of_birth FROM guest WHERE name = ?")) {
+            try (PreparedStatement st = conn.prepareStatement("SELECT id, name, passport_no, email, phone, date_of_birth FROM guest WHERE name = ?")) {
                 st.setString(1, name);
                 return executeQueryForMultipleGuests(st);
             }
         } catch (SQLException ex) {
-            logger.error("db connection problem", ex);
+            logger.error("db connection problem when looking for guest by name: " + name, ex);
             throw new ServiceFailureException("Error when retrieving guests with name" + name, ex);
         }
     }
