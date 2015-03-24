@@ -11,9 +11,13 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import java.math.BigDecimal;
+import java.sql.Connection;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import javax.sql.DataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
+import org.junit.After;
 
 /**
  *
@@ -22,12 +26,40 @@ import java.util.Comparator;
 public class RoomManagerImplTest {
     
     private RoomManagerImpl manager;
+    private DataSource dataSource;
     
     @Before
     public void setUp() throws SQLException{
-        manager = new RoomManagerImpl();
+        BasicDataSource bds = new BasicDataSource();
+        bds.setUrl("jdbc:derby:memory:RoomManagerTest;create=true");
+        this.dataSource = bds;
+        //create new empty table before every test
+        try (Connection conn = bds.getConnection()) {
+            conn.prepareStatement("CREATE TABLE ROOM (" 
+            + "ID BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY, "
+            + "NUMBER VARCHAR(10) NOT NULL "
+            + "CHECK(NUMBER = UPPER(NUMBER)), "
+            + "CAPACITY INTEGER  NOT NULL"
+            + " CHECK(CAPACITY > 0), "
+            + "PRICE_PER_NIGHT DECIMAL(12,2) NOT NULL "
+            + "CHECK(PRICE_PER_NIGHT > 0), "
+            + "BATHROOM BOOLEAN NOT NULL, "
+            + "ROOM_TYPE VARCHAR(255)) " 
+            //+ "FOREIGNKEY(ROOM_TYPE) REFERENCES ROOM_TYPE(TYPE))"
+                ).executeUpdate();
+            /*conn.prepareStatement("CREATE TABLE ROOM_TYPE ("
+            +"TYPE VARCHAR(255) PRIMARY KEY )"
+            ).executeUpdate();*/
+        }
+        manager = new RoomManagerImpl(bds);
     }
 
+    @After
+    public void tearDown() throws SQLException {
+        try (Connection con = dataSource.getConnection()) {
+            con.prepareStatement("DROP TABLE ROOM").executeUpdate();
+        }
+    }
     /**
      * Test of createRoom method, of class RoomManagerImpl.
      */
@@ -214,7 +246,7 @@ public class RoomManagerImplTest {
         Room room = newRoom("A721",2,new BigDecimal("10"),false,RoomType.STANDARD);
         manager.createRoom(room);
         Long roomId = room.getId();
-        room.setId(roomId - 1);
+        room.setId(roomId + 1);
         manager.updateRoom(room);
     }
 
@@ -317,7 +349,7 @@ public class RoomManagerImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void findRoomWithWrongNumberFormat() {
         assertNull(manager.findRoomByNumber("1"));       
-        Room room = newRoom("A721",2,new BigDecimal("0"),false,RoomType.STANDARD);
+        Room room = newRoom("A721",2,new BigDecimal("10"),false,RoomType.STANDARD);
         manager.createRoom(room);
         manager.findRoomByNumber("FFF");
     }

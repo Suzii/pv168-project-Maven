@@ -17,6 +17,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import javax.sql.DataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
+
+
 //import java.sql.*;
 
 /**
@@ -29,7 +32,8 @@ public class RoomManagerImpl implements RoomManager{
     //DataSource
     private DataSource dataSource;
 
-    public void setDataSource(DataSource dataSource) {
+
+    public RoomManagerImpl(DataSource dataSource) { //asi takyto nazov metody
         this.dataSource = dataSource;
     }
 
@@ -44,12 +48,12 @@ public class RoomManagerImpl implements RoomManager{
         checkDataSource();
         validate(r);
         if (r.getId() != null) {
-            throw new ValidationException("room id already set");
+            throw new IllegalArgumentException("room id already set");
         }
 
         try (Connection conn = dataSource.getConnection()) {
             try (PreparedStatement st = conn.prepareStatement(
-                    "INSERT INTO GUEST (number, capacity, price_per_night, bathroom, room_type) "
+                    "INSERT INTO ROOM (number, capacity, price_per_night, bathroom, room_type) "
                     + "VALUES(?,?,?,?,?)",
                     Statement.RETURN_GENERATED_KEYS)) {
                 st.setString(1, r.getNumber());
@@ -67,7 +71,7 @@ public class RoomManagerImpl implements RoomManager{
 
         } catch (SQLException ex) {
             //logger.error("db connection problem", ex);
-            throw new ServiceFailureException("Error when creatig new guest", ex);
+            throw new ServiceFailureException("Error when creatig new room", ex);
         }
     }
     
@@ -114,10 +118,10 @@ public class RoomManagerImpl implements RoomManager{
         checkDataSource();
         validate(r);
         if (r.getId() == null) {
-            throw new ValidationException("room id must not be null when updating");
+            throw new IllegalArgumentException("room id must not be null when updating");
         }
         try (Connection conn = dataSource.getConnection()) {
-            try (PreparedStatement st = conn.prepareStatement("UPDATE room SET number = ?, capacity = ?, price_pre_night = ?, bathroom = ?, room_type = ? WHERE id = ?")) { //zatvorka???
+            try (PreparedStatement st = conn.prepareStatement("UPDATE room SET number = ?, capacity = ?, price_per_night = ?, bathroom = ?, room_type = ? WHERE id = ?")) { //zatvorka???
                 st.setString(1, r.getNumber());
                 st.setInt(2, r.getCapacity());
                 st.setBigDecimal(3, r.getPricePerNight());
@@ -126,12 +130,12 @@ public class RoomManagerImpl implements RoomManager{
                 st.setLong(6, r.getId());
                 int updatedRows = st.executeUpdate();
                 if (updatedRows != 1) {
-                    throw new ServiceFailureException("Internal Error: More rows updated when one was expected.");
+                    throw new IllegalArgumentException("Internal Error: More rows updated when one was expected.");
                 }
             }
         } catch (SQLException ex) {
             //logger.error("db connection problem", ex);
-            throw new ServiceFailureException("Error when updating room", ex);
+            throw new ServiceFailureException("Error when updating room" , ex);
         } 
     }
 
@@ -140,7 +144,7 @@ public class RoomManagerImpl implements RoomManager{
         checkDataSource();
         validate(r);
         if (r.getId() == null) {
-            throw new ValidationException("room id must not be null when deleting");
+            throw new IllegalArgumentException("room id must not be null when deleting");
         }
         try (Connection conn = dataSource.getConnection()) {
             try (PreparedStatement st = conn.prepareStatement("DELETE FROM room WHERE id = ?")) {
@@ -191,7 +195,7 @@ public class RoomManagerImpl implements RoomManager{
         if (rs.next()) {
             result = rowToRoom(rs);
             if (rs.next()) {
-                throw new ServiceFailureException(
+                throw new IllegalArgumentException(
                         "Internal error: More entities with same id found "
                         + "(source id: " + result.getId() + ", found " + result + " and " + rowToRoom(rs));
             }
@@ -229,7 +233,7 @@ public class RoomManagerImpl implements RoomManager{
      * @param room room to be checked for validity
      */
     private static void validate(Room room) {
-        if (room == null) {
+       try{ if (room == null) {
             throw new IllegalArgumentException("room is null");
         }
         if (room.getCapacity() <= 0) {
@@ -241,9 +245,16 @@ public class RoomManagerImpl implements RoomManager{
         if (room.getNumber().equals("")) {
             throw new ValidationException("room number must not be empty");
         }
-        if (room.getPricePerNight().equals(new BigDecimal("0"))){ //?dobre porovnanie?
-            throw new ValidationException("room number must not be empty");
-        } 
+        if (room.getNumber().length() < 4) {
+            throw new ValidationException("room number must have some format");
+        }
+        if (room.getPricePerNight().signum() < 0){ //testuje ci je to zaporne
+            throw new ValidationException("price per night must be positive");
+        }      
+       }
+       catch (ValidationException e){
+           throw new IllegalArgumentException("Validation failed ",e);
+       }
     }
 }
 
