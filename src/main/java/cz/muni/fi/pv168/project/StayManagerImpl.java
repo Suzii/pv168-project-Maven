@@ -150,7 +150,22 @@ public class StayManagerImpl implements StayManager {
 
     @Override
     public void deleteStay(Stay stay) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        validate(stay);
+        if (stay.getId() == null) {
+            throw new IllegalArgumentException("stay id must not be null when deleting");
+        }
+        try (Connection conn = dataSource.getConnection()) {        
+            try (PreparedStatement st = conn.prepareStatement("DELETE FROM stay WHERE id = ?")) {
+                st.setLong(1, stay.getId());
+                int removedRows = st.executeUpdate();
+                if (removedRows != 1) {
+                    throw new IllegalArgumentException("Internal Error: More rows removed when one was expected, id = " + stay.getId());
+                }
+            } 
+        }catch (SQLException ex) {
+            logger.error("db connection problem when deleting stay: " + stay, ex);
+            throw new ServiceFailureException("Error when deleting stay", ex);
+        }
     }
 
     //Zuzana
@@ -170,6 +185,9 @@ public class StayManagerImpl implements StayManager {
 
     @Override
     public List<Stay> findStaysByDate(LocalDate from, LocalDate to) {
+        if (from == null || to == null){
+            throw new IllegalArgumentException("date must not be null.");
+        }
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -242,6 +260,7 @@ public class StayManagerImpl implements StayManager {
 
     @Override
     public List<Stay> findAllStaysForGuest(Guest guest) {
+        validate(guest);
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -274,6 +293,10 @@ public class StayManagerImpl implements StayManager {
 
     @Override
     public List<Stay> findStaysForRoomByDate(Room room, LocalDate date) {
+        validate(room);
+        if (date == null){
+            throw new IllegalArgumentException("date must not be null.");
+        }
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -306,6 +329,12 @@ public class StayManagerImpl implements StayManager {
 
     @Override
     public List<Room> findFreeRoomByDateAndCapacity(LocalDate date, int capacity) {
+        if (date == null){
+            throw new IllegalArgumentException("date must not be null.");
+        }
+        if (capacity <= 0){
+            throw new IllegalArgumentException("capacity must be positive.");
+        }
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

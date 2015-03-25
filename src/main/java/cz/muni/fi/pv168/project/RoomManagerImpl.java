@@ -28,7 +28,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 public class RoomManagerImpl implements RoomManager {
 
     //Logger
-    //private static final Logger logger = Logger.getLogger(GuestManagerImpl.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(RoomManagerImpl.class.getName());
     //DataSource
     private final DataSource dataSource;
 
@@ -63,7 +63,7 @@ public class RoomManagerImpl implements RoomManager {
                 ResultSet keyRS = st.getGeneratedKeys();
                 r.setId(getKey(keyRS, r));
         } catch (SQLException ex) {
-            //logger.error("db connection problem", ex);
+            logger.error("db connection problem when creating room: " + r, ex);
             throw new ServiceFailureException("Error when creatig new room", ex);
         }
     }
@@ -100,7 +100,7 @@ public class RoomManagerImpl implements RoomManager {
                 return executeQueryForSingleRoom(st);
             }
         } catch (SQLException ex) {
-            //logger.error("db connection problem", ex);
+            logger.error("db connection problem when retrieving guest by id. Id: " + id, ex);
             throw new ServiceFailureException("Error when retrieving room with id " + id, ex);
         }
     }
@@ -125,7 +125,7 @@ public class RoomManagerImpl implements RoomManager {
                 }
             }
         } catch (SQLException ex) {
-            //logger.error("db connection problem", ex);
+            logger.error("db connection problem when updating room: " + r, ex);
             throw new ServiceFailureException("Error when updating room", ex);
         }
     }
@@ -145,7 +145,7 @@ public class RoomManagerImpl implements RoomManager {
                 }
             }
         } catch (SQLException ex) {
-            //logger.error("db connection problem", ex);
+            logger.error("db connection problem when deleting room: " + r, ex);
             throw new ServiceFailureException("Error when deleting room", ex);
         }
     }
@@ -157,7 +157,7 @@ public class RoomManagerImpl implements RoomManager {
                 return executeQueryForMultipleRooms(st);
             }
         } catch (SQLException ex) {
-            //logger.error("db connection problem", ex);
+            logger.error("db connection problem when retrieving all rooms.", ex);
             throw new ServiceFailureException("Error when retrieving all rooms", ex);
         }
     }
@@ -173,7 +173,7 @@ public class RoomManagerImpl implements RoomManager {
                 return executeQueryForSingleRoom(st);
             }
         } catch (SQLException ex) {
-            //logger.error("db connection problem", ex);
+            logger.error("db connection problem when finding room by number: " + n, ex);
             throw new ServiceFailureException("Error when retrieving room with number" + n, ex);
         }
     }

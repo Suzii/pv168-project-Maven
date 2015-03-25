@@ -428,8 +428,13 @@ public class StayManagerImplTest {
                 .guest(g0)
                 .room(r2)
                 .build();
+        guestManager.createGuest(g1);
+        guestManager.createGuest(g0);
+        roomManager.createRoom(r1);
+        roomManager.createRoom(r2);
         manager.createStay(s1);
         manager.createStay(s2);
+
 
         assertNotNull(manager.getStayById(s1.getId()));
         assertNotNull(manager.getStayById(s2.getId()));
@@ -450,7 +455,10 @@ public class StayManagerImplTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void deleteStayWithStayIdNull() {
-        Stay stay = stayBuilder.build();
+        Stay stay = stayBuilder
+                .guest(goodGuest)
+                .room(goodRoom)
+                .build();
         manager.deleteStay(stay);
     }
 
