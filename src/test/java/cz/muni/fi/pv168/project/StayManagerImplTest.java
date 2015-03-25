@@ -600,17 +600,18 @@ public class StayManagerImplTest {
 
         List<Stay> expected = Arrays.asList(s1, s2, s3);
         List<Stay> actual = manager.findStaysByDate(LocalDate.of(2015, 1, 1), LocalDate.of(2015, 1, 3));
+        assertEquals(expected, actual);
         assertDeepEqualsStays(expected, actual);
 
         expected = Arrays.asList(s1);
         actual = manager.findStaysByDate(LocalDate.of(2014, 1, 3), LocalDate.of(2015, 1, 1));
+        assertEquals(expected, actual);
         assertDeepEqualsStays(expected, actual);
 
         expected = Arrays.asList(s5, s6);
         actual = manager.findStaysByDate(LocalDate.of(2015, 1, 7), LocalDate.of(2015, 1, 9));
+        assertEquals(expected, actual);
         assertDeepEqualsStays(expected, actual);
-
-
 
         assertTrue(manager.findStaysByDate(LocalDate.of(2014, 1, 1), LocalDate.of(2014, 31, 12)).isEmpty());
         assertEquals(1, manager.findStaysByDate(LocalDate.of(2015, 1, 2), LocalDate.of(2015, 1, 2)).size());
@@ -682,6 +683,7 @@ public class StayManagerImplTest {
         List<Guest> expected = Arrays.asList(g1, g2);
         List<Guest> actual = manager.findStayingGuestsByDate(LocalDate.of(2015, 1, 2));
 
+        assertEquals(expected, actual);
         assertDeepEqualsGuests(expected, actual);
 
         assertTrue(manager.findStayingGuestsByDate(LocalDate.of(2015, 1, 10)).isEmpty());
@@ -696,21 +698,22 @@ public class StayManagerImplTest {
     /**
      * Zuzana
      */
+    @Test
     public void findFreeRoomsByDateAndLen() {
         Guest g1 = guestBuilder.build();
 
         Room r1 = roomBuilder
-                .number("A000")
-                .build();
-        Room r2 = roomBuilder
                 .number("A001")
                 .build();
-        Room r3 = roomBuilder
+        Room r2 = roomBuilder
                 .number("A002")
+                .build();
+        Room r3 = roomBuilder
+                .number("A003")
                 .build();
 
         Room r4 = roomBuilder
-                .number("A003")
+                .number("A004")
                 .build();
 
         Stay s1 = stayBuilder
@@ -754,18 +757,22 @@ public class StayManagerImplTest {
 
         List<Room> expected = Arrays.asList(r2, r4);
         List<Room> actual = manager.findFreeRoomsByDateAndLen(LocalDate.of(2015, 1, 3), 2);
+        assertEquals(expected, actual);
         assertDeepEqualsRooms(expected, actual);
 
         expected = Arrays.asList(r1, r2, r3);
         actual = manager.findFreeRoomsByDateAndLen(LocalDate.of(2015, 1, 5), 5);
+        assertEquals(expected, actual);
         assertDeepEqualsRooms(expected, actual);
 
         expected = Arrays.asList(r4);
         actual = manager.findFreeRoomsByDateAndLen(LocalDate.of(2015, 1, 2), 2);
+        assertEquals(expected, actual);
         assertDeepEqualsRooms(expected, actual);
 
         expected = Arrays.asList(r1, r2, r3, r4);
         actual = manager.findFreeRoomsByDateAndLen(LocalDate.of(2015, 1, 10), 5);
+        assertEquals(expected, actual);
         assertDeepEqualsRooms(expected, actual);
 
         assertTrue(manager.findFreeRoomsByDateAndLen(LocalDate.of(2015, 1, 1), 10).isEmpty());
@@ -882,18 +889,21 @@ public class StayManagerImplTest {
 
         List<Stay> expected = Arrays.asList();
         List<Stay> actual = manager.findAllStaysForGuest(g0);
+        assertEquals(expected, actual);
         assertDeepEqualsStays(expected, actual);
 
         assertTrue(manager.findAllStaysForGuest(g0).isEmpty());
 
         expected = Arrays.asList(s5, s6, s1);
         actual = manager.findAllStaysForGuest(g1);
+        assertEquals(expected, actual);
         assertDeepEqualsStays(expected, actual);
 
         assertEquals(3, manager.findAllStaysForGuest(g1).size());
 
         expected = Arrays.asList(s3);
         actual = manager.findAllStaysForGuest(g2);
+        assertEquals(expected, actual);
         assertDeepEqualsStays(expected, actual);
 
         assertEquals(1, manager.findAllStaysForGuest(g4).size());
@@ -913,7 +923,7 @@ public class StayManagerImplTest {
     }
 
     /**
-     * Zuzana kukni ci ti sedia tie cisla guestov pri assertoch
+     * Zuzana
      */
     @Test
     public void findRoomsForGuestByDate() {
@@ -1005,18 +1015,22 @@ public class StayManagerImplTest {
 
         List<Room> expected = Arrays.asList(r1);
         List<Room> actual = manager.findRoomsForGuestByDate(g1, LocalDate.of(2015, 1, 1));
+        assertEquals(expected, actual);
         assertDeepEqualsRooms(expected, actual);
 
         expected = Arrays.asList(r1);
         actual = manager.findRoomsForGuestByDate(g1, LocalDate.of(2015, 1, 3));
+        assertEquals(expected, actual);
         assertDeepEqualsRooms(expected, actual);
 
         expected = Arrays.asList(r1, r2);
         actual = manager.findRoomsForGuestByDate(g1, LocalDate.of(2015, 1, 7));
+        assertEquals(expected, actual);
         assertDeepEqualsRooms(expected, actual);
 
         expected = Arrays.asList(r2);
         actual = manager.findRoomsForGuestByDate(g4, LocalDate.of(2015, 1, 4));
+        assertEquals(expected, actual);
         assertDeepEqualsRooms(expected, actual);
 
         assertTrue(manager.findRoomsForGuestByDate(g0, LocalDate.of(2015, 1, 5)).isEmpty());
@@ -1115,24 +1129,29 @@ public class StayManagerImplTest {
 
         List<Stay> expected = Arrays.asList(s1);
         List<Stay> actual = manager.findStaysForRoomByDate(r1, LocalDate.of(2015, 1, 1));
+        assertEquals(expected, actual);
         assertDeepEqualsStays(expected, actual);
 
         expected = Arrays.asList(s3, s1);
         actual = manager.findStaysForRoomByDate(r1, LocalDate.of(2015, 1, 3));
+        assertEquals(expected, actual);
         assertDeepEqualsStays(expected, actual);
 
         expected = Arrays.asList(s4);
         actual = manager.findStaysForRoomByDate(r2, LocalDate.of(2015, 1, 5));
+        assertEquals(expected, actual);
         assertDeepEqualsStays(expected, actual);
 
         expected = Arrays.asList(s2, s4);
         actual = manager.findStaysForRoomByDate(r2, LocalDate.of(2015, 1, 4));
+        assertEquals(expected, actual);
         assertDeepEqualsStays(expected, actual);
 
         assertTrue(manager.findStaysForRoomByDate(r1, LocalDate.of(2014, 1, 5)).isEmpty());
 
         expected = Arrays.asList(s3);
         actual = manager.findStaysForRoomByDate(r1, LocalDate.of(2015, 1, 5));
+        assertEquals(expected, actual);
         assertDeepEqualsStays(expected, actual);
 
         assertTrue(manager.findStaysForRoomByDate(r2, LocalDate.of(2014, 1, 1)).isEmpty());
@@ -1248,18 +1267,22 @@ public class StayManagerImplTest {
 
         List<Guest> expected = Arrays.asList(g0);
         List<Guest> actual = manager.findGuestsForRoomByDate(r1, LocalDate.of(2015, 1, 1));
+        assertEquals(expected, actual);
         assertDeepEqualsGuests(expected, actual);
 
         expected = Arrays.asList(g0, g2);
         actual = manager.findGuestsForRoomByDate(r1, LocalDate.of(2015, 1, 3));
+        assertEquals(expected, actual);
         assertDeepEqualsGuests(expected, actual);
 
         expected = Arrays.asList(g1);
         actual = manager.findGuestsForRoomByDate(r1, LocalDate.of(2015, 1, 8));
+        assertEquals(expected, actual);
         assertDeepEqualsGuests(expected, actual);
 
         expected = Arrays.asList(g3, g4);
         actual = manager.findGuestsForRoomByDate(r2, LocalDate.of(2015, 1, 4));
+        assertEquals(expected, actual);
         assertDeepEqualsGuests(expected, actual);
 
         assertTrue(manager.findGuestsForRoomByDate(r2, LocalDate.of(2015, 1, 1)).isEmpty());
@@ -1382,18 +1405,22 @@ public class StayManagerImplTest {
 
         List<Room> expected = Arrays.asList(r2);
         List<Room> actual = manager.findFreeRoomByDateAndCapacity(LocalDate.of(2015, 1, 1), 3);
+        assertEquals(expected, actual);
         assertDeepEqualsRooms(expected, actual);
 
         expected = Arrays.asList(r3);
         actual = manager.findFreeRoomByDateAndCapacity(LocalDate.of(2015, 1, 3), 2);
+        assertEquals(expected, actual);
         assertDeepEqualsRooms(expected, actual);
 
         expected = Arrays.asList(r3, r1);
         actual = manager.findFreeRoomByDateAndCapacity(LocalDate.of(2015, 1, 8), 2);
+        assertEquals(expected, actual);
         assertDeepEqualsRooms(expected, actual);
 
         expected = Arrays.asList();
         actual = manager.findFreeRoomByDateAndCapacity(LocalDate.of(2015, 31, 7), 3);
+        assertEquals(expected, actual);
         assertDeepEqualsRooms(expected, actual);
 
         assertTrue(manager.findFreeRoomByDateAndCapacity(LocalDate.of(2015, 1, 5), 3).isEmpty());
@@ -1694,7 +1721,7 @@ public class StayManagerImplTest {
     private void assertDeepEqualsGuests(List<Guest> expectedList, List<Guest> actualList) {
         expectedList.sort(idComparatorGuest);
         actualList.sort(idComparatorGuest);
-
+        assertEquals(expectedList.size(), actualList.size());
         for (int i = 0; i < expectedList.size(); i++) {
             Guest expected = expectedList.get(i);
             Guest actual = actualList.get(i);
@@ -1703,7 +1730,7 @@ public class StayManagerImplTest {
     }
 
     private void assertDeepEqualsCustomers(List<Guest> expectedList, List<Guest> actualList) {
-
+        assertEquals(expectedList.size(), actualList.size() );
         for (int i = 0; i < expectedList.size(); i++) {
             Guest expected = expectedList.get(i);
             Guest actual = actualList.get(i);
@@ -1712,6 +1739,7 @@ public class StayManagerImplTest {
     }
 
     private void assertDeepEqualsRooms(List<Room> expectedList, List<Room> actualList) {
+        assertEquals(expectedList.size(), actualList.size() );
         expectedList.sort(idComparatorRoom);
         actualList.sort(idComparatorRoom);
         for (int i = 0; i < expectedList.size(); i++) {
@@ -1722,6 +1750,7 @@ public class StayManagerImplTest {
     }
 
     private void assertDeepEqualsStays(List<Stay> expectedList, List<Stay> actualList) {
+        assertEquals(expectedList.size(), actualList.size() );
         expectedList.sort(idComparatorStay);
         actualList.sort(idComparatorStay);
         for (int i = 0; i < expectedList.size(); i++) {
