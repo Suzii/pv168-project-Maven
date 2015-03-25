@@ -213,7 +213,7 @@ public class StayManagerImpl implements StayManager {
         logger.debug("Date from: " + dateFrom + "\n Date to: " + dateTo);
         try (Connection conn = dataSource.getConnection()) {
             try (PreparedStatement st = conn.prepareStatement(
-                    "SELECT room_id AS id, number, capacity, price_per_night, bathroom, room_type "
+                    "SELECT room_id  AS id, number, capacity, price_per_night, bathroom, room_type "
                     + "FROM stay JOIN room ON (room.id = stay.room_id)"
                     + "WHERE (start_date >= ?) OR ((real_end_date IS NOT NULL AND real_end_date <= ?) OR (real_end_date IS NULL AND (expected_end_date IS NOT NULL AND expected_end_date <= ?)))")) {
                 st.setDate(1, dateTo);

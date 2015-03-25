@@ -204,51 +204,66 @@ public class RoomManagerImplTest {
         manager.createRoom(room);
         manager.createRoom(r2);
         Long roomId = room.getId();
+        Room result;
+        
 
         room = manager.getRoomById(roomId);
         room.setNumber("A121");
         manager.updateRoom(room);
-        assertEquals("A121", room.getNumber());
+        result = manager.getRoomById(roomId);
+        assertDeepEquals(room, result);
+                
+        /*assertEquals("A121", room.getNumber());
         assertEquals(new BigDecimal("10").setScale(2), room.getPricePerNight());
         assertEquals(2, room.getCapacity());
         assertEquals(false, room.hasBathroom());
-        assertEquals(RoomType.STANDARD, room.getType());
+        assertEquals(RoomType.STANDARD, room.getType());*/
 
         room = manager.getRoomById(roomId);
         room.setPricePerNight(new BigDecimal("9").setScale(2));
         manager.updateRoom(room);
-        assertEquals("A121", room.getNumber());
+        result = manager.getRoomById(roomId);
+        assertDeepEquals(room, result);
+       /*assertEquals("A121", room.getNumber());
         assertEquals(new BigDecimal("9").setScale(2), room.getPricePerNight());
         assertEquals(2, room.getCapacity());
         assertEquals(false, room.hasBathroom());
-        assertEquals(RoomType.STANDARD, room.getType());
+        assertEquals(RoomType.STANDARD, room.getType());*/
 
         room = manager.getRoomById(roomId);
         room.setCapacity(3);
         manager.updateRoom(room);
-        assertEquals("A121", room.getNumber());
+        result = manager.getRoomById(roomId);
+        assertDeepEquals(room, result);
+        /*assertEquals("A121", room.getNumber());
         assertEquals(new BigDecimal("9").setScale(2), room.getPricePerNight());
         assertEquals(3, room.getCapacity());
         assertEquals(false, room.hasBathroom());
-        assertEquals(RoomType.STANDARD, room.getType());
+        assertEquals(RoomType.STANDARD, room.getType());*/
 
         room = manager.getRoomById(roomId);
         room.setBathroom(true);
         manager.updateRoom(room);
-        assertEquals("A121", room.getNumber());
+        result = manager.getRoomById(roomId);
+        assertDeepEquals(room, result);
+        
+        /*assertEquals("A121", room.getNumber());
         assertEquals(new BigDecimal("9").setScale(2), room.getPricePerNight());
         assertEquals(3, room.getCapacity());
         assertEquals(true, room.hasBathroom());
-        assertEquals(RoomType.STANDARD, room.getType());
+        assertEquals(RoomType.STANDARD, room.getType());*/
 
         room = manager.getRoomById(roomId);
         room.setType(RoomType.APARTMENT);
         manager.updateRoom(room);
-        assertEquals("A121", room.getNumber());
+        result = manager.getRoomById(roomId);
+        assertDeepEquals(room, result);
+       
+        /*assertEquals("A121", room.getNumber());
         assertEquals(new BigDecimal("9").setScale(2), room.getPricePerNight());
         assertEquals(3, room.getCapacity());
         assertEquals(true, room.hasBathroom());
-        assertEquals(RoomType.APARTMENT, room.getType());
+        assertEquals(RoomType.APARTMENT, room.getType());*/
 
         // Check if updates didn't affected other records
         assertDeepEquals(r2, manager.getRoomById(r2.getId()));
