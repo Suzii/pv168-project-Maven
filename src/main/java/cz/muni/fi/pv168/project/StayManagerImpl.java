@@ -185,9 +185,9 @@ public class StayManagerImpl implements StayManager {
             try (PreparedStatement st = conn.prepareStatement(
                     "SELECT guest_id AS id, name, passport_no, email, phone, date_of_birth "
                     + "FROM stay JOIN guest ON (guest.id = stay.guest_id)"
-                    + "WHERE start_date >= ? "
-                    + "AND (expected_end_date IS NULL OR expected_end_date <= ?) "
-                    + "AND (real_end_date IS NULL OR real_end_date <= ?)")) {
+                    + "WHERE start_date <= ? "
+                    + "AND (expected_end_date IS NULL OR expected_end_date >= ?) "
+                    + "AND (real_end_date IS NULL OR real_end_date >= ?)")) {
                 st.setDate(1, Date.valueOf(date));
                 st.setDate(2, Date.valueOf(date));
                 st.setDate(3, Date.valueOf(date));
@@ -200,6 +200,7 @@ public class StayManagerImpl implements StayManager {
     }
 
     //Zuzana
+    //"SELECT room_id AS id, number, capacity, price_per_night, bathroom, room_type, start_date, real_end_date, expected_end_date "
     @Override
     public List<Room> findFreeRoomsByDateAndLen(LocalDate date, int len) {
         if (date == null) {
@@ -213,19 +214,26 @@ public class StayManagerImpl implements StayManager {
         logger.debug("Date from: " + dateFrom + "\n Date to: " + dateTo);
         try (Connection conn = dataSource.getConnection()) {
             try (PreparedStatement st = conn.prepareStatement(
-                    "SELECT room_id  AS id, number, capacity, price_per_night, bathroom, room_type "
+                     "SELECT room_id  AS id, number, capacity, price_per_night, bathroom, room_type "
                     + "FROM stay JOIN room ON (room.id = stay.room_id)"
                     + "WHERE (start_date >= ?) OR ((real_end_date IS NOT NULL AND real_end_date <= ?) OR (real_end_date IS NULL AND (expected_end_date IS NOT NULL AND expected_end_date <= ?)))")) {
                 st.setDate(1, dateTo);
                 st.setDate(2, dateFrom);
                 st.setDate(3, dateFrom);
-                //return executeQueryForMultipleRooms(st);
-                List<Room> result = executeQueryForMultipleRooms(st);
+                return executeQueryForMultipleRooms(st);
+/*
+                ResultSet rs = st.executeQuery();
+                List<Room> result = new ArrayList<Room>();
+                while (rs.next()) {
+                    Room r = rowToRoom(rs);
+                    result.add(r);
+                    logger.debug("Room + " + r.toString() + " startDate: " + rs.getDate("start_date") + " realEndDate: " + rs.getDate("real_end_date") + " expecEndDate " + rs.getDate("expected_end_date"));
+                }
                 for (Room r : result) {
-                    logger.debug("Room + " + r.toString());
+                    //logger.debug("Room + " + r.toString() + " startDate: " + rs.getDate("start_date") + " realEndDate: " + rs.getDate("real_end_date") + " expecEndDate " + rs.getDate("expected_end_date"));
                 }
                 return result;
-            }
+  */          }
         } catch (SQLException ex) {
             logger.error("db connection problem when retrieving rooms by date: " + date + "and len: " + len, ex);
             throw new ServiceFailureException("Error when retrieving rooms by date: " + date + "and len: " + len, ex);
@@ -249,9 +257,9 @@ public class StayManagerImpl implements StayManager {
                     "SELECT room_id AS id, number, capacity, price_per_night, bathroom, room_type "
                     + "FROM stay JOIN room ON (room.id = stay.room_id) JOIN guest ON (guest.id = stay.guest_id)"
                     + "WHERE stay.guest_id = ? "
-                    + "AND start_date >= ? "
-                    + "AND (expected_end_date IS NULL OR expected_end_date <= ?) "
-                    + "AND (real_end_date IS NULL OR real_end_date <= ?)")) {
+                    + "AND start_date <= ? "
+                    + "AND (expected_end_date IS NULL OR expected_end_date >= ?) "
+                    + "AND (real_end_date IS NULL OR real_end_date >= ?)")) {
                 st.setLong(1, guest.getId());
                 st.setDate(2, Date.valueOf(date));
                 st.setDate(3, Date.valueOf(date));
@@ -281,9 +289,9 @@ public class StayManagerImpl implements StayManager {
                     "SELECT guest_id AS id, name, passport_no, email, phone, date_of_birth "
                     + "FROM stay JOIN room ON (room.id = stay.room_id) JOIN guest ON (guest.id = stay.guest_id)"
                     + "WHERE stay.room_id = ? "
-                    + "AND start_date >= ? "
-                    + "AND (expected_end_date IS NULL OR expected_end_date <= ?) "
-                    + "AND (real_end_date IS NULL OR real_end_date <= ?)")) {
+                    + "AND start_date <= ? "
+                    + "AND (expected_end_date IS NULL OR expected_end_date >= ?) "
+                    + "AND (real_end_date IS NULL OR real_end_date >= ?)")) {
                 st.setLong(1, room.getId());
                 st.setDate(2, Date.valueOf(date));
                 st.setDate(3, Date.valueOf(date));
