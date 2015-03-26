@@ -621,7 +621,7 @@ public class StayManagerImplTest {
         //assertEquals(expected, actual);
         assertDeepEqualsStays(expected, actual);
 
-        assertTrue(manager.findStaysByDate(LocalDate.of(2014, 1, 1), LocalDate.of(2014, 31, 12)).isEmpty());
+        assertTrue(manager.findStaysByDate(LocalDate.of(2014, 1, 1), LocalDate.of(2014, 1, 12)).isEmpty());
         assertEquals(1, manager.findStaysByDate(LocalDate.of(2015, 1, 2), LocalDate.of(2015, 1, 2)).size());
         assertEquals(2, manager.findStaysByDate(LocalDate.of(2015, 1, 6), LocalDate.of(2015, 1, 6)).size());
     }
@@ -1346,13 +1346,15 @@ public class StayManagerImplTest {
                 .passportNo("723")
                 .build();
 
-        Room r1 = roomBuilder.build();
+       // Room r1 = roomBuilder.build();
+        Room r1 = goodRoom;
         Room r2 = roomBuilder
                 .number("A001")
                 .capacity(3)
                 .build();
         Room r3 = roomBuilder
                 .number("A002")
+                .capacity(2)
                 .build();
 
         Stay s1 = stayBuilder
@@ -1404,7 +1406,7 @@ public class StayManagerImplTest {
         guestManager.createGuest(g2);
         guestManager.createGuest(g3);
         guestManager.createGuest(g4);
-        roomManager.createRoom(r1);
+        //roomManager.createRoom(r1);
         roomManager.createRoom(r2);
         roomManager.createRoom(r3);
         manager.createStay(s1);
@@ -1430,7 +1432,7 @@ public class StayManagerImplTest {
         assertDeepEqualsRooms(expected, actual);
 
         expected = Arrays.asList();
-        actual = manager.findFreeRoomByDateAndCapacity(LocalDate.of(2015, 31, 7), 3);
+        actual = manager.findFreeRoomByDateAndCapacity(LocalDate.of(2015, 1, 7), 3);
         //assertEquals(expected, actual);
         assertDeepEqualsRooms(expected, actual);
 
@@ -1537,7 +1539,7 @@ public class StayManagerImplTest {
         List<Guest> actual = manager.findTop3Guests();
         assertDeepEqualsCustomers(expected, actual);
 
-        assertEquals(1, manager.findTop3Guests());
+        assertEquals(1, manager.findTop3Guests().size());
 
         manager.createStay(s2);
         manager.createStay(s3);
@@ -1741,7 +1743,7 @@ public class StayManagerImplTest {
     }
 
     private void assertDeepEqualsCustomers(List<Guest> expectedList, List<Guest> actualList) {
-        assertEquals(expectedList.size(), actualList.size() );
+        assertEquals(expectedList, actualList );
         for (int i = 0; i < expectedList.size(); i++) {
             Guest expected = expectedList.get(i);
             Guest actual = actualList.get(i);

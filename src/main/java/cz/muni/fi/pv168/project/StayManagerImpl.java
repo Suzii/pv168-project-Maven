@@ -15,13 +15,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * Checkovat ci je izba praznda , dorobit metodu na to +logging + presne kde pisat ten uvodny logger
  * @author Zuzana
  */
 public class StayManagerImpl implements StayManager {
@@ -46,6 +47,7 @@ public class StayManagerImpl implements StayManager {
     //Zuzana
     @Override
     public void createStay(Stay stay) {
+        logger.debug("Creating stay : " + stay);
         validate(stay);
         if (stay.getId() != null) {
             throw new IllegalArgumentException("stay id already set");
@@ -101,6 +103,7 @@ public class StayManagerImpl implements StayManager {
     //Zuzana
     @Override
     public Stay getStayById(Long id) {
+        logger.debug("Getting stay by id : " + id);
         if (id == null) {
             throw new IllegalArgumentException("id must not be null");
         }
@@ -121,6 +124,7 @@ public class StayManagerImpl implements StayManager {
     //Zuzana
     @Override
     public void updateStay(Stay stay) {
+        logger.debug("Updating stay : " + stay);
         validate(stay);
         if (stay.getId() == null) {
             throw new IllegalArgumentException("stay id must not be null when updating");
@@ -147,9 +151,10 @@ public class StayManagerImpl implements StayManager {
             throw new ServiceFailureException("Error when updating stay", ex);
         }
     }
-
+      //pato  
     @Override
     public void deleteStay(Stay stay) {
+        logger.debug("Deleting stay : " + stay);
         validate(stay);
         if (stay.getId() == null) {
             throw new IllegalArgumentException("stay id must not be null when deleting");
@@ -171,6 +176,7 @@ public class StayManagerImpl implements StayManager {
     //Zuzana
     @Override
     public List<Stay> findAllStays() {
+        logger.debug("Finding all stays. ");
         try (Connection conn = dataSource.getConnection()) {
             try (PreparedStatement st = conn.prepareStatement(
                     "SELECT id, start_date, expected_end_date, real_end_date, guest_id, room_id, minibar_costs "
@@ -182,13 +188,32 @@ public class StayManagerImpl implements StayManager {
             throw new ServiceFailureException("Error when retrieving all stays", ex);
         }
     }
-
+    
+    // pato - ocekovat porovnavacky este!
     @Override
     public List<Stay> findStaysByDate(LocalDate from, LocalDate to) {
+        logger.debug("Finding stays by date from : " + from  + " to: " + to);
         if (from == null || to == null){
             throw new IllegalArgumentException("date must not be null.");
         }
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try (Connection conn = dataSource.getConnection()) {
+            try (PreparedStatement st = conn.prepareStatement(
+                    "SELECT id, start_date, expected_end_date, real_end_date, guest_id, room_id, minibar_costs "
+                    + "FROM stay "
+                    + "WHERE (start_date >= ?" 
+                    + "AND start_date <= ?) "
+                    + "OR (expected_end_date >= ? "
+                    + "AND expected_end_date <= ? )")){
+                st.setDate(1, Date.valueOf(from));
+                st.setDate(2, Date.valueOf(to));
+                st.setDate(3, Date.valueOf(from));
+                st.setDate(4, Date.valueOf(to));
+                return executeQueryForMultipleStays(st);
+            }
+        } catch (SQLException ex) {
+            logger.error("db connection problem when retrieving stays by date from: " + from + " to: " + to, ex);
+            throw new ServiceFailureException("Error when retrieving guests by date from: " + from + " to: " + to , ex);
+        }
     }
 
     /**
@@ -196,6 +221,7 @@ public class StayManagerImpl implements StayManager {
      */
     @Override
     public List<Guest> findStayingGuestsByDate(LocalDate date) {
+        logger.debug("Finding staying guests by date: " + date);
         if (date == null) {
             throw new IllegalArgumentException("date must not be null");
         }
@@ -221,6 +247,7 @@ public class StayManagerImpl implements StayManager {
     //"SELECT room_id AS id, number, capacity, price_per_night, bathroom, room_type, start_date, real_end_date, expected_end_date "
     @Override
     public List<Room> findFreeRoomsByDateAndLen(LocalDate date, int len) {
+        logger.debug("Finding free rooms by date : " + date + " and length: " + len);
         if (date == null) {
             throw new IllegalArgumentException("date must not be null");
         }
@@ -257,16 +284,29 @@ public class StayManagerImpl implements StayManager {
             throw new ServiceFailureException("Error when retrieving rooms by date: " + date + "and len: " + len, ex);
         }
     }
-
+    //pato
     @Override
     public List<Stay> findAllStaysForGuest(Guest guest) {
+        logger.debug("Finding all stays for guest : " + guest);
         validate(guest);
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try (Connection conn = dataSource.getConnection()) {
+            try (PreparedStatement st = conn.prepareStatement(
+                      "SELECT id, start_date, expected_end_date, real_end_date, guest_id, room_id, minibar_costs "
+                    + "FROM stay "
+                    + "WHERE guest_id = ?" )){
+                st.setLong(1, guest.getId());
+                return executeQueryForMultipleStays(st);
+            }
+        } catch (SQLException ex) {
+            logger.error("db connection problem when retrieving stays by guest: " + guest, ex);
+            throw new ServiceFailureException("Error when retrieving stays by guest: " + guest, ex);
+        }
     }
 
     //Zuzana
     @Override
     public List<Room> findRoomsForGuestByDate(Guest guest, LocalDate date) {
+        logger.debug("Finding rooms for guest : " + guest + " by date: " + date);
         validate(guest);
         if (date == null) {
             throw new IllegalArgumentException("date must not be null");
@@ -290,19 +330,39 @@ public class StayManagerImpl implements StayManager {
             throw new ServiceFailureException("Error when retrieving rooms for guest: " + guest + " by date: " + date, ex);
         }
     }
-
+    
+    // pato
     @Override
     public List<Stay> findStaysForRoomByDate(Room room, LocalDate date) {
+        logger.debug("Finding stays for room : " + room  + " by date: " + date);
         validate(room);
         if (date == null){
             throw new IllegalArgumentException("date must not be null.");
         }
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Date dateFrom = Date.valueOf(date);
+        logger.debug("Finding stays by room " + room + " and date: " + date);
+        try (Connection conn = dataSource.getConnection()) {
+            try (PreparedStatement st = conn.prepareStatement(
+                     "SELECT id, start_date, expected_end_date, real_end_date, guest_id, room_id, minibar_costs "
+                    + "FROM stay "
+                    + "WHERE ((start_date <= ?) AND (real_end_date IS NOT NULL AND real_end_date >= ?) OR (real_end_date IS NULL AND (expected_end_date IS NOT NULL AND expected_end_date >= ?))) "
+                    + " AND room_id = ? ")) {
+                st.setDate(1, dateFrom);
+                st.setDate(2, dateFrom);
+                st.setDate(3, dateFrom);
+                st.setLong(4,room.getId());
+                return executeQueryForMultipleStays(st);
+         }
+        } catch (SQLException ex) {
+            logger.error("db connection problem when retrieving stays by room " + room + " and date: " + date, ex);
+            throw new ServiceFailureException("Error when retrieving stays by room " + room + " and date: " + date, ex);
+        }
     }
 
     //Zuzana
     @Override
     public List<Guest> findGuestsForRoomByDate(Room room, LocalDate date) {
+        logger.debug("Finding guests for room : " + room  + " by date: " + date);
         validate(room);
         if (date == null) {
             throw new IllegalArgumentException("date must not be null");
@@ -326,21 +386,67 @@ public class StayManagerImpl implements StayManager {
             throw new ServiceFailureException("Error when retrieving guests for room: " + room + " by date: " + date, ex);
         }
     }
-
+    
+    
+    /*
+    * pato nie je to asi az tak good metoda
+    * chyba tam ta dlzka najde to napr len pre jeden den volnu alebo current date?
+    * checknut porovnavanie date  
+    */
     @Override
     public List<Room> findFreeRoomByDateAndCapacity(LocalDate date, int capacity) {
+        logger.debug("Finding room by date: " + date + " and capacity: " + capacity);
         if (date == null){
             throw new IllegalArgumentException("date must not be null.");
         }
         if (capacity <= 0){
             throw new IllegalArgumentException("capacity must be positive.");
         }
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+        Date dateFrom = Date.valueOf(date);
+        
+        try (Connection conn = dataSource.getConnection()) {
+            try (PreparedStatement st = conn.prepareStatement(
+                     "SELECT id, number, capacity, price_per_night, bathroom, room_type "
+                    + "FROM room "
+                    + "WHERE id NOT IN (SELECT room_id FROM STAY WHERE ((start_date <= ?)"
+                    + " AND (real_end_date > ?) AND (expected_end_date > ?)) ) "
+                    + " AND capacity = ? ")) {
+                    /*+ "WHERE id NOT IN (SELECT room_id FROM STAY WHERE ((start_date <= ?)"
+                    + " AND ((real_end_date IS NOT NULL AND real_end_date > ?) OR (real_end_date IS NULL AND (expected_end_date IS NOT NULL AND expected_end_date > ?)) ))) "
+                    + " AND capacity = ? ")) {*/
+                st.setDate(1, dateFrom);
+                st.setDate(2, dateFrom);
+                st.setDate(3, dateFrom);
+                st.setInt(4,capacity);
+                return executeQueryForMultipleRooms(st);
+         }
+        } catch (SQLException ex) {
+            logger.error("db connection problem when retrieving rooms by date: " + date + " and capacity: " + capacity, ex);
+            throw new ServiceFailureException("Error when retrieving rooms by date: " + date + " and capacity: " + capacity, ex);
+        }
+    }       
+    
 
     @Override
     public List<Guest> findTop3Guests() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        logger.error("Finding top 3 guests. ");
+         try (Connection conn = dataSource.getConnection()) {
+            try (PreparedStatement st = conn.prepareStatement(
+                    "SELECT guest_id AS id, name, passport_no, email, phone, date_of_birth ,count(guest_id) as countStays"
+                    +" FROM stay join guest on (guest_id = guest.id) GROUP BY guest_id,name, passport_no, email, phone, date_of_birth"
+                    +" ORDER BY countStays DESC"
+                    )) {
+                List<Guest> guests = executeQueryForMultipleGuests(st);
+                List<Guest> top3 = new ArrayList<Guest>();
+                if (guests.size()>0) top3.add(guests.get(0));
+                if (guests.size()>1) top3.add(guests.get(1));
+                if (guests.size()>2) top3.add(guests.get(2));
+                return top3;
+            }
+        } catch (SQLException ex) {
+            logger.error("db connection problem when retrieving top 3 guests ", ex);
+            throw new ServiceFailureException("Error when retrieving top 3 guests ", ex);
+        }
     }
 
     static Stay executeQueryForSingleStay(PreparedStatement st) throws SQLException, ServiceFailureException {

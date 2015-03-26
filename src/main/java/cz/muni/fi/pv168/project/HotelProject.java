@@ -11,6 +11,8 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.Properties;
 import java.util.logging.Logger;
 import javax.sql.DataSource;
@@ -26,7 +28,7 @@ public class HotelProject {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException {
-        
+
        /* DataSource dataSource = new DataSource();
         dataSource.setConnectionProperties("create=true");
         Properties myconf = new Properties();
