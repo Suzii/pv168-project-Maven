@@ -40,6 +40,7 @@ public class GuestManagerImpl implements GuestManager {
 
     @Override
     public void createGuest(Guest guest) {
+        logger.debug("Creating guest : " + guest);
         validate(guest);
         if (guest.getId() != null) {
             throw new IllegalArgumentException("guest id already set");
@@ -92,6 +93,7 @@ public class GuestManagerImpl implements GuestManager {
 
     @Override
     public Guest getGuestById(Long id) throws ServiceFailureException {
+        logger.debug("Getting guest by id : " + id);
         if (id == null) {
             throw new IllegalArgumentException("id must not be null");
         }
@@ -108,6 +110,7 @@ public class GuestManagerImpl implements GuestManager {
 
     @Override
     public void updateGuest(Guest guest) {
+        logger.debug("Updating guest : " + guest);
         validate(guest);
         if (guest.getId() == null) {
             throw new IllegalArgumentException("guest id must not be null when updating");
@@ -133,6 +136,7 @@ public class GuestManagerImpl implements GuestManager {
 
     @Override
     public void deleteGuest(Guest guest) {
+        logger.debug("Deleting guest : " + guest);
         validate(guest);
         if (guest.getId() == null) {
             throw new IllegalArgumentException("guest id must not be null when deleting");
@@ -153,6 +157,7 @@ public class GuestManagerImpl implements GuestManager {
 
     @Override
     public List<Guest> findAllGuests() {
+        logger.debug("Finding all guests");
         try (Connection conn = dataSource.getConnection()) {
             try (PreparedStatement st = conn.prepareStatement("SELECT id, name, passport_no, email, phone, date_of_birth FROM guest")) {
                 return executeQueryForMultipleGuests(st);
@@ -165,6 +170,7 @@ public class GuestManagerImpl implements GuestManager {
 
     @Override
     public List<Guest> findGuestByName(String name) {
+        logger.debug("Finding guest by name : " + name);
         if (name == null) {
             throw new IllegalArgumentException("name must not be null");
         }

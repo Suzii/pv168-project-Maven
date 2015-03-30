@@ -41,6 +41,7 @@ public class RoomManagerImpl implements RoomManager {
 
     @Override
     public void createRoom(Room r) {
+        logger.debug("Creating room : " + r);
         validate(r);
         if (r.getId() != null) {
             throw new IllegalArgumentException("room id already set");
@@ -91,6 +92,7 @@ public class RoomManagerImpl implements RoomManager {
 
     @Override
     public Room getRoomById(Long id) {
+        logger.debug("Getting room by id  : " + id);
         if (id == null) {
             throw new IllegalArgumentException("id must not be null");
         }
@@ -107,6 +109,7 @@ public class RoomManagerImpl implements RoomManager {
 
     @Override
     public void updateRoom(Room r) {
+        logger.debug("Updating room : " + r);
         validate(r);
         if (r.getId() == null) {
             throw new IllegalArgumentException("room id must not be null when updating");
@@ -132,6 +135,7 @@ public class RoomManagerImpl implements RoomManager {
 
     @Override
     public void deleteRoom(Room r) {
+        logger.debug("Deleting room : " +r );
         validate(r);
         if (r.getId() == null) {
             throw new IllegalArgumentException("room id must not be null when deleting");
@@ -152,6 +156,7 @@ public class RoomManagerImpl implements RoomManager {
 
     @Override
     public List<Room> findAllRooms() {
+        logger.debug("Findgin all rooms ");
         try (Connection conn = dataSource.getConnection()) {
             try (PreparedStatement st = conn.prepareStatement("SELECT id, number, capacity, price_per_night, bathroom, room_type FROM room")) {
                 return executeQueryForMultipleRooms(st);
@@ -164,6 +169,7 @@ public class RoomManagerImpl implements RoomManager {
 
     @Override
     public Room findRoomByNumber(String n) {
+        logger.debug("Finding room by number : " + n);
         if (n == null) {
             throw new IllegalArgumentException("name must not be null");
         }
