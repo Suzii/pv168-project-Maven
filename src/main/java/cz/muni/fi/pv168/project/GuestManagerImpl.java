@@ -55,7 +55,12 @@ public class GuestManagerImpl implements GuestManager {
                 st.setString(2, guest.getPassportNo());
                 st.setString(3, guest.getEmail());
                 st.setString(4, guest.getPhone());
-                st.setDate(5, Date.valueOf(guest.getDateOfBirth()));
+                Date d = null;
+                LocalDate dd = guest.getDateOfBirth();
+                if (dd != null) {
+                    d = Date.valueOf(dd);
+                }
+                st.setDate(5, d);
                 int addedRows = st.executeUpdate();
                 if (addedRows != 1) {
                     throw new ServiceFailureException("Internal Error: More rows inserted when one expected.");
@@ -215,7 +220,10 @@ public class GuestManagerImpl implements GuestManager {
         result.setPassportNo(rs.getString("passport_no"));
         result.setEmail(rs.getString("email"));
         result.setPhone(rs.getString("phone"));
-        result.setDateOfBirth(rs.getDate("date_of_birth").toLocalDate());
+        Date d = rs.getDate("date_of_birth");
+        if (d != null) {
+            result.setDateOfBirth(d.toLocalDate());
+        }
         return result;
     }
 
