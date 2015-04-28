@@ -19,7 +19,7 @@ public class Room {
     private BigDecimal pricePerNight;
     private boolean bathroom;
     private RoomType type;
-
+    
     public RoomType getType() {
         return type;
     }

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 import static org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType.DERBY;
+import org.springframework.transaction.annotation.Transactional;
 /**
  *
  * @author Zuzana
@@ -39,6 +40,7 @@ public class SpringConfig {
     }
 
     @Bean
+    @Transactional
     public RoomManager roomManager() {
         return new RoomManagerImpl(new TransactionAwareDataSourceProxy(dataSource()));
     }
