@@ -40,9 +40,9 @@ public class SpringConfig {
     }
 
     @Bean
-    @Transactional
+    //@Transactional
     public RoomManager roomManager() {
-        return new RoomManagerImpl(new TransactionAwareDataSourceProxy(dataSource()));
+        return new RoomManagerImpl(/*new TransactionAwareDataSourceProxy(*/dataSource()/*)*/);
     }
 
     @Bean
