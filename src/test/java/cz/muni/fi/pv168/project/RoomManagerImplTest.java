@@ -112,12 +112,12 @@ public class RoomManagerImplTest {
         manager.createRoom(room);
         Room result = manager.getRoomById(room.getId());
         assertNotNull(result);
-
-        room = newRoom("A101", 1, new BigDecimal("10"), false, RoomType.STANDARD); //minimalna capacita
+/*
+        room = newRoom("A102", 1, new BigDecimal("10"), false, RoomType.STANDARD); //minimalna capacita
         manager.createRoom(room);
         result = manager.getRoomById(room.getId());
         assertNotNull(result);
-    }
+  */  }
 
     @Test
     public void getRoomById() {

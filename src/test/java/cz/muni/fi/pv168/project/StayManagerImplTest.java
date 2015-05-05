@@ -85,6 +85,7 @@ public class StayManagerImplTest {
     
     @After
     public void tearDown() throws SQLException {
+        System.out.println("Tabes droppped");
         DBUtils.executeSqlScript(ds,GuestManager.class.getResourceAsStream("/dropTables.sql"));
     }
 
