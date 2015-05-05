@@ -34,9 +34,7 @@ public class HotelApp extends javax.swing.JFrame {
      */
     public HotelApp() {
         initComponents();
-        for(RoomType t: RoomType.values()){
-            jComboBoxRoomType.addItem(t);
-        }
+        
 
         guestsModel = (GuestsTableModel) jTableGuests.getModel();
         roomsModel = (RoomsTableModel) jTableRooms.getModel();
@@ -127,6 +125,10 @@ public class HotelApp extends javax.swing.JFrame {
         jLabel12.setText("Bathroom:");
 
         jRadioButton1.setText("included");
+
+        for(RoomType t: RoomType.values()){
+            jComboBoxRoomType.addItem(t);
+        }
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -408,10 +410,10 @@ public class HotelApp extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(61, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jTabbedPaneGuests, javax.swing.GroupLayout.PREFERRED_SIZE, 341, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPaneGuests.getAccessibleContext().setAccessibleName("Guests");
@@ -420,9 +422,7 @@ public class HotelApp extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItemGuestCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGuestCreateActionPerformed
-
         jFrameGuestCreation.setVisible(true);
-
     }//GEN-LAST:event_jMenuItemGuestCreateActionPerformed
 
     private void jButtonCreateGuestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateGuestActionPerformed
@@ -440,15 +440,12 @@ public class HotelApp extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonCreateGuestActionPerformed
 
     private void jMenuItemRoomCreationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemRoomCreationActionPerformed
-        
         jFrameRoomCreation.setVisible(true);
     }//GEN-LAST:event_jMenuItemRoomCreationActionPerformed
 
     private void jButtonSerachGuestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSerachGuestActionPerformed
         String name = jButtonSerachGuest.getText();
         List<Guest> guests = guestManager.findGuestByName(name);
-        
-        
     }//GEN-LAST:event_jButtonSerachGuestActionPerformed
 
     private void jButtonRoomCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRoomCreateActionPerformed

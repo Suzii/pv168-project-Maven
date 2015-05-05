@@ -151,5 +151,12 @@ public class RoomsTableModel extends AbstractTableModel {
         int lastRow = rooms.size() - 1;
         fireTableRowsInserted(lastRow, lastRow);
     }
+    
+    public void removeRow(int rowIndex){
+            if (rowIndex < 0 || rowIndex >= getRowCount()) {
+            throw new IllegalArgumentException("rowIndex");
+        }
+            rooms.remove(rowIndex);
+        }
 
 }
