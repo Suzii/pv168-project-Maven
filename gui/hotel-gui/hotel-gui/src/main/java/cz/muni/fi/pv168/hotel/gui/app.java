@@ -68,11 +68,11 @@ public class app extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTableGuest = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        jTableRoom = new javax.swing.JTable();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
+        jTableStay = new javax.swing.JTable();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
@@ -350,7 +350,7 @@ public class app extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Hotel App");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTableGuest.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
@@ -369,20 +369,20 @@ public class app extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(jTableGuest);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("texts"); // NOI18N
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setHeaderValue(bundle.getString("id")); // NOI18N
-            jTable1.getColumnModel().getColumn(1).setHeaderValue(bundle.getString("name")); // NOI18N
-            jTable1.getColumnModel().getColumn(2).setHeaderValue(bundle.getString("email")); // NOI18N
-            jTable1.getColumnModel().getColumn(3).setHeaderValue(bundle.getString("passport-no")); // NOI18N
-            jTable1.getColumnModel().getColumn(4).setHeaderValue(bundle.getString("phone")); // NOI18N
-            jTable1.getColumnModel().getColumn(5).setHeaderValue(bundle.getString("date-of-birth")); // NOI18N
+        if (jTableGuest.getColumnModel().getColumnCount() > 0) {
+            jTableGuest.getColumnModel().getColumn(0).setHeaderValue(bundle.getString("id")); // NOI18N
+            jTableGuest.getColumnModel().getColumn(1).setHeaderValue(bundle.getString("name")); // NOI18N
+            jTableGuest.getColumnModel().getColumn(2).setHeaderValue(bundle.getString("email")); // NOI18N
+            jTableGuest.getColumnModel().getColumn(3).setHeaderValue(bundle.getString("passport-no")); // NOI18N
+            jTableGuest.getColumnModel().getColumn(4).setHeaderValue(bundle.getString("phone")); // NOI18N
+            jTableGuest.getColumnModel().getColumn(5).setHeaderValue(bundle.getString("date-of-birth")); // NOI18N
         }
 
         jTabbedPane1.addTab("Guests", jScrollPane1);
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        jTableRoom.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
@@ -401,19 +401,19 @@ public class app extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        jScrollPane2.setViewportView(jTable2);
-        if (jTable2.getColumnModel().getColumnCount() > 0) {
-            jTable2.getColumnModel().getColumn(0).setHeaderValue(bundle.getString("id")); // NOI18N
-            jTable2.getColumnModel().getColumn(1).setHeaderValue(bundle.getString("room-number")); // NOI18N
-            jTable2.getColumnModel().getColumn(2).setHeaderValue(bundle.getString("capacity")); // NOI18N
-            jTable2.getColumnModel().getColumn(3).setHeaderValue(bundle.getString("price-per-night")); // NOI18N
-            jTable2.getColumnModel().getColumn(4).setHeaderValue(bundle.getString("type")); // NOI18N
-            jTable2.getColumnModel().getColumn(5).setHeaderValue(bundle.getString("bathroom")); // NOI18N
+        jScrollPane2.setViewportView(jTableRoom);
+        if (jTableRoom.getColumnModel().getColumnCount() > 0) {
+            jTableRoom.getColumnModel().getColumn(0).setHeaderValue(bundle.getString("id")); // NOI18N
+            jTableRoom.getColumnModel().getColumn(1).setHeaderValue(bundle.getString("room-number")); // NOI18N
+            jTableRoom.getColumnModel().getColumn(2).setHeaderValue(bundle.getString("capacity")); // NOI18N
+            jTableRoom.getColumnModel().getColumn(3).setHeaderValue(bundle.getString("price-per-night")); // NOI18N
+            jTableRoom.getColumnModel().getColumn(4).setHeaderValue(bundle.getString("type")); // NOI18N
+            jTableRoom.getColumnModel().getColumn(5).setHeaderValue(bundle.getString("bathroom")); // NOI18N
         }
 
         jTabbedPane1.addTab("Rooms", jScrollPane2);
 
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+        jTableStay.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null},
@@ -432,20 +432,25 @@ public class app extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        jScrollPane3.setViewportView(jTable3);
-        if (jTable3.getColumnModel().getColumnCount() > 0) {
-            jTable3.getColumnModel().getColumn(0).setHeaderValue(bundle.getString("id")); // NOI18N
-            jTable3.getColumnModel().getColumn(1).setHeaderValue(bundle.getString("guest-id")); // NOI18N
-            jTable3.getColumnModel().getColumn(2).setHeaderValue(bundle.getString("room-id")); // NOI18N
-            jTable3.getColumnModel().getColumn(3).setHeaderValue(bundle.getString("start-date")); // NOI18N
-            jTable3.getColumnModel().getColumn(4).setHeaderValue(bundle.getString("expected-end-date")); // NOI18N
-            jTable3.getColumnModel().getColumn(5).setHeaderValue(bundle.getString("real-end-date")); // NOI18N
-            jTable3.getColumnModel().getColumn(6).setHeaderValue(bundle.getString("minibar-costs")); // NOI18N
+        jScrollPane3.setViewportView(jTableStay);
+        if (jTableStay.getColumnModel().getColumnCount() > 0) {
+            jTableStay.getColumnModel().getColumn(0).setHeaderValue(bundle.getString("id")); // NOI18N
+            jTableStay.getColumnModel().getColumn(1).setHeaderValue(bundle.getString("guest-id")); // NOI18N
+            jTableStay.getColumnModel().getColumn(2).setHeaderValue(bundle.getString("room-id")); // NOI18N
+            jTableStay.getColumnModel().getColumn(3).setHeaderValue(bundle.getString("start-date")); // NOI18N
+            jTableStay.getColumnModel().getColumn(4).setHeaderValue(bundle.getString("expected-end-date")); // NOI18N
+            jTableStay.getColumnModel().getColumn(5).setHeaderValue(bundle.getString("real-end-date")); // NOI18N
+            jTableStay.getColumnModel().getColumn(6).setHeaderValue(bundle.getString("minibar-costs")); // NOI18N
         }
 
         jTabbedPane1.addTab("Stay", jScrollPane3);
 
         jButton5.setText("Create");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         jButton6.setText("Update");
 
@@ -463,16 +468,16 @@ public class app extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton7)
                 .addContainerGap())
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(19, 19, 19)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton5)
                     .addComponent(jButton6)
@@ -560,6 +565,10 @@ public class app extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton5ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -636,9 +645,9 @@ public class app extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
-    private javax.swing.JTable jTable3;
+    private javax.swing.JTable jTableGuest;
+    private javax.swing.JTable jTableRoom;
+    private javax.swing.JTable jTableStay;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField10;
     private javax.swing.JTextField jTextField11;
