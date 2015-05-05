@@ -7,6 +7,7 @@ package cz.muni.fi.pv168.hotel.gui;
 
 import cz.muni.fi.pv168.project.*;
 import cz.muni.fi.pv168.project.common.SpringConfig;
+import java.math.BigDecimal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -26,6 +27,7 @@ public class HotelApp extends javax.swing.JFrame {
         initComponents();
         ApplicationContext appContext = new AnnotationConfigApplicationContext(SpringConfig.class);
         GuestManager guestManager = appContext.getBean("guestManager", GuestManager.class);
+        RoomManager roomManager = appContext.getBean("roomManager",RoomManager.class);
         log.info("managers instantiated");
         
         Guest g = new Guest();
@@ -35,6 +37,16 @@ public class HotelApp extends javax.swing.JFrame {
         guestManager.createGuest(g);
         GuestsTableModel guestsModel = (GuestsTableModel) jTableGuests.getModel();
         guestsModel.addGuest(g);
+        
+        Room r = new Room();
+        r.setNumber("A111");
+        r.setCapacity(2);
+        r.setPricePerNight(new BigDecimal("11.50"));
+        r.setType(RoomType.STUDIO);
+        r.setBathroom(true);
+        roomManager.createRoom(r);
+        RoomTableModel roomModel = (RoomTableModel) jTableRooms.getModel();
+        roomModel.addRoom(r);
     }
 
     /**
@@ -46,29 +58,36 @@ public class HotelApp extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPaneGuests = new javax.swing.JTabbedPane();
+        jTabbedPanel = new javax.swing.JTabbedPane();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTableGuests = new javax.swing.JTable();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTableRooms = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jTableGuests.setModel(new GuestsTableModel());
         jScrollPane4.setViewportView(jTableGuests);
 
-        jTabbedPaneGuests.addTab("Guests", jScrollPane4);
+        jTabbedPanel.addTab("Guests", jScrollPane4);
+
+        jTableRooms.setModel(new RoomTableModel());
+        jScrollPane1.setViewportView(jTableRooms);
+
+        jTabbedPanel.addTab("Rooms", jScrollPane1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPaneGuests, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addComponent(jTabbedPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPaneGuests, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+            .addComponent(jTabbedPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
         );
 
-        jTabbedPaneGuests.getAccessibleContext().setAccessibleName("Guests");
+        jTabbedPanel.getAccessibleContext().setAccessibleName("Guests");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -109,8 +128,10 @@ public class HotelApp extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTabbedPane jTabbedPaneGuests;
+    private javax.swing.JTabbedPane jTabbedPanel;
     private javax.swing.JTable jTableGuests;
+    private javax.swing.JTable jTableRooms;
     // End of variables declaration//GEN-END:variables
 }
