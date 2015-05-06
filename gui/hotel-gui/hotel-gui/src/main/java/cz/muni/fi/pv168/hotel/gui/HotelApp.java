@@ -999,40 +999,39 @@ public class HotelApp extends javax.swing.JFrame {
         jPanelGuests.setLayout(jPanelGuestsLayout);
         jPanelGuestsLayout.setHorizontalGroup(
             jPanelGuestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPaneGuests)
             .addGroup(jPanelGuestsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelGuestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelGuestsLayout.createSequentialGroup()
-                        .addComponent(jButtonFindAllGuests)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButtonTop3Guests)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonDeleteSelectedGuests))
-                    .addGroup(jPanelGuestsLayout.createSequentialGroup()
                         .addGroup(jPanelGuestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel13))
-                        .addGap(34, 34, 34)
-                        .addGroup(jPanelGuestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanelGuestsLayout.createSequentialGroup()
-                                .addComponent(jTextFieldFindGuestsForRoomByDate_date, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jButtonFindAllGuests)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jComboBoxFindGuestsFormRoomByDate_room, 0, 118, Short.MAX_VALUE))
-                            .addComponent(jTextFieldSearchGuest)
-                            .addComponent(jTextFieldFindStayingGuestsByDate))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanelGuestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButtonFindStayingGuestsByDate, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButtonSerachGuestByName, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButtonFindGuestsForRoomByDate, javax.swing.GroupLayout.Alignment.TRAILING))))
-                .addContainerGap())
-            .addGroup(jPanelGuestsLayout.createSequentialGroup()
-                .addGroup(jPanelGuestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPaneGuests, javax.swing.GroupLayout.PREFERRED_SIZE, 527, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jButtonTop3Guests)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButtonDeleteSelectedGuests))
+                            .addGroup(jPanelGuestsLayout.createSequentialGroup()
+                                .addGroup(jPanelGuestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel7)
+                                    .addComponent(jLabel13))
+                                .addGap(34, 34, 34)
+                                .addGroup(jPanelGuestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(jPanelGuestsLayout.createSequentialGroup()
+                                        .addComponent(jTextFieldFindGuestsForRoomByDate_date, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jComboBoxFindGuestsFormRoomByDate_room, 0, 118, Short.MAX_VALUE))
+                                    .addComponent(jTextFieldSearchGuest)
+                                    .addComponent(jTextFieldFindStayingGuestsByDate))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanelGuestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButtonFindStayingGuestsByDate, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jButtonSerachGuestByName, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jButtonFindGuestsForRoomByDate, javax.swing.GroupLayout.Alignment.TRAILING))))
+                        .addContainerGap())
                     .addGroup(jPanelGuestsLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel14)))
-                .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(jLabel14)
+                        .addGap(0, 456, Short.MAX_VALUE))))
         );
         jPanelGuestsLayout.setVerticalGroup(
             jPanelGuestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1059,7 +1058,7 @@ public class HotelApp extends javax.swing.JFrame {
                     .addComponent(jTextFieldFindGuestsForRoomByDate_date, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jComboBoxFindGuestsFormRoomByDate_room, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonFindGuestsForRoomByDate))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(49, Short.MAX_VALUE))
         );
 
         jTabbedPaneGuests.addTab("Guests", jPanelGuests);
@@ -1089,7 +1088,7 @@ public class HotelApp extends javax.swing.JFrame {
         jPanelRooms.setLayout(jPanelRoomsLayout);
         jPanelRoomsLayout.setHorizontalGroup(
             jPanelRoomsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 599, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 609, Short.MAX_VALUE)
             .addGroup(jPanelRoomsLayout.createSequentialGroup()
                 .addGroup(jPanelRoomsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelRoomsLayout.createSequentialGroup()
@@ -1115,7 +1114,7 @@ public class HotelApp extends javax.swing.JFrame {
                 .addGroup(jPanelRoomsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonFindAllRooms)
                     .addComponent(jButtonDeleteRoom))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 113, Short.MAX_VALUE)
                 .addGroup(jPanelRoomsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(jTextFieldSearchRoomNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1185,7 +1184,7 @@ public class HotelApp extends javax.swing.JFrame {
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 599, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 609, Short.MAX_VALUE)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(jButtonFindAllStays)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1241,7 +1240,7 @@ public class HotelApp extends javax.swing.JFrame {
                     .addComponent(jLabel17)
                     .addComponent(jButtonFindStaysForGuest)
                     .addComponent(jComboBoxFindStaysForGuest, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 1, Short.MAX_VALUE))
+                .addGap(0, 32, Short.MAX_VALUE))
         );
 
         jTabbedPaneGuests.addTab("Stays", jPanel4);
@@ -1283,15 +1282,11 @@ public class HotelApp extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jTabbedPaneGuests)
-                .addContainerGap())
+            .addComponent(jTabbedPaneGuests, javax.swing.GroupLayout.DEFAULT_SIZE, 614, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jTabbedPaneGuests, javax.swing.GroupLayout.PREFERRED_SIZE, 432, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 31, Short.MAX_VALUE))
+            .addComponent(jTabbedPaneGuests, javax.swing.GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE)
         );
 
         jTabbedPaneGuests.getAccessibleContext().setAccessibleName("Guests");
@@ -1390,7 +1385,7 @@ public class HotelApp extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonFindGuestsForRoomByDateActionPerformed
 
     private void jButtonFindStaysForRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFindStaysForRoomActionPerformed
-        Room room = (Room) jComboBoxFindGuestsFormRoomByDate_room.getSelectedItem();
+        Room room = (Room) jComboBoxFindStaysForRoom.getSelectedItem();
         LocalDate date = parseDate(jTextFieldFindStaysForRoomByDate_date.getText());
         FindStaysForRoomByDateWorker w = new FindStaysForRoomByDateWorker(room, date);
         w.execute();
