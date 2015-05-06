@@ -25,13 +25,13 @@ public class StayCreationFrame extends javax.swing.JFrame {
     private static StayManager stayManager = AppCommons.getStayManager();
     private HotelApp context;
     private StaysTableModel staysModel;
-    
+
     /**
      * Creates new form StayCreationFrame
      */
     public StayCreationFrame(HotelApp context) {
         initComponents();
-        
+
         this.context = context;
         staysModel = context.getStaysModel();
 
@@ -39,8 +39,8 @@ public class StayCreationFrame extends javax.swing.JFrame {
         this.setVisible(true);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
-    
-     private class CreateStayWorker extends SwingWorker<Stay, Integer> {
+
+    private class CreateStayWorker extends SwingWorker<Stay, Integer> {
 
         @Override
         protected Stay doInBackground() throws Exception {
@@ -58,12 +58,13 @@ public class StayCreationFrame extends javax.swing.JFrame {
         protected void done() {
             try {
                 Stay s = get();
+                if (s == null) {
+                //do not close window
+
+                }
                 staysModel.addStay(s);
                 log.info("Stay " + s + " created.");
                 StayCreationFrame.this.dispose();
-            } catch (DateTimeParseException ex) {
-                //do not close window
-
             } catch (ExecutionException ex) {
                 log.error("Exception thrown in doInBackground of CreateStay: " + ex.getCause());
             } catch (InterruptedException ex) {
@@ -73,6 +74,8 @@ public class StayCreationFrame extends javax.swing.JFrame {
         }
 
         private Stay getStayFromCreateForm() {
+            //TODO create stay from data in form
+            ///TOO input validation, if invalid, return null
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
     }

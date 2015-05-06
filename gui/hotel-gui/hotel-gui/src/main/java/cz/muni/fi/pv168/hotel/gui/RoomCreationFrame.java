@@ -49,8 +49,6 @@ public class RoomCreationFrame extends javax.swing.JFrame {
             try {
                 roomManager.createRoom(r);
                 return r;
-            } catch (NumberFormatException ex) {
-                throw ex;
             } catch (Exception ex) {
                 log.error("Exception thrown in doInBackground of CreateRoom: " + ex.getCause());
                 throw ex;
@@ -61,13 +59,14 @@ public class RoomCreationFrame extends javax.swing.JFrame {
         protected void done() {
             try {
                 Room r = get();
+                if (r == null) {
+                    //do not close the winfow
+                    log.error("Wrong number entered :");
+                    JOptionPane.showMessageDialog(null, "Wrong number entered!");
+                }
                 roomsModel.addRoom(r);
                 log.info("Room " + r + " created");
                 RoomCreationFrame.this.dispose();
-            } catch (NumberFormatException ex) {
-                //do not close the winfow
-                log.error("Wrong number entered :");
-                JOptionPane.showMessageDialog(null, "Wrong number entered!");
             } catch (ExecutionException ex) {
                 log.error("Exception thrown in doInBackground of CreateRoom: " + ex.getCause());
             } catch (InterruptedException ex) {
@@ -78,6 +77,8 @@ public class RoomCreationFrame extends javax.swing.JFrame {
     }
 
     private Room getRoomFromCreateForm() {
+        // TODO add validation, if invalid, return null
+        //number conversion must be in try-catch
         Room r = new Room();
         r.setNumber((String) jTextFieldRoomNumber.getText());
         r.setCapacity(Integer.parseInt(jTextFieldCapacity.getText()));

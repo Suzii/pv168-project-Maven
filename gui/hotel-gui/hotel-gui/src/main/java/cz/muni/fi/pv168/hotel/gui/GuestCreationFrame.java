@@ -48,8 +48,6 @@ public class GuestCreationFrame extends javax.swing.JFrame {
             try {
                 guestManager.createGuest(g);
                 return g;
-            } catch (DateTimeParseException ex) {
-                throw ex;
             } catch (Exception ex) {
                 log.error("Exception thrown in doInBackground of CreateGuest: " + ex.getCause());
                 throw ex;
@@ -60,14 +58,15 @@ public class GuestCreationFrame extends javax.swing.JFrame {
         protected void done() {
             try {
                 Guest g = get();
+                if(g == null){
+                log.error("Wrong data entered :");
+                    JOptionPane.showMessageDialog(null, "Wrong date format entered! Supported format is YYYY-MM-DD");
+                    return;
+                }
                 guestsModel.addGuest(g);
                 log.info("Guest " + g + " created");
                 GuestCreationFrame.this.dispose();
-            } catch (DateTimeParseException ex) {
-                //do not close window
-                log.error("Wrong date entered :");
-                JOptionPane.showMessageDialog(null, "Wrong date format entered! Supported format is YYYY-MM-DD");
-            } catch (ExecutionException ex) {
+                } catch (ExecutionException ex) {
                 log.error("Exception thrown in doInBackground of CreateGuest: " + ex.getCause());
             } catch (InterruptedException ex) {
                 log.error("doInBackground of CreateGuest interrupted: " + ex.getCause());
@@ -77,13 +76,25 @@ public class GuestCreationFrame extends javax.swing.JFrame {
     }
 
     private Guest getGuestFromCreateForm() {
-        Guest g = new Guest();
-        g.setName(jTextFieldGuestName.getText());
-        g.setPassportNo(jTextFieldPassportNumber.getText());
-        g.setEmail(jTextFieldEmail.getText());
-        g.setPhone(jTextFieldPhone.getText());
+        String name = jTextFieldGuestName.getText();
+        if(name == null  ||name.trim().length() == 0){
+            return null;
+        }
+        String pass = jTextFieldPassportNumber.getText();
+        String email = jTextFieldEmail.getText();
+        String phone = jTextFieldPhone.getText();
         String dateStr = jTextFieldDateOfBirth.getText();
-        LocalDate d = LocalDate.parse(dateStr);
+        //do try 
+        LocalDate date = LocalDate.parse(dateStr);
+        
+        
+        
+        Guest g = new Guest();
+        g.setName(name);
+        g.setPassportNo(pass);
+        g.setEmail(email);
+        g.setPhone(phone);
+        LocalDate d = date;
         g.setDateOfBirth(d);
         return g;
     }
