@@ -11,6 +11,7 @@ import cz.muni.fi.pv168.project.common.SpringConfig;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+import javax.swing.JTable;
 import javax.swing.SwingWorker;
 import javax.swing.table.AbstractTableModel;
 import org.springframework.context.ApplicationContext;
@@ -129,10 +130,10 @@ public class GuestsTableModel extends AbstractTableModel {
         UpdateGuestSwingWorker updateGuestSW = new UpdateGuestSwingWorker(g);
         updateGuestSW.execute();
         fireTableCellUpdated(rowIndex, columnIndex);
-}
+    }
 
-@Override
-        public boolean isCellEditable(int rowIndex, int columnIndex) {
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
         switch (columnIndex) {
             case 3:
             case 2:
@@ -164,11 +165,17 @@ public class GuestsTableModel extends AbstractTableModel {
     public void setGuests(List<Guest> guests) {
         this.guests = guests;
         fireTableDataChanged();
-    
 
-}
+    }
 
-   private class UpdateGuestSwingWorker extends SwingWorker<Void, Void> {
+    void deleteGuests(int[] indexes) {
+        for (int i : indexes) {
+            guests.remove(i);
+        }
+        fireTableRowsDeleted(indexes[0], indexes[indexes.length - 1]);
+    }
+
+    private class UpdateGuestSwingWorker extends SwingWorker<Void, Void> {
 
         private final Guest guest;
 

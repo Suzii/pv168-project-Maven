@@ -174,4 +174,16 @@ public class StaysTableModel extends AbstractTableModel {
         this.stays = stays;
         fireTableDataChanged();
     }
+
+    Stay getStay(int selectedRow) {
+        return stays.get(selectedRow);
+    }
+
+    void deleteStays(int[] indexes) {
+        for(int i: indexes){
+            stays.remove(i);
+        }
+        fireTableRowsDeleted(indexes[0], indexes[indexes.length-1]);
+    
+    }
 }
