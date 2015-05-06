@@ -11,12 +11,12 @@ import cz.muni.fi.pv168.project.*;
  *
  * @author Zuzana
  */
-public class jFrameGuestCreation2 extends javax.swing.JFrame {
+public class jFrameRoomCreation extends javax.swing.JFrame {
 
     /**
      * Creates new form jFrameGuestCreation2
      */
-    public jFrameGuestCreation2() {
+    public jFrameRoomCreation() {
         initComponents();
     }
 
@@ -193,7 +193,7 @@ public class jFrameGuestCreation2 extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new jFrameGuestCreation2().setVisible(true);
+                new jFrameRoomCreation().setVisible(true);
             }
         });
     }
