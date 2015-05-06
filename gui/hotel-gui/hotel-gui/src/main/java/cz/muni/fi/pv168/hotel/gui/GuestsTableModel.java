@@ -5,10 +5,14 @@
  */
 package cz.muni.fi.pv168.hotel.gui;
 
+import static cz.muni.fi.pv168.hotel.gui.HotelApp.guestManager;
 import cz.muni.fi.pv168.project.*;
 import cz.muni.fi.pv168.project.common.SpringConfig;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import javax.swing.JTable;
+import javax.swing.SwingWorker;
 import javax.swing.table.AbstractTableModel;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -30,6 +34,10 @@ public class GuestsTableModel extends AbstractTableModel {
     @Override
     public int getColumnCount() {
         return GUESTS_PARAMS;
+    }
+
+    public Guest getGuest(int index) {
+        return guests.get(index);
     }
 
     @Override
@@ -118,7 +126,9 @@ public class GuestsTableModel extends AbstractTableModel {
             default:
                 throw new IllegalArgumentException("columnIndex");
         }
-        
+
+        UpdateGuestSwingWorker updateGuestSW = new UpdateGuestSwingWorker(g);
+        updateGuestSW.execute();
         fireTableCellUpdated(rowIndex, columnIndex);
     }
 
@@ -144,23 +154,39 @@ public class GuestsTableModel extends AbstractTableModel {
         fireTableRowsInserted(lastRow, lastRow);
     }
 
-    public void addGuests(List<Guest> guests) {
-        for (Guest g : guests) {
-            addGuest(g);
-        }
-
-    }
-
-    public void removeRow(int rowIndex) {
+    public void deleteGuest(int rowIndex) {
         if (rowIndex < 0 || rowIndex >= getRowCount()) {
             throw new IllegalArgumentException("rowIndex");
         }
         guests.remove(rowIndex);
-    }
-    
-    public void setGuests(List<Guest> guests){
-        this.guests = guests;
-        fireTableRowsInserted(0, guests.size()-1);
+        fireTableRowsDeleted(rowIndex, rowIndex);
     }
 
+    public void setGuests(List<Guest> guests) {
+        this.guests = guests;
+        fireTableDataChanged();
+
+    }
+
+    void deleteGuests(int[] indexes) {
+        for (int i : indexes) {
+            guests.remove(i);
+        }
+        fireTableRowsDeleted(indexes[0], indexes[indexes.length - 1]);
+    }
+
+    private class UpdateGuestSwingWorker extends SwingWorker<Void, Void> {
+
+        private final Guest guest;
+
+        public UpdateGuestSwingWorker(Guest g) {
+            guest = g;
+        }
+
+        @Override
+        protected Void doInBackground() {
+            guestManager.updateGuest(guest);
+            return null;
+        }
+    }
 }

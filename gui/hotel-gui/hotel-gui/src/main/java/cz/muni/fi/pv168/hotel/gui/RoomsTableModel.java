@@ -9,6 +9,7 @@ import cz.muni.fi.pv168.project.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.SwingWorker;
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -119,6 +120,9 @@ public class RoomsTableModel extends AbstractTableModel {
             default:
                 throw new IllegalArgumentException("columnIndex");
         }
+        
+        UpdateRoomSwingWorker updateRoomSW = new UpdateRoomSwingWorker(r);
+        updateRoomSW.execute();
         fireTableCellUpdated(rowIndex, columnIndex);
     }
 
@@ -156,9 +160,48 @@ public class RoomsTableModel extends AbstractTableModel {
         if (rowIndex < 0 || rowIndex >= getRowCount()) {
             throw new IllegalArgumentException("rowIndex");
         }
-        
+
         rooms.remove(rowIndex);
         fireTableRowsDeleted(rowIndex, rowIndex);
     }
 
+    public void setRooms(List<Room> rooms) {
+        this.rooms = rooms;
+        fireTableDataChanged();
+    }
+
+    void deleteRoom(int rowIndex) {
+        if (rowIndex < 0 || rowIndex >= getRowCount()) {
+            throw new IllegalArgumentException("rowIndex");
+        }
+        rooms.remove(rowIndex);
+        fireTableRowsDeleted(rowIndex, rowIndex);
+    }
+
+    Room getRoom(int selectedRow) {
+        return rooms.get(selectedRow);
+    }
+
+    void deleteRooms(int[] indexes) {
+        for(int i: indexes){
+            rooms.remove(i);
+        }
+        fireTableRowsDeleted(indexes[0], indexes[indexes.length-1]);
+        
+    }
+    
+    private class UpdateRoomSwingWorker extends SwingWorker<Void, Void> {
+
+        private final Room room;
+
+        public UpdateRoomSwingWorker(Room r) {
+            room = r;
+        }
+
+        @Override
+        protected Void doInBackground() {
+            AppCommons.getRoomManager().updateRoom(room);
+            return null;
+        }
+    }
 }

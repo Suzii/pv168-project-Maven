@@ -5,7 +5,6 @@
  */
 package cz.muni.fi.pv168.hotel.gui;
 
-
 import cz.muni.fi.pv168.project.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -18,7 +17,8 @@ import javax.swing.table.AbstractTableModel;
  * @author pato
  */
 public class StaysTableModel extends AbstractTableModel {
-     private List<Stay> stays = new ArrayList<Stay>();
+
+    private List<Stay> stays = new ArrayList<Stay>();
     private static final int STAYS_PARAMS = 9;
 
     @Override
@@ -93,8 +93,8 @@ public class StaysTableModel extends AbstractTableModel {
             case 0:
                 return Integer.class;
             case 1:
-            case 2:                
-            case 3:                
+            case 2:
+            case 3:
                 return LocalDate.class;
             case 4:
                 return Integer.class;
@@ -127,7 +127,7 @@ public class StaysTableModel extends AbstractTableModel {
             case 3:
                 s.setRealEndDate((LocalDate) aValue);
                 break;
-            
+
             case 8:
                 s.setMinibarCosts((BigDecimal) aValue);
                 break;
@@ -168,5 +168,22 @@ public class StaysTableModel extends AbstractTableModel {
         stays.add(s);
         int lastRow = stays.size() - 1;
         fireTableRowsInserted(lastRow, lastRow);
+    }
+
+    public void setStays(List<Stay> stays) {
+        this.stays = stays;
+        fireTableDataChanged();
+    }
+
+    Stay getStay(int selectedRow) {
+        return stays.get(selectedRow);
+    }
+
+    void deleteStays(int[] indexes) {
+        for(int i: indexes){
+            stays.remove(i);
+        }
+        fireTableRowsDeleted(indexes[0], indexes[indexes.length-1]);
+    
     }
 }

@@ -429,7 +429,7 @@ public class StayManagerImpl implements StayManager {
 
     @Override
     public List<Guest> findTop3Guests() {
-        logger.error("Finding top 3 guests. ");
+        logger.debug("Finding top 3 guests. ");
          try (Connection conn = dataSource.getConnection()) {
             try (PreparedStatement st = conn.prepareStatement(
                     "SELECT guest_id AS id, name, passport_no, email, phone, date_of_birth ,count(guest_id) as countStays"
