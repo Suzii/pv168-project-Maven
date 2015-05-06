@@ -154,6 +154,38 @@ public class HotelApp extends javax.swing.JFrame {
             }
         }
     }
+    
+    // ********************* WORKERS FOR DELETE*****************************
+    private class DeleteGuestSwingWorker extends SwingWorker<Integer, Void> {
+
+        @Override
+        protected Integer doInBackground() {
+            int selectedRow = jTableGuests.getSelectedRow();
+            if (selectedRow >= 0) {
+                Guest g = guestsModel.getGuest(selectedRow);
+                guestManager.deleteGuest(g);
+                return selectedRow;
+            }
+            return null;
+        }
+
+        @Override
+        protected void done() {
+            try {
+                Integer index = get();
+                if (index != null) {
+                    guestsModel.deleteGuest(index);
+
+                }
+            } catch (ExecutionException ex) {
+                //TODO
+            } catch (InterruptedException ex) {
+                //TODO
+            }
+        }
+    }
+
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

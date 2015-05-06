@@ -24,7 +24,6 @@ public class GuestsTableModel extends AbstractTableModel {
 
     private List<Guest> guests = new ArrayList<Guest>();
     private static final int GUESTS_PARAMS = 6;
-            
 
     @Override
     public int getRowCount() {
@@ -34,6 +33,10 @@ public class GuestsTableModel extends AbstractTableModel {
     @Override
     public int getColumnCount() {
         return GUESTS_PARAMS;
+    }
+
+    public Guest getGuest(int index) {
+        return guests.get(index);
     }
 
     @Override
@@ -123,18 +126,13 @@ public class GuestsTableModel extends AbstractTableModel {
                 throw new IllegalArgumentException("columnIndex");
         }
 
-        SwingWorker<void, void> updateGuest = new SwingWorker<void, void> extends SwingWorker{
-        @Override
-        protected void doInBackground(){
-            
-        }
-    };
-        
+        UpdateGuestSwingWorker updateGuestSW = new UpdateGuestSwingWorker(g);
+        updateGuestSW.execute();
         fireTableCellUpdated(rowIndex, columnIndex);
-    }
+}
 
-    @Override
-    public boolean isCellEditable(int rowIndex, int columnIndex) {
+@Override
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
         switch (columnIndex) {
             case 3:
             case 2:
@@ -155,8 +153,7 @@ public class GuestsTableModel extends AbstractTableModel {
         fireTableRowsInserted(lastRow, lastRow);
     }
 
-
-    public void removeRow(int rowIndex) {
+    public void deleteGuest(int rowIndex) {
         if (rowIndex < 0 || rowIndex >= getRowCount()) {
             throw new IllegalArgumentException("rowIndex");
         }
@@ -167,33 +164,22 @@ public class GuestsTableModel extends AbstractTableModel {
     public void setGuests(List<Guest> guests) {
         this.guests = guests;
         fireTableDataChanged();
-    }
-
-    private class UpdateGuestWorker extends SwingWorker<Guest, Integer> {
-
-        @Override
-        protected Guest doInBackground() throws Exception {
-            Guest g = getGuestFromCreateForm();
-            try{
-                guestManager.createGuest(g);
-                return g;
-            } catch (Exception ex){
-                log.error("Exception thrown in doInBackground of CreateGuest: " + ex.getCause());
-                throw ex;
-            }
-        }
-
-        @Override
-        protected void done() {
-            try {
-                guestsModel.addGuest(get());
-            } catch (ExecutionException ex) {
-                log.error("Exception thrown in doInBackground of CreateGuest: " + ex.getCause());
-            } catch (InterruptedException ex) {
-                log.error("doInBackground of CreateGuest interrupted: " + ex.getCause());
-                throw new RuntimeException("Operation interrupted.. findAllGuests");
-            }
-        }
-    }
     
+
+}
+
+   private class UpdateGuestSwingWorker extends SwingWorker<Void, Void> {
+
+        private final Guest guest;
+
+        public UpdateGuestSwingWorker(Guest g) {
+            guest = g;
+        }
+
+        @Override
+        protected Void doInBackground() {
+            guestManager.updateGuest(guest);
+            return null;
+        }
+    }
 }
