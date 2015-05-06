@@ -18,10 +18,10 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
  */
 public abstract class AppCommons {
     /*
-    Treba nastavit vsetky tabluky na 
-    table.setRowSelectionAllowed(true);
-table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-    */
+     Treba nastavit vsetky tabluky na 
+     table.setRowSelectionAllowed(true);
+     table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+     */
 
     protected static ApplicationContext appContext = new AnnotationConfigApplicationContext(SpringConfig.class);
     protected static GuestManager guestManager = appContext.getBean("guestManager", GuestManager.class);
@@ -36,7 +36,6 @@ table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         return guestManager;
     }
 
-
     public static RoomManager getRoomManager() {
         return roomManager;
     }
@@ -44,5 +43,18 @@ table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     public static StayManager getStayManager() {
         return stayManager;
     }
+
+    public static Integer[] getSortedDesc(int[] a) {
+        if (a == null) {
+            return null;
+        }
+        Integer[] result = new Integer[a.length];
+        for (int i = 0; i < a.length; i++) {
+            result[i] = Integer.valueOf(a[i]);
+            System.out.println(i + " ");
+        }
+        return result;
+    }
+    
 
 }

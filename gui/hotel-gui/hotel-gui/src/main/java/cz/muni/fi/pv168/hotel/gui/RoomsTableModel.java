@@ -30,6 +30,10 @@ public class RoomsTableModel extends AbstractTableModel {
     public int getColumnCount() {
         return ROOMS_PARAMS;
     }
+    
+    public Room getRoom(int index){
+        return rooms.get(index);
+    }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
@@ -142,27 +146,11 @@ public class RoomsTableModel extends AbstractTableModel {
         }
     }
 
-    public void addRooms(List<Room> rooms) {
-        System.out.println("Adding all rooms of size " + rooms.size());
-        for (Room r : rooms) {
-            addRoom(r);
-        }
-    }
-
+    
     public void addRoom(Room r) {
-        System.out.println(r);
         rooms.add(r);
         int lastRow = rooms.size() - 1;
         fireTableRowsInserted(lastRow, lastRow);
-    }
-
-    public void removeRow(int rowIndex) {
-        if (rowIndex < 0 || rowIndex >= getRowCount()) {
-            throw new IllegalArgumentException("rowIndex");
-        }
-
-        rooms.remove(rowIndex);
-        fireTableRowsDeleted(rowIndex, rowIndex);
     }
 
     public void setRooms(List<Room> rooms) {
@@ -171,23 +159,15 @@ public class RoomsTableModel extends AbstractTableModel {
     }
 
     void deleteRoom(int rowIndex) {
-        if (rowIndex < 0 || rowIndex >= getRowCount()) {
-            throw new IllegalArgumentException("rowIndex");
-        }
         rooms.remove(rowIndex);
         fireTableRowsDeleted(rowIndex, rowIndex);
     }
 
-    Room getRoom(int selectedRow) {
-        return rooms.get(selectedRow);
-    }
-
-    void deleteRooms(int[] indexes) {
-        for(int i: indexes){
-            rooms.remove(i);
+    void deleteRooms(int[] selectedRows) {
+        Integer[] indexes = AppCommons.getSortedDesc(selectedRows);
+        for (int i : indexes) {
+            deleteRoom(i);
         }
-        fireTableRowsDeleted(indexes[0], indexes[indexes.length-1]);
-        
     }
     
     private class UpdateRoomSwingWorker extends SwingWorker<Void, Void> {
