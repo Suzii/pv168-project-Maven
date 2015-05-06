@@ -26,14 +26,15 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public class HotelApp extends javax.swing.JFrame {
 
     private final static Logger log = LoggerFactory.getLogger(HotelApp.class);
-    protected static ApplicationContext appContext = new AnnotationConfigApplicationContext(SpringConfig.class);
-    protected static GuestManager guestManager = appContext.getBean("guestManager", GuestManager.class);
-    protected static RoomManager roomManager = appContext.getBean("roomManager", RoomManager.class);
-    protected static StayManager stayManager;
+    protected static GuestManager guestManager = AppCommons.getGuestManager();
+    protected static RoomManager roomManager = AppCommons.getRoomManager();
+    protected static StayManager stayManager = AppCommons.getStayManager();
     protected GuestsTableModel guestsModel;
     protected RoomsTableModel roomsModel;
     protected StaysTableModel staysModel;
     private FindAllGuestsWorker findAllGuestsWorker;
+    private FindAllRoomsWorker findAllRoomsWorker;
+    private FindAllStaysWorker findAllStaysWorker;
 
     /**
      * Creates new form HotelApp
@@ -45,16 +46,18 @@ public class HotelApp extends javax.swing.JFrame {
         guestsModel = (GuestsTableModel) jTableGuests.getModel();
         findAllGuestsWorker = new FindAllGuestsWorker();
         findAllGuestsWorker.execute();
-        //guestsModel.addGuests(guestManager.findAllGuests());
 
         //init room table
         roomsModel = (RoomsTableModel) jTableRooms.getModel();
-        //roomsModel.addRooms(roomManager.findAllRooms());
+        findAllRoomsWorker = new FindAllRoomsWorker();
+        findAllRoomsWorker.execute();
+
         //init stay table
         staysModel = (StaysTableModel) jTableStays.getModel();
+        findAllStaysWorker = new FindAllStaysWorker();
+        findAllStaysWorker.execute();
     }
 
-    // ********************* WORKERS FOR FINDING ALL *****************************
     // ********************* WORKERS FOR FINDING ALL *****************************
     private class FindAllGuestsWorker extends SwingWorker<List<Guest>, Integer> {
 
@@ -92,7 +95,7 @@ public class HotelApp extends javax.swing.JFrame {
         protected void done() {
             try {
                 log.debug("Setting roomsModel to all rooms. Size: " + get().size());
-                roomsModel.setGuests(get());
+                roomsModel.setRooms(get());
             } catch (ExecutionException ex) {
                 log.error("Exception thrown in doInBackground of FindAlGuests: " + ex.getCause());
             } catch (InterruptedException ex) {
@@ -101,31 +104,56 @@ public class HotelApp extends javax.swing.JFrame {
             }
         }
     }
-    
-    private class FindAllStaysWorker extends SwingWorker<List<Guest>, Integer> {
+
+    private class FindAllStaysWorker extends SwingWorker<List<Stay>, Integer> {
 
         @Override
-        protected List<Guest> doInBackground() throws Exception {
-            List<Guest> result;
-            result = guestManager.findAllGuests();
+        protected List<Stay> doInBackground() throws Exception {
+            List<Stay> result;
+            result = stayManager.findAllStays();
             return result;
         }
 
         @Override
         protected void done() {
             try {
-                log.debug("Setting guestsModel to all guests. Size: " + get().size());
-                guestsModel.setGuests(get());
+                log.debug("Setting staysModel to all stays. Size: " + get().size());
+                staysModel.setStays(get());
             } catch (ExecutionException ex) {
-                log.error("Exception thrown in doInBackground of FindAlGuests: " + ex.getCause());
+                log.error("Exception thrown in doInBackground of FindAlStays: " + ex.getCause());
             } catch (InterruptedException ex) {
-                log.error("doInBackground of FindAlGuests interrupted: " + ex.getCause());
+                log.error("doInBackground of FindAlStays interrupted: " + ex.getCause());
+                throw new RuntimeException("Operation interrupted.. findAllStays");
+            }
+        }
+    }
+    // ********************* WORKERS FOR CREATION*****************************
+    private class CreateGuestWorker extends SwingWorker<Guest, Integer> {
+
+        @Override
+        protected Guest doInBackground() throws Exception {
+            Guest g = getGuestFromCreateForm();
+            try{
+                guestManager.createGuest(g);
+                return g;
+            } catch (Exception ex){
+                log.error("Exception thrown in doInBackground of CreateGuest: " + ex.getCause());
+                throw ex;
+            }
+        }
+
+        @Override
+        protected void done() {
+            try {
+                guestsModel.addGuest(get());
+            } catch (ExecutionException ex) {
+                log.error("Exception thrown in doInBackground of CreateGuest: " + ex.getCause());
+            } catch (InterruptedException ex) {
+                log.error("doInBackground of CreateGuest interrupted: " + ex.getCause());
                 throw new RuntimeException("Operation interrupted.. findAllGuests");
             }
         }
     }
-    
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -523,19 +551,32 @@ public class HotelApp extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItemGuestCreateActionPerformed
 
     private void jButtonCreateGuestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateGuestActionPerformed
+        
+        CreateGuestWorker createGuestWorker = new CreateGuestWorker();
+        createGuestWorker.execute();
+        
+        jFrameGuestCreation.setVisible(false);
+    }//GEN-LAST:event_jButtonCreateGuestActionPerformed
+
+    private Guest getGuestFromCreateForm(){
         Guest g = new Guest();
         g.setName(jTextFieldGuestName.getText());
-        g.setPassportNo(jTextFieldEmail.getText());
+        g.setPassportNo(jTextFieldPassportNumber.getText());
         g.setEmail(jTextFieldEmail.getText());
         g.setPhone(jTextFieldPhone.getText());
         String dateStr = jTextFieldDateOfBirth.getText();
         LocalDate d = LocalDate.parse(dateStr);
         g.setDateOfBirth(d);
-        //guestManager.createGuest(g);
-        guestsModel.addGuest(g);
-        jFrameGuestCreation.setVisible(false);
-    }//GEN-LAST:event_jButtonCreateGuestActionPerformed
-
+        
+        jTextFieldGuestName.setText("");
+        jTextFieldEmail.setText("");
+        jTextFieldPassportNumber.setText("");
+        jTextFieldPhone.setText("");
+        //TODO delete all other fields
+        
+        return g;
+    }
+    
     private void jMenuItemRoomCreationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemRoomCreationActionPerformed
         jFrameRoomCreation.setVisible(true);
     }//GEN-LAST:event_jMenuItemRoomCreationActionPerformed

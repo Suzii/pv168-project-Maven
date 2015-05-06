@@ -5,10 +5,13 @@
  */
 package cz.muni.fi.pv168.hotel.gui;
 
+import static cz.muni.fi.pv168.hotel.gui.HotelApp.guestManager;
 import cz.muni.fi.pv168.project.*;
 import cz.muni.fi.pv168.project.common.SpringConfig;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import javax.swing.SwingWorker;
 import javax.swing.table.AbstractTableModel;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -21,6 +24,7 @@ public class GuestsTableModel extends AbstractTableModel {
 
     private List<Guest> guests = new ArrayList<Guest>();
     private static final int GUESTS_PARAMS = 6;
+            
 
     @Override
     public int getRowCount() {
@@ -118,6 +122,13 @@ public class GuestsTableModel extends AbstractTableModel {
             default:
                 throw new IllegalArgumentException("columnIndex");
         }
+
+        SwingWorker<void, void> updateGuest = new SwingWorker<void, void> extends SwingWorker{
+        @Override
+        protected void doInBackground(){
+            
+        }
+    };
         
         fireTableCellUpdated(rowIndex, columnIndex);
     }
@@ -144,23 +155,45 @@ public class GuestsTableModel extends AbstractTableModel {
         fireTableRowsInserted(lastRow, lastRow);
     }
 
-    public void addGuests(List<Guest> guests) {
-        for (Guest g : guests) {
-            addGuest(g);
-        }
-
-    }
 
     public void removeRow(int rowIndex) {
         if (rowIndex < 0 || rowIndex >= getRowCount()) {
             throw new IllegalArgumentException("rowIndex");
         }
         guests.remove(rowIndex);
-    }
-    
-    public void setGuests(List<Guest> guests){
-        this.guests = guests;
-        fireTableRowsInserted(0, guests.size()-1);
+        fireTableRowsDeleted(rowIndex, rowIndex);
     }
 
+    public void setGuests(List<Guest> guests) {
+        this.guests = guests;
+        fireTableDataChanged();
+    }
+
+    private class UpdateGuestWorker extends SwingWorker<Guest, Integer> {
+
+        @Override
+        protected Guest doInBackground() throws Exception {
+            Guest g = getGuestFromCreateForm();
+            try{
+                guestManager.createGuest(g);
+                return g;
+            } catch (Exception ex){
+                log.error("Exception thrown in doInBackground of CreateGuest: " + ex.getCause());
+                throw ex;
+            }
+        }
+
+        @Override
+        protected void done() {
+            try {
+                guestsModel.addGuest(get());
+            } catch (ExecutionException ex) {
+                log.error("Exception thrown in doInBackground of CreateGuest: " + ex.getCause());
+            } catch (InterruptedException ex) {
+                log.error("doInBackground of CreateGuest interrupted: " + ex.getCause());
+                throw new RuntimeException("Operation interrupted.. findAllGuests");
+            }
+        }
+    }
+    
 }

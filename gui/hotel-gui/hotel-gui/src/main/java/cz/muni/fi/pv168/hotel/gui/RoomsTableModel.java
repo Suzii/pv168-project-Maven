@@ -156,9 +156,13 @@ public class RoomsTableModel extends AbstractTableModel {
         if (rowIndex < 0 || rowIndex >= getRowCount()) {
             throw new IllegalArgumentException("rowIndex");
         }
-        
+
         rooms.remove(rowIndex);
         fireTableRowsDeleted(rowIndex, rowIndex);
     }
 
+    public void setRooms(List<Room> rooms) {
+        this.rooms = rooms;
+        fireTableDataChanged();
+    }
 }

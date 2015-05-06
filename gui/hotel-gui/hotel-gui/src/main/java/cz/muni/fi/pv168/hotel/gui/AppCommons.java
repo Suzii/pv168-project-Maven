@@ -21,7 +21,7 @@ public abstract class AppCommons {
     protected static ApplicationContext appContext = new AnnotationConfigApplicationContext(SpringConfig.class);
     protected static GuestManager guestManager = appContext.getBean("guestManager", GuestManager.class);
     protected static RoomManager roomManager = appContext.getBean("roomManager", RoomManager.class);
-    protected static StayManager stayManager;
+    protected static StayManager stayManager = appContext.getBean("stayManager", StayManager.class);
 
     public static ApplicationContext getAppContext() {
         return appContext;
