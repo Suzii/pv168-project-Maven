@@ -10,7 +10,10 @@ import java.util.*;
 import cz.muni.fi.pv168.project.common.SpringConfig;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.concurrent.ExecutionException;
+import javax.management.RuntimeErrorException;
 import javax.swing.JFrame;
+import javax.swing.SwingWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -23,34 +26,106 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public class HotelApp extends javax.swing.JFrame {
 
     private final static Logger log = LoggerFactory.getLogger(HotelApp.class);
-    private GuestsTableModel guestsModel;
-    private RoomsTableModel roomsModel;
-    ApplicationContext appContext = new AnnotationConfigApplicationContext(SpringConfig.class);
-    GuestManager guestManager = appContext.getBean("guestManager", GuestManager.class);
-    RoomManager roomManager = appContext.getBean("roomManager", RoomManager.class);
+    protected static ApplicationContext appContext = new AnnotationConfigApplicationContext(SpringConfig.class);
+    protected static GuestManager guestManager = appContext.getBean("guestManager", GuestManager.class);
+    protected static RoomManager roomManager = appContext.getBean("roomManager", RoomManager.class);
+    protected static StayManager stayManager;
+    protected GuestsTableModel guestsModel;
+    protected RoomsTableModel roomsModel;
+    protected StaysTableModel staysModel;
+    private FindAllGuestsWorker findAllGuestsWorker;
 
     /**
      * Creates new form HotelApp
      */
     public HotelApp() {
         initComponents();
-        
 
+        //init guest table
         guestsModel = (GuestsTableModel) jTableGuests.getModel();
+        findAllGuestsWorker = new FindAllGuestsWorker();
+        findAllGuestsWorker.execute();
+        //guestsModel.addGuests(guestManager.findAllGuests());
+
+        //init room table
         roomsModel = (RoomsTableModel) jTableRooms.getModel();
-        Guest g = new Guest();
-        g.setName("Anicka");
-        g.setPassportNo("123");
-        g.setEmail("anca@gmail.com");
-        System.out.println("Adding anicka");
-        guestsModel.addGuests(guestManager.findAllGuests());
-        guestManager.createGuest(g);
-        guestsModel.addGuest(g);
-        
-        System.out.println("Adding rooms");
-        roomsModel.addRooms(roomManager.findAllRooms());
+        //roomsModel.addRooms(roomManager.findAllRooms());
+        //init stay table
+        staysModel = (StaysTableModel) jTableStays.getModel();
     }
 
+    // ********************* WORKERS FOR FINDING ALL *****************************
+    // ********************* WORKERS FOR FINDING ALL *****************************
+    private class FindAllGuestsWorker extends SwingWorker<List<Guest>, Integer> {
+
+        @Override
+        protected List<Guest> doInBackground() throws Exception {
+            List<Guest> result;
+            result = guestManager.findAllGuests();
+            return result;
+        }
+
+        @Override
+        protected void done() {
+            try {
+                log.debug("Setting guestsModel to all guests. Size: " + get().size());
+                guestsModel.setGuests(get());
+            } catch (ExecutionException ex) {
+                log.error("Exception thrown in doInBackground of FindAlGuests: " + ex.getCause());
+            } catch (InterruptedException ex) {
+                log.error("doInBackground of FindAlGuests interrupted: " + ex.getCause());
+                throw new RuntimeException("Operation interrupted.. findAllGuests");
+            }
+        }
+    }
+
+    private class FindAllRoomsWorker extends SwingWorker<List<Room>, Integer> {
+
+        @Override
+        protected List<Room> doInBackground() throws Exception {
+            List<Room> result;
+            result = roomManager.findAllRooms();
+            return result;
+        }
+
+        @Override
+        protected void done() {
+            try {
+                log.debug("Setting roomsModel to all rooms. Size: " + get().size());
+                roomsModel.setGuests(get());
+            } catch (ExecutionException ex) {
+                log.error("Exception thrown in doInBackground of FindAlGuests: " + ex.getCause());
+            } catch (InterruptedException ex) {
+                log.error("doInBackground of FindAlRooms interrupted: " + ex.getCause());
+                throw new RuntimeException("Operation interrupted.. findAllRooms");
+            }
+        }
+    }
+    
+    private class FindAllStaysWorker extends SwingWorker<List<Guest>, Integer> {
+
+        @Override
+        protected List<Guest> doInBackground() throws Exception {
+            List<Guest> result;
+            result = guestManager.findAllGuests();
+            return result;
+        }
+
+        @Override
+        protected void done() {
+            try {
+                log.debug("Setting guestsModel to all guests. Size: " + get().size());
+                guestsModel.setGuests(get());
+            } catch (ExecutionException ex) {
+                log.error("Exception thrown in doInBackground of FindAlGuests: " + ex.getCause());
+            } catch (InterruptedException ex) {
+                log.error("doInBackground of FindAlGuests interrupted: " + ex.getCause());
+                throw new RuntimeException("Operation interrupted.. findAllGuests");
+            }
+        }
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -99,6 +174,9 @@ public class HotelApp extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jTextFieldSearchRoomNumber = new javax.swing.JTextField();
         jButtonSearchRoomNumber = new javax.swing.JButton();
+        jPanel4 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTableStays = new javax.swing.JTable();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItemGuestCreate = new javax.swing.JMenuItem();
@@ -374,6 +452,24 @@ public class HotelApp extends javax.swing.JFrame {
 
         jTabbedPaneGuests.addTab("Rooms", jPanel3);
 
+        jTableStays.setModel(new StaysTableModel());
+        jScrollPane2.setViewportView(jTableStays);
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 527, Short.MAX_VALUE)
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 71, Short.MAX_VALUE))
+        );
+
+        jTabbedPaneGuests.addTab("Stays", jPanel4);
+
         jMenu1.setText("Create");
 
         jMenuItemGuestCreate.setText("Guest");
@@ -422,6 +518,7 @@ public class HotelApp extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItemGuestCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGuestCreateActionPerformed
+        JFrame guestCreation = new jFrameRoomCreation();
         jFrameGuestCreation.setVisible(true);
     }//GEN-LAST:event_jMenuItemGuestCreateActionPerformed
 
@@ -434,7 +531,7 @@ public class HotelApp extends javax.swing.JFrame {
         String dateStr = jTextFieldDateOfBirth.getText();
         LocalDate d = LocalDate.parse(dateStr);
         g.setDateOfBirth(d);
-        guestManager.createGuest(g);
+        //guestManager.createGuest(g);
         guestsModel.addGuest(g);
         jFrameGuestCreation.setVisible(false);
     }//GEN-LAST:event_jButtonCreateGuestActionPerformed
@@ -445,7 +542,7 @@ public class HotelApp extends javax.swing.JFrame {
 
     private void jButtonSerachGuestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSerachGuestActionPerformed
         String name = jButtonSerachGuest.getText();
-        List<Guest> guests = guestManager.findGuestByName(name);
+        //List<Guest> guests = guestManager.findGuestByName(name);
     }//GEN-LAST:event_jButtonSerachGuestActionPerformed
 
     private void jButtonRoomCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRoomCreateActionPerformed
@@ -455,8 +552,8 @@ public class HotelApp extends javax.swing.JFrame {
         r.setPricePerNight(new BigDecimal(jTextFieldPricePerNight.getText()));
         r.setType((RoomType) jComboBoxRoomType.getSelectedItem());
         r.setBathroom((Boolean) jRadioButton1.isSelected());
-        
-        roomManager.createRoom(r);
+
+        //roomManager.createRoom(r);
         roomsModel.addRoom(r);
         jFrameRoomCreation.setVisible(false);
     }//GEN-LAST:event_jButtonRoomCreateActionPerformed
@@ -529,13 +626,16 @@ public class HotelApp extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanelGuests;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPaneGuests;
     private javax.swing.JTabbedPane jTabbedPaneGuests;
     private javax.swing.JTable jTableGuests;
     private javax.swing.JTable jTableRooms;
+    private javax.swing.JTable jTableStays;
     private javax.swing.JTextField jTextFieldCapacity;
     private javax.swing.JTextField jTextFieldDateOfBirth;
     private javax.swing.JTextField jTextFieldEmail;

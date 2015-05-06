@@ -157,5 +157,10 @@ public class GuestsTableModel extends AbstractTableModel {
         }
         guests.remove(rowIndex);
     }
+    
+    public void setGuests(List<Guest> guests){
+        this.guests = guests;
+        fireTableRowsInserted(0, guests.size()-1);
+    }
 
 }
