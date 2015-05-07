@@ -155,9 +155,7 @@ public class GuestsTableModel extends AbstractTableModel {
     }
 
     public void deleteGuest(int rowIndex) {
-        if (rowIndex < 0 || rowIndex >= getRowCount()) {
-            throw new IllegalArgumentException("rowIndex");
-        }
+
         guests.remove(rowIndex);
         fireTableRowsDeleted(rowIndex, rowIndex);
     }
@@ -165,14 +163,13 @@ public class GuestsTableModel extends AbstractTableModel {
     public void setGuests(List<Guest> guests) {
         this.guests = guests;
         fireTableDataChanged();
-
     }
 
-    void deleteGuests(int[] indexes) {
+    void deleteGuests(int[] selectedRows) {
+        Integer[] indexes = AppCommons.getSortedDesc(selectedRows);
         for (int i : indexes) {
-            guests.remove(i);
+            deleteGuest(i);
         }
-        fireTableRowsDeleted(indexes[0], indexes[indexes.length - 1]);
     }
 
     private class UpdateGuestSwingWorker extends SwingWorker<Void, Void> {

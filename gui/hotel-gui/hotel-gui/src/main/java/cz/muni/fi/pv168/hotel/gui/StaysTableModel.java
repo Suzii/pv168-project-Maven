@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.SwingWorker;
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -29,6 +30,10 @@ public class StaysTableModel extends AbstractTableModel {
     @Override
     public int getColumnCount() {
         return STAYS_PARAMS;
+    }
+    
+    public Stay getStay(int index){
+        return stays.get(index);
     }
 
     @Override
@@ -134,6 +139,9 @@ public class StaysTableModel extends AbstractTableModel {
             default:
                 throw new IllegalArgumentException("columnIndex");
         }
+        
+        UpdateStaySwingWorker w = new UpdateStaySwingWorker(s);
+        w.execute();
         fireTableCellUpdated(rowIndex, columnIndex);
     }
 
@@ -156,13 +164,6 @@ public class StaysTableModel extends AbstractTableModel {
         }
     }
 
-    public void addStays(List<Stay> stays) {
-        //System.out.println("Adding all rooms of size " + rooms.size());
-        for (Stay s : stays) {
-            addStay(s);
-        }
-    }
-
     public void addStay(Stay s) {
         //System.out.println(r);
         stays.add(s);
@@ -170,20 +171,35 @@ public class StaysTableModel extends AbstractTableModel {
         fireTableRowsInserted(lastRow, lastRow);
     }
 
-    public void setStays(List<Stay> stays) {
+    public void setStays(List<Stay> stays){
         this.stays = stays;
         fireTableDataChanged();
     }
-
-    Stay getStay(int selectedRow) {
-        return stays.get(selectedRow);
+    
+    void deleteStay(int rowIndex){
+        stays.remove(rowIndex);
+        fireTableRowsDeleted(rowIndex, rowIndex);
     }
 
-    void deleteStays(int[] indexes) {
-        for(int i: indexes){
-            stays.remove(i);
+    void deleteStays(int[] selectedRows) {
+        Integer[] indexes = AppCommons.getSortedDesc(selectedRows);
+        for (int i : indexes) {
+            deleteStay(i);
         }
-        fireTableRowsDeleted(indexes[0], indexes[indexes.length-1]);
+    }
     
+    private class UpdateStaySwingWorker extends SwingWorker<Void, Void> {
+
+        private final Stay stay;
+
+        public UpdateStaySwingWorker(Stay s) {
+            stay = s;
+        }
+
+        @Override
+        protected Void doInBackground() {
+            AppCommons.getStayManager().updateStay(stay);
+            return null;
+        }
     }
 }
