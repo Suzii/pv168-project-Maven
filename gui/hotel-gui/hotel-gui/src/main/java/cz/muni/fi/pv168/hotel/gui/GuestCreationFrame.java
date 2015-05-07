@@ -10,9 +10,15 @@ import cz.muni.fi.pv168.project.Guest;
 import cz.muni.fi.pv168.project.GuestManager;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.Properties;
 import java.util.concurrent.ExecutionException;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+
+import org.jdatepicker.impl.UtilDateModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +39,24 @@ public class GuestCreationFrame extends javax.swing.JFrame {
     public GuestCreationFrame(HotelApp context) {
         initComponents();
         this.context = context;
+        UtilDateModel model = new UtilDateModel();
+        model.setDate(2014,04,01);
+// Need this...
+        Properties p = new Properties();
+        p.put("text.today", "Today");
+        p.put("text.month", "Month");
+        p.put("text.year", "Year");
+        JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
+// Don't know about the formatter, but there it is...
+        JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DataLabelFormater());
+         datePicker.setVisible(true);
+        datePicker.setBounds(100, 100, 100, 100);
+        datePicker.getModel().getValue();
+        jPanelGuestCreation.add(datePicker);
+       
+       /* JFrame f = new JFrame();
+                f.add(datePicker);
+                f.setVisible(true);*/
         guestsModel = context.getGuestsModel();
 
         //context.setVisible(false);
@@ -45,8 +69,10 @@ public class GuestCreationFrame extends javax.swing.JFrame {
         @Override
         protected Guest doInBackground() throws Exception {
             Guest g = getGuestFromCreateForm();
-            if (g == null) return g;
-            try { 
+            if (g == null) {
+                return g;
+            }
+            try {
                 guestManager.createGuest(g);
                 return g;
             } catch (Exception ex) {
@@ -59,15 +85,15 @@ public class GuestCreationFrame extends javax.swing.JFrame {
         protected void done() {
             try {
                 Guest g = get();
-                if(g == null){
-                log.error("Wrong data entered :");
+                if (g == null) {
+                    log.error("Wrong data entered :");
                     JOptionPane.showMessageDialog(null, "Wrong date format entered! Supported format is YYYY-MM-DD");
                     return;
                 }
                 guestsModel.addGuest(g);
                 log.info("Guest " + g + " created");
                 GuestCreationFrame.this.dispose();
-                } catch (ExecutionException ex) {
+            } catch (ExecutionException ex) {
                 log.error("Exception thrown in doInBackground of CreateGuest: " + ex.getCause());
             } catch (InterruptedException ex) {
                 log.error("doInBackground of CreateGuest interrupted: " + ex.getCause());
@@ -78,7 +104,7 @@ public class GuestCreationFrame extends javax.swing.JFrame {
 
     private Guest getGuestFromCreateForm() {
         String name = jTextFieldGuestName.getText();
-        if(name == null  ||name.trim().length() == 0){
+        if (name == null || name.trim().length() == 0) {
             return null;
         }
         String pass = jTextFieldPassportNumber.getText();
@@ -86,21 +112,21 @@ public class GuestCreationFrame extends javax.swing.JFrame {
         String phone = jTextFieldPhone.getText();
         String dateStr = jTextFieldDateOfBirth.getText();
         LocalDate date;
-        try{
-         date = LocalDate.parse(dateStr);
-        }catch(DateTimeParseException ex){
+        try {
+            date = LocalDate.parse(dateStr);
+        } catch (DateTimeParseException ex) {
             log.error("Error why parsing date in bad format");
             date = null;
         }
-        if (date != null){      
-        Guest g = new Guest();
-        g.setName(name);
-        g.setPassportNo(pass);
-        g.setEmail(email);
-        g.setPhone(phone);
-        LocalDate d = date;
-        g.setDateOfBirth(d);
-        return g;
+        if (date != null) {
+            Guest g = new Guest();
+            g.setName(name);
+            g.setPassportNo(pass);
+            g.setEmail(email);
+            g.setPhone(phone);
+            LocalDate d = date;
+            g.setDateOfBirth(d);
+            return g;
         }
         return null;
     }
@@ -162,7 +188,7 @@ public class GuestCreationFrame extends javax.swing.JFrame {
                             .addGroup(jPanelGuestCreationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 98, Short.MAX_VALUE)
                                 .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addComponent(jLabel5))
                         .addGap(18, 18, 18)

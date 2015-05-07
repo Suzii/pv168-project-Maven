@@ -16,6 +16,9 @@ import javax.management.RuntimeErrorException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -72,6 +75,7 @@ public class HotelApp extends javax.swing.JFrame {
         staysModel = (StaysTableModel) jTableStays.getModel();
         findAllStaysWorker = new FindAllStaysWorker();
         findAllStaysWorker.execute();
+
     }
 
     // ********************* WORKERS FOR FINDING ALL *****************************
@@ -861,6 +865,7 @@ public class HotelApp extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+        
                 new GuestCreationFrame(HotelApp.this);//.setVisible(true);
             }
         });
