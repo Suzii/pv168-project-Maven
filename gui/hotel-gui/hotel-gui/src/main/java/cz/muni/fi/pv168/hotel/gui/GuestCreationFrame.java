@@ -45,7 +45,8 @@ public class GuestCreationFrame extends javax.swing.JFrame {
         @Override
         protected Guest doInBackground() throws Exception {
             Guest g = getGuestFromCreateForm();
-            try {
+            if (g == null) return g;
+            try { 
                 guestManager.createGuest(g);
                 return g;
             } catch (Exception ex) {
@@ -84,11 +85,14 @@ public class GuestCreationFrame extends javax.swing.JFrame {
         String email = jTextFieldEmail.getText();
         String phone = jTextFieldPhone.getText();
         String dateStr = jTextFieldDateOfBirth.getText();
-        //do try 
-        LocalDate date = LocalDate.parse(dateStr);
-        
-        
-        
+        LocalDate date;
+        try{
+         date = LocalDate.parse(dateStr);
+        }catch(DateTimeParseException ex){
+            log.error("Error why parsing date in bad format");
+            date = null;
+        }
+        if (date != null){      
         Guest g = new Guest();
         g.setName(name);
         g.setPassportNo(pass);
@@ -97,6 +101,8 @@ public class GuestCreationFrame extends javax.swing.JFrame {
         LocalDate d = date;
         g.setDateOfBirth(d);
         return g;
+        }
+        return null;
     }
 
     /**
