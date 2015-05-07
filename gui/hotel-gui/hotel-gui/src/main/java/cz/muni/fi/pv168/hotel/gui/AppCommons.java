@@ -9,6 +9,8 @@ import cz.muni.fi.pv168.project.GuestManager;
 import cz.muni.fi.pv168.project.RoomManager;
 import cz.muni.fi.pv168.project.StayManager;
 import cz.muni.fi.pv168.project.common.SpringConfig;
+import java.util.Arrays;
+import java.util.Collections;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -51,8 +53,9 @@ public abstract class AppCommons {
         Integer[] result = new Integer[a.length];
         for (int i = 0; i < a.length; i++) {
             result[i] = Integer.valueOf(a[i]);
-            System.out.println(i + " ");
+            
         }
+        Arrays.sort(result, Collections.reverseOrder());
         return result;
     }
     

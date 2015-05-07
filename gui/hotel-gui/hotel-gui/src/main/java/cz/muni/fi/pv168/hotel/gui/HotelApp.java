@@ -29,7 +29,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
  * @author Zuzana
  */
 public class HotelApp extends javax.swing.JFrame {
-
+    
     private final static Logger log = LoggerFactory.getLogger(HotelApp.class);
     protected static GuestManager guestManager = AppCommons.getGuestManager();
     protected static RoomManager roomManager = AppCommons.getRoomManager();
@@ -37,15 +37,15 @@ public class HotelApp extends javax.swing.JFrame {
     protected GuestsTableModel guestsModel;
     protected RoomsTableModel roomsModel;
     protected StaysTableModel staysModel;
-
+    
     public GuestsTableModel getGuestsModel() {
         return guestsModel;
     }
-
+    
     public RoomsTableModel getRoomsModel() {
         return roomsModel;
     }
-
+    
     public StaysTableModel getStaysModel() {
         return staysModel;
     }
@@ -75,19 +75,19 @@ public class HotelApp extends javax.swing.JFrame {
         staysModel = (StaysTableModel) jTableStays.getModel();
         findAllStaysWorker = new FindAllStaysWorker();
         findAllStaysWorker.execute();
-
+        
     }
 
     // ********************* WORKERS FOR FINDING ALL *****************************
     private class FindAllGuestsWorker extends SwingWorker<List<Guest>, Integer> {
-
+        
         @Override
         protected List<Guest> doInBackground() throws Exception {
             List<Guest> result;
             result = guestManager.findAllGuests();
             return result;
         }
-
+        
         @Override
         protected void done() {
             try {
@@ -101,16 +101,16 @@ public class HotelApp extends javax.swing.JFrame {
             }
         }
     }
-
+    
     private class FindAllRoomsWorker extends SwingWorker<List<Room>, Integer> {
-
+        
         @Override
         protected List<Room> doInBackground() throws Exception {
             List<Room> result;
             result = roomManager.findAllRooms();
             return result;
         }
-
+        
         @Override
         protected void done() {
             try {
@@ -124,16 +124,16 @@ public class HotelApp extends javax.swing.JFrame {
             }
         }
     }
-
+    
     private class FindAllStaysWorker extends SwingWorker<List<Stay>, Integer> {
-
+        
         @Override
         protected List<Stay> doInBackground() throws Exception {
             List<Stay> result;
             result = stayManager.findAllStays();
             return result;
         }
-
+        
         @Override
         protected void done() {
             try {
@@ -150,7 +150,7 @@ public class HotelApp extends javax.swing.JFrame {
 
 // ********************* WORKERS FOR DELETE*****************************
     private class DeleteGuestWorker extends SwingWorker<int[], Void> {
-
+        
         @Override
         protected int[] doInBackground() {
             int[] selectedRows = jTableGuests.getSelectedRows();
@@ -163,7 +163,7 @@ public class HotelApp extends javax.swing.JFrame {
             }
             return null;
         }
-
+        
         @Override
         protected void done() {
             try {
@@ -178,9 +178,9 @@ public class HotelApp extends javax.swing.JFrame {
             }
         }
     }
-
+    
     private class DeleteRoomWorker extends SwingWorker<int[], Void> {
-
+        
         @Override
         protected int[] doInBackground() {
             int[] selectedRows = jTableRooms.getSelectedRows();
@@ -193,7 +193,7 @@ public class HotelApp extends javax.swing.JFrame {
             }
             return null;
         }
-
+        
         @Override
         protected void done() {
             try {
@@ -208,9 +208,9 @@ public class HotelApp extends javax.swing.JFrame {
             }
         }
     }
-
+    
     private class DeleteStayWorker extends SwingWorker<int[], Void> {
-
+        
         @Override
         protected int[] doInBackground() {
             int[] selectedRows = jTableStays.getSelectedRows();
@@ -223,7 +223,7 @@ public class HotelApp extends javax.swing.JFrame {
             }
             return null;
         }
-
+        
         @Override
         protected void done() {
             try {
@@ -241,13 +241,13 @@ public class HotelApp extends javax.swing.JFrame {
 
 // ********************* WORKERS FOR GUEST UTIL *****************************
     private class FindGuestByNameWorker extends SwingWorker<List<Guest>, Integer> {
-
+        
         private String name;
-
+        
         public FindGuestByNameWorker(String name) {
             this.name = name;
         }
-
+        
         @Override
         protected List<Guest> doInBackground() throws Exception {
             List<Guest> result;
@@ -255,7 +255,7 @@ public class HotelApp extends javax.swing.JFrame {
             result = guestManager.findGuestByName(name);
             return result;
         }
-
+        
         @Override
         protected void done() {
             try {
@@ -270,16 +270,16 @@ public class HotelApp extends javax.swing.JFrame {
             }
         }
     }
-
+    
     private class FindTop3GuestsWorker extends SwingWorker<List<Guest>, Integer> {
-
+        
         @Override
         protected List<Guest> doInBackground() throws Exception {
             List<Guest> result;
             result = stayManager.findTop3Guests();
             return result;
         }
-
+        
         @Override
         protected void done() {
             try {
@@ -292,22 +292,22 @@ public class HotelApp extends javax.swing.JFrame {
             }
         }
     }
-
+    
     private class FindStayingGuestsByDateWorker extends SwingWorker<List<Guest>, Integer> {
-
+        
         private LocalDate date;
-
+        
         public FindStayingGuestsByDateWorker(LocalDate date) {
             this.date = date;
         }
-
+        
         @Override
         protected List<Guest> doInBackground() throws Exception {
             List<Guest> result;
             result = stayManager.findStayingGuestsByDate(date);
             return result;
         }
-
+        
         @Override
         protected void done() {
             try {
@@ -320,24 +320,24 @@ public class HotelApp extends javax.swing.JFrame {
             }
         }
     }
-
+    
     private class FindGuestsForRoomByDateWorker extends SwingWorker<List<Guest>, Integer> {
-
+        
         private Room room;
         private LocalDate date;
-
+        
         public FindGuestsForRoomByDateWorker(Room room, LocalDate date) {
             this.room = room;
             this.date = date;
         }
-
+        
         @Override
         protected List<Guest> doInBackground() throws Exception {
             List<Guest> result;
             result = stayManager.findGuestsForRoomByDate(room, date);
             return result;
         }
-
+        
         @Override
         protected void done() {
             try {
@@ -352,24 +352,142 @@ public class HotelApp extends javax.swing.JFrame {
     }
 
 // ********************* WORKERS FOR ROOM UTIL *****************************
+    private class FindRoomByNumberWorker extends SwingWorker<List<Room>, Integer> {
+        
+        private String number;
+        
+        public FindRoomByNumberWorker(String number) {
+            this.number = number;
+        }
+        
+        @Override
+        protected List<Room> doInBackground() throws Exception {
+            List<Room> result = new ArrayList<Room>();
+            result.add(roomManager.findRoomByNumber(number));
+            return result;
+        }
+        
+        @Override
+        protected void done() {
+            try {
+                roomsModel.setRooms(get());
+            } catch (ExecutionException ex) {
+                log.error("Exception thrown in doInBackground of FindRoomByNumberWorker: " + ex.getCause());
+            } catch (InterruptedException ex) {
+                log.error("doInBackground of FindRoomByNumberWorker interrupted: " + ex.getCause());
+                throw new RuntimeException("Operation interrupted.. FindRoomByNumberWorker");
+            }
+        }
+    }
+    
+    private class FindFreeRoomsByDateAndLenWorker extends SwingWorker<List<Room>, Integer> {
+        
+        private LocalDate date;
+        private int len;
+        
+        public FindFreeRoomsByDateAndLenWorker(LocalDate date, int len) {
+            this.date = date;
+            this.len = len;
+        }
+        
+        @Override
+        protected List<Room> doInBackground() throws Exception {
+            List<Room> result;
+            result = stayManager.findFreeRoomsByDateAndLen(date, len);
+            return result;
+        }
+        
+        @Override
+        protected void done() {
+            try {
+                roomsModel.setRooms(get());
+            } catch (ExecutionException ex) {
+                log.error("Exception thrown in doInBackground of FindFreeRoomsByDateAndLenWorker: " + ex.getCause());
+            } catch (InterruptedException ex) {
+                log.error("doInBackground of FindFreeRoomsByDateAndLenWorker interrupted: " + ex.getCause());
+                throw new RuntimeException("Operation interrupted.. FindFreeRoomsByDateAndLenWorker");
+            }
+        }
+    }
+    
+    private class FindRoomsForGuestByDateWorker extends SwingWorker<List<Room>, Integer> {
+        
+        private Guest guest;
+        private LocalDate date;
+        
+        public FindRoomsForGuestByDateWorker(Guest guest, LocalDate date) {
+            this.guest = guest;
+            this.date = date;
+        }
+        
+        @Override
+        protected List<Room> doInBackground() throws Exception {
+            List<Room> result;
+            result = stayManager.findRoomsForGuestByDate(guest, date);
+            return result;
+        }
+        
+        @Override
+        protected void done() {
+            try {
+                roomsModel.setRooms(get());
+            } catch (ExecutionException ex) {
+                log.error("Exception thrown in doInBackground of FindRoomsForGuestByDateWorker: " + ex.getCause());
+            } catch (InterruptedException ex) {
+                log.error("doInBackground of FindRoomsForGuestByDateWorker interrupted: " + ex.getCause());
+                throw new RuntimeException("Operation interrupted.. FindRoomsForGuestByDateWorker");
+            }
+        }
+    }
+    
+    private class FindFreeRoomByDateAndCapacityWorker extends SwingWorker<List<Room>, Integer> {
+        
+        private LocalDate date;
+        private int capacity;
+        
+        public FindFreeRoomByDateAndCapacityWorker(LocalDate date, int capacity) {
+            this.date = date;
+            this.capacity = capacity;
+        }
+        
+        @Override
+        protected List<Room> doInBackground() throws Exception {
+            List<Room> result;
+            result = stayManager.findFreeRoomByDateAndCapacity(date, capacity);
+            return result;
+        }
+        
+        @Override
+        protected void done() {
+            try {
+                roomsModel.setRooms(get());
+            } catch (ExecutionException ex) {
+                log.error("Exception thrown in doInBackground of FindFreeRoomByDateAndCapacityWorker: " + ex.getCause());
+            } catch (InterruptedException ex) {
+                log.error("doInBackground of FindFreeRoomByDateAndCapacityWorker interrupted: " + ex.getCause());
+                throw new RuntimeException("Operation interrupted.. FindFreeRoomByDateAndCapacityWorker");
+            }
+        }
+    }
 // ********************* WORKERS FOR STAY UTIL *****************************
-    private class FindStaysByDateWorker extends SwingWorker<List<Stay>, Integer> {
 
+    private class FindStaysByDateWorker extends SwingWorker<List<Stay>, Integer> {
+        
         private LocalDate from;
         private LocalDate to;
-
+        
         public FindStaysByDateWorker(LocalDate from, LocalDate to) {
             this.from = from;
             this.to = to;
         }
-
+        
         @Override
         protected List<Stay> doInBackground() throws Exception {
             List<Stay> result;
             result = stayManager.findStaysByDate(from, to);
             return result;
         }
-
+        
         @Override
         protected void done() {
             try {
@@ -382,22 +500,22 @@ public class HotelApp extends javax.swing.JFrame {
             }
         }
     }
-
+    
     private class FindStaysForGuestWorker extends SwingWorker<List<Stay>, Integer> {
-
+        
         private Guest guest;
-
+        
         public FindStaysForGuestWorker(Guest guest) {
             this.guest = guest;
         }
-
+        
         @Override
         protected List<Stay> doInBackground() throws Exception {
             List<Stay> result;
             result = stayManager.findAllStaysForGuest(guest);
             return result;
         }
-
+        
         @Override
         protected void done() {
             try {
@@ -410,24 +528,24 @@ public class HotelApp extends javax.swing.JFrame {
             }
         }
     }
-
+    
     private class FindStaysForRoomByDateWorker extends SwingWorker<List<Stay>, Integer> {
-
+        
         private Room room;
         private LocalDate date;
-
+        
         public FindStaysForRoomByDateWorker(Room room, LocalDate date) {
             this.room = room;
             this.date = date;
         }
-
+        
         @Override
         protected List<Stay> doInBackground() throws Exception {
             List<Stay> result;
             result = stayManager.findStaysForRoomByDate(room, date);
             return result;
         }
-
+        
         @Override
         protected void done() {
             try {
@@ -475,6 +593,16 @@ public class HotelApp extends javax.swing.JFrame {
         jButtonSearchRoomNumber = new javax.swing.JButton();
         jButtonFindAllRooms = new javax.swing.JButton();
         jButtonDeleteRoom = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jTextFieldFindFreeRoomsByDateAndLen_Len = new javax.swing.JTextField();
+        jButtonFindFreeRoomsByDateAndLen = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jButtonFindRoomsForGuestByDate = new javax.swing.JButton();
+        jButtonFindFreeRoomByDateAndCapacity = new javax.swing.JButton();
+        jComboBoxFindRoomsForGuestByDate_guest = new javax.swing.JComboBox();
+        jTextFieldFindFreeRoomsByDateAndCapacity_capacity = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTableStays = new javax.swing.JTable();
@@ -625,7 +753,7 @@ public class HotelApp extends javax.swing.JFrame {
                     .addComponent(jTextFieldFindGuestsForRoomByDate_date, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jComboBoxFindGuestsFormRoomByDate_room, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonFindGuestsForRoomByDate))
-                .addContainerGap(49, Short.MAX_VALUE))
+                .addContainerGap(56, Short.MAX_VALUE))
         );
 
         jTabbedPaneGuests.addTab("Guests", jPanelGuests);
@@ -636,6 +764,11 @@ public class HotelApp extends javax.swing.JFrame {
         jLabel8.setText("Search by room number:");
 
         jButtonSearchRoomNumber.setText("Search");
+        jButtonSearchRoomNumber.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSearchRoomNumberActionPerformed(evt);
+            }
+        });
 
         jButtonFindAllRooms.setText("List all");
         jButtonFindAllRooms.addActionListener(new java.awt.event.ActionListener() {
@@ -651,26 +784,82 @@ public class HotelApp extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setText("Find free rooms by date and length:");
+
+        jTextField1.setText("jTextField1");
+
+        jTextFieldFindFreeRoomsByDateAndLen_Len.setText("jTextField2");
+
+        jButtonFindFreeRoomsByDateAndLen.setText("Search");
+        jButtonFindFreeRoomsByDateAndLen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonFindFreeRoomsByDateAndLenActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("Find rooms for guest by date:");
+
+        jLabel3.setText("Find free room by date and capacity:");
+
+        jButtonFindRoomsForGuestByDate.setText("Search");
+        jButtonFindRoomsForGuestByDate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonFindRoomsForGuestByDateActionPerformed(evt);
+            }
+        });
+
+        jButtonFindFreeRoomByDateAndCapacity.setText("Search");
+        jButtonFindFreeRoomByDateAndCapacity.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonFindFreeRoomByDateAndCapacityActionPerformed(evt);
+            }
+        });
+
+        jComboBoxFindRoomsForGuestByDate_guest.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jTextFieldFindFreeRoomsByDateAndCapacity_capacity.setText("jTextField2");
+
         javax.swing.GroupLayout jPanelRoomsLayout = new javax.swing.GroupLayout(jPanelRooms);
         jPanelRooms.setLayout(jPanelRoomsLayout);
         jPanelRoomsLayout.setHorizontalGroup(
             jPanelRoomsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 609, Short.MAX_VALUE)
             .addGroup(jPanelRoomsLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanelRoomsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelRoomsLayout.createSequentialGroup()
-                        .addGap(34, 34, 34)
-                        .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextFieldSearchRoomNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButtonSearchRoomNumber)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanelRoomsLayout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(jButtonFindAllRooms)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonDeleteRoom)))
+                        .addComponent(jButtonDeleteRoom))
+                    .addGroup(jPanelRoomsLayout.createSequentialGroup()
+                        .addGroup(jPanelRoomsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanelRoomsLayout.createSequentialGroup()
+                                .addComponent(jLabel8)
+                                .addGap(67, 67, 67)
+                                .addComponent(jTextFieldSearchRoomNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanelRoomsLayout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanelRoomsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jComboBoxFindRoomsForGuestByDate_guest, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanelRoomsLayout.createSequentialGroup()
+                                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(178, 178, 178)
+                                        .addGroup(jPanelRoomsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jTextFieldFindFreeRoomsByDateAndCapacity_capacity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jTextFieldFindFreeRoomsByDateAndLen_Len, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanelRoomsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButtonSearchRoomNumber, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButtonFindFreeRoomsByDateAndLen, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addGroup(jPanelRoomsLayout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButtonFindFreeRoomByDateAndCapacity))
+                    .addGroup(jPanelRoomsLayout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButtonFindRoomsForGuestByDate)))
                 .addContainerGap())
         );
         jPanelRoomsLayout.setVerticalGroup(
@@ -681,12 +870,28 @@ public class HotelApp extends javax.swing.JFrame {
                 .addGroup(jPanelRoomsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonFindAllRooms)
                     .addComponent(jButtonDeleteRoom))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 113, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanelRoomsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(jTextFieldSearchRoomNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonSearchRoomNumber))
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanelRoomsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldFindFreeRoomsByDateAndLen_Len, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonFindFreeRoomsByDateAndLen))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanelRoomsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jButtonFindRoomsForGuestByDate)
+                    .addComponent(jComboBoxFindRoomsForGuestByDate_guest, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanelRoomsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jButtonFindFreeRoomByDateAndCapacity)
+                    .addComponent(jTextFieldFindFreeRoomsByDateAndCapacity_capacity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPaneGuests.addTab("Rooms", jPanelRooms);
@@ -807,7 +1012,7 @@ public class HotelApp extends javax.swing.JFrame {
                     .addComponent(jLabel17)
                     .addComponent(jButtonFindStaysForGuest)
                     .addComponent(jComboBoxFindStaysForGuest, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 32, Short.MAX_VALUE))
+                .addGap(0, 39, Short.MAX_VALUE))
         );
 
         jTabbedPaneGuests.addTab("Stays", jPanel4);
@@ -865,7 +1070,7 @@ public class HotelApp extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-        
+                
                 new GuestCreationFrame(HotelApp.this);//.setVisible(true);
             }
         });
@@ -886,7 +1091,7 @@ public class HotelApp extends javax.swing.JFrame {
         FindGuestByNameWorker w = new FindGuestByNameWorker(name);
         w.execute();
     }//GEN-LAST:event_jButtonSerachGuestByNameActionPerformed
-
+    
 
     private void jButtonDeleteSelectedGuestsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteSelectedGuestsActionPerformed
         DeleteGuestWorker w = new DeleteGuestWorker();
@@ -908,6 +1113,7 @@ public class HotelApp extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldFindStayingGuestsByDateActionPerformed
 
     private void jButtonFindStayingGuestsByDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFindStayingGuestsByDateActionPerformed
+        //TODO picker
         LocalDate date = parseDate(jTextFieldFindStayingGuestsByDate.getText());
         if (date != null) {
             FindStayingGuestsByDateWorker w = new FindStayingGuestsByDateWorker(date);
@@ -917,6 +1123,7 @@ public class HotelApp extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonFindStayingGuestsByDateActionPerformed
 
     private void jButtonFindGuestsForRoomByDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFindGuestsForRoomByDateActionPerformed
+        //TODO picker
         LocalDate date = parseDate(jTextFieldFindGuestsForRoomByDate_date.getText());
         Room room = (Room) jComboBoxFindGuestsFormRoomByDate_room.getSelectedItem();
         if (date != null) {
@@ -929,13 +1136,16 @@ public class HotelApp extends javax.swing.JFrame {
 
     private void jButtonFindStaysForRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFindStaysForRoomActionPerformed
         Room room = (Room) jComboBoxFindStaysForRoom.getSelectedItem();
+        //TODO picker
         LocalDate date = parseDate(jTextFieldFindStaysForRoomByDate_date.getText());
         FindStaysForRoomByDateWorker w = new FindStaysForRoomByDateWorker(room, date);
         w.execute();
     }//GEN-LAST:event_jButtonFindStaysForRoomActionPerformed
 
     private void jButtonFindStaysByDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFindStaysByDateActionPerformed
+        //TODO picker
         LocalDate from = parseDate(jTextFieldFindStaysByDate_from.getText());
+        //TODO picker
         LocalDate to = parseDate(jTextFieldFindStaysByDate_to.getText());
         FindStaysByDateWorker w = new FindStaysByDateWorker(from, to);
         w.execute();
@@ -977,6 +1187,56 @@ public class HotelApp extends javax.swing.JFrame {
         });
     }//GEN-LAST:event_jMenuItemStayCreateActionPerformed
 
+    private void jButtonSearchRoomNumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSearchRoomNumberActionPerformed
+        FindRoomByNumberWorker w = new FindRoomByNumberWorker(jTextFieldSearchRoomNumber.getText());
+        w.execute();
+    }//GEN-LAST:event_jButtonSearchRoomNumberActionPerformed
+
+    private void jButtonFindFreeRoomsByDateAndLenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFindFreeRoomsByDateAndLenActionPerformed
+        //TODO jPicker
+        LocalDate date = null;
+        int len = 1;
+        try {
+            String l = jTextFieldFindFreeRoomsByDateAndLen_Len.getText();
+            len = Integer.parseInt(l);
+            
+            if (len <= 0) {
+                throw new IllegalArgumentException("length must be positive");
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Invalid value",
+                    null, JOptionPane.INFORMATION_MESSAGE);
+        }
+        FindFreeRoomsByDateAndLenWorker w = new FindFreeRoomsByDateAndLenWorker(date, len);
+        w.execute();
+    }//GEN-LAST:event_jButtonFindFreeRoomsByDateAndLenActionPerformed
+
+    private void jButtonFindFreeRoomByDateAndCapacityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFindFreeRoomByDateAndCapacityActionPerformed
+        //TODO jPicker
+        LocalDate date = null;
+        int cap = 1;
+        try {
+            String c = jTextFieldFindFreeRoomsByDateAndCapacity_capacity.getText();
+            cap = Integer.parseInt(c);
+            
+            if (cap <= 0) {
+                throw new IllegalArgumentException("capacity must be positive");
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Invalid value",
+                    null, JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_jButtonFindFreeRoomByDateAndCapacityActionPerformed
+
+    private void jButtonFindRoomsForGuestByDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFindRoomsForGuestByDateActionPerformed
+        //TODO jPicker
+        LocalDate date = null;
+        Guest g = (Guest) jComboBoxFindRoomsForGuestByDate_guest.getSelectedItem();
+        
+        FindRoomsForGuestByDateWorker w = new FindRoomsForGuestByDateWorker(g, date);
+        w.execute();
+    }//GEN-LAST:event_jButtonFindRoomsForGuestByDateActionPerformed
+    
     private LocalDate parseDate(String d) {
         try {
             return LocalDate.parse(d);
@@ -1000,7 +1260,7 @@ public class HotelApp extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
-
+                    
                 }
             }
         } catch (ClassNotFoundException ex) {
@@ -1033,7 +1293,10 @@ public class HotelApp extends javax.swing.JFrame {
     private javax.swing.JButton jButtonFindAllGuests;
     private javax.swing.JButton jButtonFindAllRooms;
     private javax.swing.JButton jButtonFindAllStays;
+    private javax.swing.JButton jButtonFindFreeRoomByDateAndCapacity;
+    private javax.swing.JButton jButtonFindFreeRoomsByDateAndLen;
     private javax.swing.JButton jButtonFindGuestsForRoomByDate;
+    private javax.swing.JButton jButtonFindRoomsForGuestByDate;
     private javax.swing.JButton jButtonFindStayingGuestsByDate;
     private javax.swing.JButton jButtonFindStaysByDate;
     private javax.swing.JButton jButtonFindStaysForGuest;
@@ -1042,13 +1305,17 @@ public class HotelApp extends javax.swing.JFrame {
     private javax.swing.JButton jButtonSerachGuestByName;
     private javax.swing.JButton jButtonTop3Guests;
     private javax.swing.JComboBox jComboBoxFindGuestsFormRoomByDate_room;
+    private javax.swing.JComboBox jComboBoxFindRoomsForGuestByDate_guest;
     private javax.swing.JComboBox jComboBoxFindStaysForGuest;
     private javax.swing.JComboBox jComboBoxFindStaysForRoom;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JMenu jMenu1;
@@ -1067,6 +1334,9 @@ public class HotelApp extends javax.swing.JFrame {
     private javax.swing.JTable jTableGuests;
     private javax.swing.JTable jTableRooms;
     private javax.swing.JTable jTableStays;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextFieldFindFreeRoomsByDateAndCapacity_capacity;
+    private javax.swing.JTextField jTextFieldFindFreeRoomsByDateAndLen_Len;
     private javax.swing.JTextField jTextFieldFindGuestsForRoomByDate_date;
     private javax.swing.JTextField jTextFieldFindStayingGuestsByDate;
     private javax.swing.JTextField jTextFieldFindStaysByDate_from;

@@ -167,7 +167,9 @@ public class GuestsTableModel extends AbstractTableModel {
 
     void deleteGuests(int[] selectedRows) {
         Integer[] indexes = AppCommons.getSortedDesc(selectedRows);
+        System.out.println(indexes.toString());
         for (int i : indexes) {
+            System.out.println(i + " ");
             deleteGuest(i);
         }
     }
