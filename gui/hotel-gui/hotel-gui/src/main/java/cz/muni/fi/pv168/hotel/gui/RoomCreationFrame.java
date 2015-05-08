@@ -61,7 +61,7 @@ public class RoomCreationFrame extends javax.swing.JFrame {
             Room r = getRoomFromCreateForm();
             if (r == null) {
                 log.error("Wrong data entered.");
-                throw new IllegalArgumentException("Wrong data entered!");
+                throw new IllegalArgumentException(java.util.ResourceBundle.getBundle("texts").getString("WRONG DATA ENTERED!"));
             }
             roomManager.createRoom(r);
             return r;
@@ -73,7 +73,7 @@ public class RoomCreationFrame extends javax.swing.JFrame {
                 Room r = get();
 
                 roomsModel.addRoom(r);
-                log.info("Room " + r + " created");
+                log.info(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("texts").getString("ROOM {0} CREATED"), new Object[] {r}));
                 context.refreshComboBoxesRooms();
                 RoomCreationFrame.this.dispose();
             } catch (IllegalArgumentException ex) {
@@ -95,7 +95,7 @@ public class RoomCreationFrame extends javax.swing.JFrame {
             Room r = getRoomFromCreateForm();
             if (r == null) {
                 log.error("Wrong data entered.");
-                throw new IllegalArgumentException("Wrong data entered!");
+                throw new IllegalArgumentException(java.util.ResourceBundle.getBundle("texts").getString("WRONG DATA ENTERED!"));
             }
             roomManager.updateRoom(r);
             return r;
@@ -125,7 +125,7 @@ public class RoomCreationFrame extends javax.swing.JFrame {
         // TODO add validation, if invalid, return null
         String number = jTextFieldRoomNumber.getText();
         if (number == null || number.trim().length() < 4) {
-            warning("Number is required, at least 4 characters long!");
+            warning(java.util.ResourceBundle.getBundle("texts").getString("NUMBER IS REQUIRED, AT LEAST 4 CHARACTERS LONG!"));
             return null;
         }
         int capacity = 0;
@@ -136,16 +136,16 @@ public class RoomCreationFrame extends javax.swing.JFrame {
             }
         } catch (Exception ex) {
             log.debug("Wrong capacity entered");
-            warning("Capacity must be a positive number!");
+            warning(java.util.ResourceBundle.getBundle("texts").getString("CAPACITY MUST BE A POSITIVE NUMBER!"));
         }
         BigDecimal price = null;
         try{
             price = new BigDecimal(jTextFieldPricePerNight.getText());
             if(price.signum() < 1)
-                throw new IllegalArgumentException("Price must be positive.");
+                throw new IllegalArgumentException(java.util.ResourceBundle.getBundle("texts").getString("PRICE MUST BE POSITIVE."));
         }catch (Exception ex) {
             log.debug("Wrong price entered");
-            warning("Price must be a number!");
+            warning(java.util.ResourceBundle.getBundle("texts").getString("PRICE MUST BE A NUMBER!"));
         }
         
         //number conversion must be in try-catch
@@ -191,24 +191,25 @@ public class RoomCreationFrame extends javax.swing.JFrame {
 
         jPanelRoomCreation.setMinimumSize(new java.awt.Dimension(350, 500));
 
-        jLabel3.setText("Number:");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("texts"); // NOI18N
+        jLabel3.setText(bundle.getString("NUMBER:")); // NOI18N
 
-        jButtonRoomCreate.setText("Create");
+        jButtonRoomCreate.setText(bundle.getString("CREATE")); // NOI18N
         jButtonRoomCreate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonRoomCreateActionPerformed(evt);
             }
         });
 
-        jLabel9.setText("Capacity:");
+        jLabel9.setText(bundle.getString("CAPACITY:")); // NOI18N
 
-        jLabel10.setText("Price per night:");
+        jLabel10.setText(bundle.getString("PRICE PER NIGHT:")); // NOI18N
 
-        jLabel11.setText("Room type:");
+        jLabel11.setText(bundle.getString("ROOM TYPE:")); // NOI18N
 
-        jLabel12.setText("Bathroom:");
+        jLabel12.setText(bundle.getString("BATHROOM:")); // NOI18N
 
-        jRadioButton1.setText("included");
+        jRadioButton1.setText(bundle.getString("INCLUDED")); // NOI18N
 
         for(RoomType t: RoomType.values()){
             jComboBoxRoomType.addItem(t);
@@ -235,7 +236,7 @@ public class RoomCreationFrame extends javax.swing.JFrame {
                             .addComponent(jTextFieldCapacity)))
                     .addGroup(jPanelRoomCreationLayout.createSequentialGroup()
                         .addGroup(jPanelRoomCreationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
+                            .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGroup(jPanelRoomCreationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -294,10 +295,10 @@ public class RoomCreationFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonRoomCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRoomCreateActionPerformed
-        if (action.equals("Create")) {
+        if (action.equals(java.util.ResourceBundle.getBundle("texts").getString("CREATE"))) {
             CreateRoomWorker w = new CreateRoomWorker();
             w.execute();
-        } else if (action.equals("Update")) {
+        } else if (action.equals(java.util.ResourceBundle.getBundle("texts").getString("UPDATE"))) {
             UpdateRoomWorker w = new UpdateRoomWorker();
             w.execute();
         }

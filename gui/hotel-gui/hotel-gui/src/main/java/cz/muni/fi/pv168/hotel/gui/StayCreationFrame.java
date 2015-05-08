@@ -66,7 +66,7 @@ public class StayCreationFrame extends javax.swing.JFrame {
             Stay s = getStayFromCreateForm();
             if (s == null) {
                 log.error("Wrong data entered :");
-                throw new IllegalArgumentException("Wrong data entered!");
+                throw new IllegalArgumentException(java.util.ResourceBundle.getBundle("texts").getString("WRONG DATA ENTERED!"));
             }
             stayManager.createStay(s);
             return s;
@@ -99,7 +99,7 @@ public class StayCreationFrame extends javax.swing.JFrame {
             Stay s = getStayFromCreateForm();
             if (s == null) {
                 log.error("Wrong data entered :");
-                throw new IllegalArgumentException("Wrong data entered!");
+                throw new IllegalArgumentException(java.util.ResourceBundle.getBundle("texts").getString("WRONG DATA ENTERED!"));
             }
             stayManager.updateStay(s);
             return s;
@@ -133,21 +133,21 @@ public class StayCreationFrame extends javax.swing.JFrame {
         
         //expected End date specified and not greater then start date
         if ((exEnd != null) && (start.compareTo(exEnd) == 1)) {
-            throw new IllegalArgumentException("Expected end date must be after start date");
+            throw new IllegalArgumentException(java.util.ResourceBundle.getBundle("texts").getString("EXPECTED END DATE MUST BE AFTER START DATE"));
         }
         //real end date specified and not greater then start date
         if ((rEnd != null) && (start.compareTo(rEnd) == 1)) {
-            throw new IllegalArgumentException("Real end date must be after start date");
+            throw new IllegalArgumentException(java.util.ResourceBundle.getBundle("texts").getString("REAL END DATE MUST BE AFTER START DATE"));
         }
         
         BigDecimal minibar = null;
         try{
             minibar = new BigDecimal(jTextFieldMinibarCosts.getText());
             if(minibar.signum() == -1)
-                throw new IllegalArgumentException("Price must not be negative.");
+                throw new IllegalArgumentException(java.util.ResourceBundle.getBundle("texts").getString("PRICE MUST NOT BE NEGATIVE."));
         }catch (Exception ex) {
-            log.debug("Wrong price entered");
-            warning("Price must be a number!");
+            log.debug(java.util.ResourceBundle.getBundle("texts").getString("WRONG PRICE ENTERED"));
+            warning(java.util.ResourceBundle.getBundle("texts").getString("PRICE MUST BE A NUMBER!"));
         }
         
         if (stay == null) {
@@ -194,24 +194,25 @@ public class StayCreationFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButtonCreateStay.setText("Create");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("texts"); // NOI18N
+        jButtonCreateStay.setText(bundle.getString("CREATE")); // NOI18N
         jButtonCreateStay.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCreateStayActionPerformed(evt);
             }
         });
 
-        jLabel18.setText("Start date:");
+        jLabel18.setText(bundle.getString("START DATE:")); // NOI18N
 
-        jLabel19.setText("Expected end date:");
+        jLabel19.setText(bundle.getString("EXPECTED END DATE:")); // NOI18N
 
-        jLabel20.setText("Real end date:");
+        jLabel20.setText(bundle.getString("REAL END DATE:")); // NOI18N
 
-        jLabel21.setText("Guest:");
+        jLabel21.setText(bundle.getString("GUEST:")); // NOI18N
 
-        jLabel22.setText("Room:");
+        jLabel22.setText(bundle.getString("ROOM:")); // NOI18N
 
-        jLabel23.setText("Minibar costs:");
+        jLabel23.setText(bundle.getString("MINIBAR COSTS:")); // NOI18N
 
         jComboBoxStayCreation_room.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -302,10 +303,10 @@ public class StayCreationFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonCreateStayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateStayActionPerformed
-        if (action.equals("Create")) {
+        if (action.equals(java.util.ResourceBundle.getBundle("texts").getString("CREATE"))) {
             CreateStayWorker w = new CreateStayWorker();
             w.execute();
-        } else if (action.equals("Update")) {
+        } else if (action.equals(java.util.ResourceBundle.getBundle("texts").getString("UPDATE"))) {
             UpdateStayWorker w = new UpdateStayWorker();
             w.execute();
         }

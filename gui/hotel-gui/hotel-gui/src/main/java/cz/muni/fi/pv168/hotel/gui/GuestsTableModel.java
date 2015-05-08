@@ -67,17 +67,17 @@ public class GuestsTableModel extends AbstractTableModel {
     public String getColumnName(int columnIndex) {
         switch (columnIndex) {
             case 0:
-                return "Id";
+                return java.util.ResourceBundle.getBundle("texts").getString("ID");
             case 1:
-                return "Name";
+                return java.util.ResourceBundle.getBundle("texts").getString("NAME");
             case 2:
-                return "Email";
+                return java.util.ResourceBundle.getBundle("texts").getString("EMAIL");
             case 3:
-                return "Passport No.";
+                return java.util.ResourceBundle.getBundle("texts").getString("PASSPORT NO.");
             case 4:
-                return "Phone";
+                return java.util.ResourceBundle.getBundle("texts").getString("PHONE");
             case 5:
-                return "Date of birth";
+                return java.util.ResourceBundle.getBundle("texts").getString("DATE OF BIRTH");
             default:
                 throw new IllegalArgumentException("columnIndex");
         }

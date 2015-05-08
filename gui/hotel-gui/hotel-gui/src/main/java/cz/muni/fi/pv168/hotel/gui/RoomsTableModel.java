@@ -63,17 +63,17 @@ public class RoomsTableModel extends AbstractTableModel {
     public String getColumnName(int columnIndex) {
         switch (columnIndex) {
             case 0:
-                return "Id";
+                return java.util.ResourceBundle.getBundle("texts").getString("ID");
             case 1:
-                return "Number";
+                return java.util.ResourceBundle.getBundle("texts").getString("NUMBER");
             case 2:
-                return "Capacity";
+                return java.util.ResourceBundle.getBundle("texts").getString("CAPACITY");
             case 3:
-                return "Price per night";
+                return java.util.ResourceBundle.getBundle("texts").getString("PRICE PER NIGHT");
             case 4:
-                return "Type";
+                return java.util.ResourceBundle.getBundle("texts").getString("TYPE");
             case 5:
-                return "Bathroom";
+                return java.util.ResourceBundle.getBundle("texts").getString("BATHROOM");
             default:
                 throw new IllegalArgumentException("columnIndex");
         }

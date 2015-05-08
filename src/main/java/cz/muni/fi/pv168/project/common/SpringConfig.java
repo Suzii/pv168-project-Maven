@@ -11,6 +11,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import static org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType.DERBY;
 import org.springframework.transaction.annotation.Transactional;
 /**
@@ -19,43 +22,37 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Configuration
 @EnableTransactionManagement
+@PropertySource(value = { "classpath:derby.properties" })
 public class SpringConfig {
+    
+    @Autowired
+    private Environment environment;
     
     @Bean
     public DataSource dataSource(){
-        /*return new EmbeddedDatabaseBuilder()
-                .setType(DERBY)
-                .addScript("classpath:createTables.sql")
-                .addScript("classpath:test-data.sql")
-                .build();
-        */
         BasicDataSource ds = new BasicDataSource();
-        //we will use in memory database
-        ds.setUrl("jdbc:derby://localhost:1527/hotel");
+        ds.setUrl(environment.getRequiredProperty("derby.url"));
         return ds;
     }
     
-    @Bean //potřeba pro @EnableTransactionManagement
+    @Bean
     public PlatformTransactionManager transactionManager() {
         return new DataSourceTransactionManager(dataSource());
     }
 
-    @Bean //náš manager, bude obalen řízením transakcí
+    @Bean
     public GuestManager guestManager() {
         return new GuestManagerImpl(dataSource());
     }
 
     @Bean
-    //@Transactional
     public RoomManager roomManager() {
-        return new RoomManagerImpl(/*new TransactionAwareDataSourceProxy(*/dataSource()/*)*/);
+        return new RoomManagerImpl(dataSource());
     }
 
     @Bean
     public StayManager stayManager() {
         StayManagerImpl stayManager = new StayManagerImpl(dataSource());
-        //leaseManager.setBookManager(bookManager());
-        //leaseManager.setCustomerManager(customerManager());
         return stayManager;
     }
     

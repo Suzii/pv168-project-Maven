@@ -61,9 +61,9 @@ public class GuestCreationFrame extends javax.swing.JFrame {
         model.setDate(2014, 04, 01);
         // Need this...
         Properties p = new Properties();
-        p.put("text.today", "Today");
-        p.put("text.month", "Month");
-        p.put("text.year", "Year");
+        p.put("text.today", java.util.ResourceBundle.getBundle("texts").getString("TODAY"));
+        p.put("text.month", java.util.ResourceBundle.getBundle("texts").getString("MONTH"));
+        p.put("text.year", java.util.ResourceBundle.getBundle("texts").getString("YEAR"));
         JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
         // Don't know about the formatter, but there it is...
         JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DataLabelFormater());
@@ -86,8 +86,8 @@ public class GuestCreationFrame extends javax.swing.JFrame {
         protected Guest doInBackground() throws Exception {
             Guest g = getGuestFromCreateForm();
             if (g == null) {
-                    log.error("Wrong data entered :");
-                throw new IllegalArgumentException("Wrong data entered!");
+                    log.error(java.util.ResourceBundle.getBundle("texts").getString("WRONG DATA ENTERED :"));
+                throw new IllegalArgumentException(java.util.ResourceBundle.getBundle("texts").getString("WRONG DATA ENTERED!"));
             }
             guestManager.createGuest(g);
             return g;
@@ -121,7 +121,7 @@ public class GuestCreationFrame extends javax.swing.JFrame {
             Guest g = getGuestFromCreateForm();
             if (g == null) {
                     log.error("Wrong data entered :");
-                throw new IllegalArgumentException("Wrong data entered!");
+                throw new IllegalArgumentException(java.util.ResourceBundle.getBundle("texts").getString("WRONG DATA ENTERED!"));
             }
             guestManager.updateGuest(g);
             return g;
@@ -133,7 +133,7 @@ public class GuestCreationFrame extends javax.swing.JFrame {
                 Guest g = get();
                 
                 guestsModel.updateGuest(g, rowIndex);
-                log.info("Guest " + g + " updated");
+                log.info(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("texts").getString("GUEST {0} UPDATED"), new Object[] {g}));
                 GuestCreationFrame.this.dispose();
             } catch (IllegalArgumentException ex) {
                 warning(ex.getMessage());
@@ -151,7 +151,7 @@ public class GuestCreationFrame extends javax.swing.JFrame {
         //retrieve data
         String name = jTextFieldGuestName.getText();
         if (name == null || name.trim().length() == 0) {
-            warning("Name is required!");
+            warning(java.util.ResourceBundle.getBundle("texts").getString("NAME IS REQUIRED!"));
             return null;
         }
         String pass = jTextFieldPassportNumber.getText();
@@ -164,7 +164,7 @@ public class GuestCreationFrame extends javax.swing.JFrame {
             date = LocalDate.parse(dateStr);
         } catch (DateTimeParseException ex) {
             log.debug("Error why parsing date in bad format");
-            warning("Wrong date format entered! Supported format is YYYY-MM-DD");
+            warning(java.util.ResourceBundle.getBundle("texts").getString("WRONG DATE FORMAT ENTERED! SUPPORTED FORMAT IS YYYY-MM-DD"));
             date = null;
             return null;
         }
@@ -212,24 +212,25 @@ public class GuestCreationFrame extends javax.swing.JFrame {
 
         jPanelGuestCreation.setMinimumSize(new java.awt.Dimension(350, 500));
 
-        jLabel1.setText("Name:");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("texts"); // NOI18N
+        jLabel1.setText(bundle.getString("NAME:")); // NOI18N
 
-        jLabel2.setText("Passport number:");
+        jLabel2.setText(bundle.getString("PASSPORT NUMBER:")); // NOI18N
 
-        jButtonCreateGuest.setText("Create");
+        jButtonCreateGuest.setText(bundle.getString("CREATE")); // NOI18N
         jButtonCreateGuest.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCreateGuestActionPerformed(evt);
             }
         });
 
-        jLabel4.setText("Email:");
+        jLabel4.setText(bundle.getString("EMAIL:")); // NOI18N
 
-        jLabel5.setText("Phone:");
+        jLabel5.setText(bundle.getString("PHONE:")); // NOI18N
 
-        jLabel6.setText("Date of birth:");
+        jLabel6.setText(bundle.getString("DATE OF BIRTH:")); // NOI18N
 
-        jTextFieldDateOfBirth.setText("YYYY-MM-DD");
+        jTextFieldDateOfBirth.setText(bundle.getString("YYYY-MM-DD")); // NOI18N
 
         javax.swing.GroupLayout jPanelGuestCreationLayout = new javax.swing.GroupLayout(jPanelGuestCreation);
         jPanelGuestCreation.setLayout(jPanelGuestCreationLayout);
@@ -243,7 +244,7 @@ public class GuestCreationFrame extends javax.swing.JFrame {
                             .addGroup(jPanelGuestCreationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 98, Short.MAX_VALUE)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
                                 .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addComponent(jLabel5))
                         .addGap(18, 18, 18)
@@ -301,10 +302,10 @@ public class GuestCreationFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonCreateGuestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateGuestActionPerformed
-        if (action.equals("Create")) {
+        if (action.equals(java.util.ResourceBundle.getBundle("texts").getString("CREATE"))) {
             CreateGuestWorker w = new CreateGuestWorker();
             w.execute();
-        } else if (action.equals("Update")) {
+        } else if (action.equals(java.util.ResourceBundle.getBundle("texts").getString("UPDATE"))) {
             UpdateGuestWorker w = new UpdateGuestWorker();
             w.execute();
         }

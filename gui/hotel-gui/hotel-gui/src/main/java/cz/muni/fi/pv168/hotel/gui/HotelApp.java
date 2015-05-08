@@ -739,37 +739,38 @@ public class HotelApp extends javax.swing.JFrame {
         jTableGuests.setModel(new GuestsTableModel());
         jScrollPaneGuests.setViewportView(jTableGuests);
 
-        jButtonSerachGuestByName.setText("Search");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("texts"); // NOI18N
+        jButtonSerachGuestByName.setText(bundle.getString("SEARCH")); // NOI18N
         jButtonSerachGuestByName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSerachGuestByNameActionPerformed(evt);
             }
         });
 
-        jLabel7.setText("Search by name:");
+        jLabel7.setText(bundle.getString("SEARCH BY NAME:")); // NOI18N
 
-        jButtonDeleteSelectedGuests.setText("Delete selected");
+        jButtonDeleteSelectedGuests.setText(bundle.getString("DELETE SELECTED")); // NOI18N
         jButtonDeleteSelectedGuests.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonDeleteSelectedGuestsActionPerformed(evt);
             }
         });
 
-        jButtonFindAllGuests.setText("List all");
+        jButtonFindAllGuests.setText(bundle.getString("LIST ALL")); // NOI18N
         jButtonFindAllGuests.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonFindAllGuestsActionPerformed(evt);
             }
         });
 
-        jButtonTop3Guests.setText("List top 3");
+        jButtonTop3Guests.setText(bundle.getString("LIST TOP 3")); // NOI18N
         jButtonTop3Guests.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonTop3GuestsActionPerformed(evt);
             }
         });
 
-        jLabel13.setText("Find staying guests by date:");
+        jLabel13.setText(bundle.getString("FIND STAYING GUESTS BY DATE:")); // NOI18N
 
         jTextFieldFindStayingGuestsByDate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -777,28 +778,28 @@ public class HotelApp extends javax.swing.JFrame {
             }
         });
 
-        jButtonFindStayingGuestsByDate.setText("Search");
+        jButtonFindStayingGuestsByDate.setText(bundle.getString("SEARCH")); // NOI18N
         jButtonFindStayingGuestsByDate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonFindStayingGuestsByDateActionPerformed(evt);
             }
         });
 
-        jLabel14.setText("Find guests for room by date:");
+        jLabel14.setText(bundle.getString("FIND GUESTS FOR ROOM BY DATE:")); // NOI18N
 
         List<Room> rooms = AppCommons.getRoomManager().findAllRooms();
         for(Room r: rooms){
             jComboBoxFindGuestsFormRoomByDate_room.addItem(r);
         }
 
-        jButtonFindGuestsForRoomByDate.setText("Serach");
+        jButtonFindGuestsForRoomByDate.setText(bundle.getString("SERACH")); // NOI18N
         jButtonFindGuestsForRoomByDate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonFindGuestsForRoomByDateActionPerformed(evt);
             }
         });
 
-        jButtonUpdateSelectedGuest.setText("Update selected");
+        jButtonUpdateSelectedGuest.setText(bundle.getString("UPDATE SELECTED")); // NOI18N
         jButtonUpdateSelectedGuest.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonUpdateSelectedGuestActionPerformed(evt);
@@ -879,54 +880,54 @@ public class HotelApp extends javax.swing.JFrame {
         jTableRooms.setModel(new RoomsTableModel());
         jScrollPane1.setViewportView(jTableRooms);
 
-        jLabel8.setText("Search by room number:");
+        jLabel8.setText(bundle.getString("SEARCH BY ROOM NUMBER:")); // NOI18N
 
-        jButtonSearchRoomNumber.setText("Search");
+        jButtonSearchRoomNumber.setText(bundle.getString("SEARCH")); // NOI18N
         jButtonSearchRoomNumber.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSearchRoomNumberActionPerformed(evt);
             }
         });
 
-        jButtonFindAllRooms.setText("List all");
+        jButtonFindAllRooms.setText(bundle.getString("LIST ALL")); // NOI18N
         jButtonFindAllRooms.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonFindAllRoomsActionPerformed(evt);
             }
         });
 
-        jButtonDeleteRoom.setText("Delete selected");
+        jButtonDeleteRoom.setText(bundle.getString("DELETE SELECTED")); // NOI18N
         jButtonDeleteRoom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonDeleteRoomActionPerformed(evt);
             }
         });
 
-        jLabel1.setText("Find free rooms by date and length:");
+        jLabel1.setText(bundle.getString("FIND FREE ROOMS BY DATE AND LENGTH:")); // NOI18N
 
         jTextField1.setText("jTextField1");
 
         jTextFieldFindFreeRoomsByDateAndLen_Len.setText("jTextField2");
 
-        jButtonFindFreeRoomsByDateAndLen.setText("Search");
+        jButtonFindFreeRoomsByDateAndLen.setText(bundle.getString("SEARCH")); // NOI18N
         jButtonFindFreeRoomsByDateAndLen.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonFindFreeRoomsByDateAndLenActionPerformed(evt);
             }
         });
 
-        jLabel2.setText("Find rooms for guest by date:");
+        jLabel2.setText(bundle.getString("FIND ROOMS FOR GUEST BY DATE:")); // NOI18N
 
-        jLabel3.setText("Find free room by date and capacity:");
+        jLabel3.setText(bundle.getString("FIND FREE ROOM BY DATE AND CAPACITY:")); // NOI18N
 
-        jButtonFindRoomsForGuestByDate.setText("Search");
+        jButtonFindRoomsForGuestByDate.setText(bundle.getString("SEARCH")); // NOI18N
         jButtonFindRoomsForGuestByDate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonFindRoomsForGuestByDateActionPerformed(evt);
             }
         });
 
-        jButtonFindFreeRoomByDateAndCapacity.setText("Search");
+        jButtonFindFreeRoomByDateAndCapacity.setText(bundle.getString("SEARCH")); // NOI18N
         jButtonFindFreeRoomByDateAndCapacity.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonFindFreeRoomByDateAndCapacityActionPerformed(evt);
@@ -937,7 +938,7 @@ public class HotelApp extends javax.swing.JFrame {
 
         jTextFieldFindFreeRoomsByDateAndCapacity_capacity.setText("jTextField2");
 
-        jButtonUpdateSelectedRoom.setText("Update selected");
+        jButtonUpdateSelectedRoom.setText(bundle.getString("UPDATE SELECTED")); // NOI18N
         jButtonUpdateSelectedRoom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonUpdateSelectedRoomActionPerformed(evt);
@@ -1027,41 +1028,41 @@ public class HotelApp extends javax.swing.JFrame {
         jTableStays.setModel(new StaysTableModel());
         jScrollPane2.setViewportView(jTableStays);
 
-        jButtonFindAllStays.setText("List all");
+        jButtonFindAllStays.setText(bundle.getString("LIST ALL")); // NOI18N
         jButtonFindAllStays.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonFindAllStaysActionPerformed(evt);
             }
         });
 
-        jButtonDeleteStay.setText("Delete selected");
+        jButtonDeleteStay.setText(bundle.getString("DELETE SELECTED")); // NOI18N
         jButtonDeleteStay.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonDeleteStayActionPerformed(evt);
             }
         });
 
-        jLabel15.setText("Find stays by date");
+        jLabel15.setText(bundle.getString("FIND STAYS BY DATE")); // NOI18N
 
-        jLabel16.setText("Finds stays for room by date:");
+        jLabel16.setText(bundle.getString("FINDS STAYS FOR ROOM BY DATE:")); // NOI18N
 
-        jLabel17.setText("Find stays for guest:");
+        jLabel17.setText(bundle.getString("FIND STAYS FOR GUEST:")); // NOI18N
 
-        jButtonFindStaysByDate.setText("Search");
+        jButtonFindStaysByDate.setText(bundle.getString("SEARCH")); // NOI18N
         jButtonFindStaysByDate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonFindStaysByDateActionPerformed(evt);
             }
         });
 
-        jButtonFindStaysForRoom.setText("Search");
+        jButtonFindStaysForRoom.setText(bundle.getString("SEARCH")); // NOI18N
         jButtonFindStaysForRoom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonFindStaysForRoomActionPerformed(evt);
             }
         });
 
-        jButtonFindStaysForGuest.setText("Search");
+        jButtonFindStaysForGuest.setText(bundle.getString("SEARCH")); // NOI18N
         jButtonFindStaysForGuest.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonFindStaysForGuestActionPerformed(evt);
@@ -1078,9 +1079,9 @@ public class HotelApp extends javax.swing.JFrame {
             jComboBoxFindStaysForGuest.addItem(g);
         }
 
-        jTextFieldFindStaysByDate_to.setText("to");
+        jTextFieldFindStaysByDate_to.setText(bundle.getString("TO")); // NOI18N
 
-        jButtonUpdateSelectedStay.setText("Update selected");
+        jButtonUpdateSelectedStay.setText(bundle.getString("UPDATE SELECTED")); // NOI18N
         jButtonUpdateSelectedStay.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonUpdateSelectedStayActionPerformed(evt);
@@ -1155,9 +1156,9 @@ public class HotelApp extends javax.swing.JFrame {
 
         jTabbedPaneGuests.addTab("Stays", jPanel4);
 
-        jMenu1.setText("Create");
+        jMenu1.setText(bundle.getString("CREATE")); // NOI18N
 
-        jMenuItemGuestCreate.setText("Guest");
+        jMenuItemGuestCreate.setText(bundle.getString("GUEST")); // NOI18N
         jMenuItemGuestCreate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItemGuestCreateActionPerformed(evt);
@@ -1165,7 +1166,7 @@ public class HotelApp extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItemGuestCreate);
 
-        jMenuItemRoomCreation.setText("Room");
+        jMenuItemRoomCreation.setText(bundle.getString("ROOM")); // NOI18N
         jMenuItemRoomCreation.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItemRoomCreationActionPerformed(evt);
@@ -1173,7 +1174,7 @@ public class HotelApp extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItemRoomCreation);
 
-        jMenuItemStayCreate.setText("Stay");
+        jMenuItemStayCreate.setText(bundle.getString("STAY")); // NOI18N
         jMenuItemStayCreate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItemStayCreateActionPerformed(evt);
@@ -1183,7 +1184,7 @@ public class HotelApp extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("Edit");
+        jMenu2.setText(bundle.getString("EDIT")); // NOI18N
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -1208,7 +1209,7 @@ public class HotelApp extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new GuestCreationFrame(HotelApp.this, null, -1, "Create");//.setVisible(true);
+                new GuestCreationFrame(HotelApp.this, null, -1, java.util.ResourceBundle.getBundle("texts").getString("CREATE"));//.setVisible(true);
             }
         });
     }//GEN-LAST:event_jMenuItemGuestCreateActionPerformed
@@ -1217,16 +1218,16 @@ public class HotelApp extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new RoomCreationFrame(HotelApp.this, null, -1, "Create");//.setVisible(true);
+                new RoomCreationFrame(HotelApp.this, null, -1, java.util.ResourceBundle.getBundle("texts").getString("CREATE"));//.setVisible(true);
             }
         });
     }//GEN-LAST:event_jMenuItemRoomCreationActionPerformed
 
     private void jButtonSerachGuestByNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSerachGuestByNameActionPerformed
-        log.debug("Search guest by name button clicked.");
+        log.debug(java.util.ResourceBundle.getBundle("texts").getString("SEARCH GUEST BY NAME BUTTON CLICKED."));
         String name = jTextFieldSearchGuest.getText();
         if (name == null || name.trim().length() == 0) {
-            warning("Fill in the name.");
+            warning(java.util.ResourceBundle.getBundle("texts").getString("FILL IN THE NAME."));
             return;
         }
         FindGuestByNameWorker w = new FindGuestByNameWorker(name);
@@ -1257,7 +1258,7 @@ public class HotelApp extends javax.swing.JFrame {
         //TODO picker
         LocalDate date = parseDate(jTextFieldFindStayingGuestsByDate.getText());
         if (date == null) {
-            warning("Select the date!");
+            warning(java.util.ResourceBundle.getBundle("texts").getString("SELECT THE DATE!"));
             return;
         }
         FindStayingGuestsByDateWorker w = new FindStayingGuestsByDateWorker(date);
@@ -1272,7 +1273,7 @@ public class HotelApp extends javax.swing.JFrame {
         LocalDate date = parseDate(jTextFieldFindGuestsForRoomByDate_date.getText());
         Room room = (Room) jComboBoxFindGuestsFormRoomByDate_room.getSelectedItem();
         if (date == null || room == null) {
-            warning("Specify date and room");
+            warning(java.util.ResourceBundle.getBundle("texts").getString("SPECIFY DATE AND ROOM"));
             return;
         }
 
@@ -1288,7 +1289,7 @@ public class HotelApp extends javax.swing.JFrame {
         //TODO picker
         LocalDate date = parseDate(jTextFieldFindStaysForRoomByDate_date.getText());
         if (room == null || date == null) {
-            warning("Specify date and room!");
+            warning(java.util.ResourceBundle.getBundle("texts").getString("SPECIFY DATE AND ROOM!"));
             return;
         }
         FindStaysForRoomByDateWorker w = new FindStaysForRoomByDateWorker(room, date);
@@ -1303,7 +1304,7 @@ public class HotelApp extends javax.swing.JFrame {
         //TODO picker
         LocalDate to = parseDate(jTextFieldFindStaysByDate_to.getText());
         if (from == null || to == null) {
-            warning("Specify from and to dates!");
+            warning(java.util.ResourceBundle.getBundle("texts").getString("SPECIFY FROM AND TO DATES!"));
             return;
         }
         FindStaysByDateWorker w = new FindStaysByDateWorker(from, to);
@@ -1315,7 +1316,7 @@ public class HotelApp extends javax.swing.JFrame {
     private void jButtonFindStaysForGuestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFindStaysForGuestActionPerformed
         Guest guest = (Guest) jComboBoxFindStaysForGuest.getSelectedItem();
         if (guest == null) {
-            warning("Specify guest!");
+            warning(java.util.ResourceBundle.getBundle("texts").getString("SPECIFY GUEST!"));
             return;
         }
         FindStaysForGuestWorker w = new FindStaysForGuestWorker(guest);
@@ -1347,7 +1348,7 @@ public class HotelApp extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new StayCreationFrame(HotelApp.this, null, -1, "Create");//.setVisible(true);
+                new StayCreationFrame(HotelApp.this, null, -1, java.util.ResourceBundle.getBundle("texts").getString("CREATE"));//.setVisible(true);
             }
         });
     }//GEN-LAST:event_jMenuItemStayCreateActionPerformed
@@ -1355,7 +1356,7 @@ public class HotelApp extends javax.swing.JFrame {
     private void jButtonSearchRoomNumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSearchRoomNumberActionPerformed
         String number = jTextFieldSearchRoomNumber.getText();
         if (number == null || number.trim().length() == 0) {
-            warning("Specify room number!");
+            warning(java.util.ResourceBundle.getBundle("texts").getString("SPECIFY ROOM NUMBER!"));
             return;
         }
 
@@ -1370,13 +1371,13 @@ public class HotelApp extends javax.swing.JFrame {
         String l = jTextFieldFindFreeRoomsByDateAndLen_Len.getText();
         int len = 1;
         if (date == null || l == null || l.trim().length() == 0) {
-            warning("Specify date and length!");
+            warning(java.util.ResourceBundle.getBundle("texts").getString("SPECIFY DATE AND LENGTH!"));
             return;
         }
         try {
             len = Integer.parseInt(l);
             if (len <= 0) {
-                throw new IllegalArgumentException("Length must be positive!");
+                throw new IllegalArgumentException(java.util.ResourceBundle.getBundle("texts").getString("LENGTH MUST BE POSITIVE!"));
             }
         } catch (Exception ex) {
             warning(ex.getMessage());
@@ -1394,13 +1395,13 @@ public class HotelApp extends javax.swing.JFrame {
         String c = jTextFieldFindFreeRoomsByDateAndCapacity_capacity.getText();
         int cap = 1;
         if (date == null || c == null || c.trim().length() == 0) {
-            warning("Specify date and capacity!");
+            warning(java.util.ResourceBundle.getBundle("texts").getString("SPECIFY DATE AND CAPACITY!"));
             return;
         }
         try {
             cap = Integer.parseInt(c);
             if (cap <= 0) {
-                throw new IllegalArgumentException("Capacity must be positive!");
+                throw new IllegalArgumentException(java.util.ResourceBundle.getBundle("texts").getString("CAPACITY MUST BE POSITIVE!"));
             }
         } catch (Exception ex) {
             warning(ex.getMessage());
@@ -1418,7 +1419,7 @@ public class HotelApp extends javax.swing.JFrame {
         LocalDate date = null;
         Guest g = (Guest) jComboBoxFindRoomsForGuestByDate_guest.getSelectedItem();
         if (date == null || g == null) {
-            warning("Specify date and guest");
+            warning(java.util.ResourceBundle.getBundle("texts").getString("SPECIFY DATE AND GUEST"));
             return;
         }
         FindRoomsForGuestByDateWorker w = new FindRoomsForGuestByDateWorker(g, date);
@@ -1429,42 +1430,42 @@ public class HotelApp extends javax.swing.JFrame {
 
     private void jButtonUpdateSelectedGuestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonUpdateSelectedGuestActionPerformed
         if (jTableGuests.getSelectedRowCount() != 1) {
-            warning("One row has to be selected");
+            warning(java.util.ResourceBundle.getBundle("texts").getString("ONE ROW HAS TO BE SELECTED"));
             return;
         }
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 int selected = jTableGuests.getSelectedRow();
-                JFrame frame = new GuestCreationFrame(HotelApp.this, guestsModel.getGuest(selected), selected, "Update");//.setVisible(true);
+                JFrame frame = new GuestCreationFrame(HotelApp.this, guestsModel.getGuest(selected), selected, java.util.ResourceBundle.getBundle("texts").getString("UPDATE"));//.setVisible(true);
             }
         });
     }//GEN-LAST:event_jButtonUpdateSelectedGuestActionPerformed
 
     private void jButtonUpdateSelectedRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonUpdateSelectedRoomActionPerformed
         if (jTableRooms.getSelectedRowCount() != 1) {
-            warning("One row has to be selected");
+            warning(java.util.ResourceBundle.getBundle("texts").getString("ONE ROW HAS TO BE SELECTED"));
             return;
         }
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 int selected = jTableRooms.getSelectedRow();
-                JFrame frame = new RoomCreationFrame(HotelApp.this, roomsModel.getRoom(selected), selected, "Update");//.setVisible(true);
+                JFrame frame = new RoomCreationFrame(HotelApp.this, roomsModel.getRoom(selected), selected, java.util.ResourceBundle.getBundle("texts").getString("UPDATE"));//.setVisible(true);
             }
         });
     }//GEN-LAST:event_jButtonUpdateSelectedRoomActionPerformed
 
     private void jButtonUpdateSelectedStayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonUpdateSelectedStayActionPerformed
         if (jTableStays.getSelectedRowCount() != 1) {
-            warning("One row has to be selected");
+            warning(java.util.ResourceBundle.getBundle("texts").getString("ONE ROW HAS TO BE SELECTED"));
             return;
         }
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 int selected = jTableStays.getSelectedRow();
-                JFrame frame = new StayCreationFrame(HotelApp.this, staysModel.getStay(selected), selected, "Update");//.setVisible(true);
+                JFrame frame = new StayCreationFrame(HotelApp.this, staysModel.getStay(selected), selected, java.util.ResourceBundle.getBundle("texts").getString("UPDATE"));//.setVisible(true);
             }
         });
     }//GEN-LAST:event_jButtonUpdateSelectedStayActionPerformed
@@ -1473,7 +1474,7 @@ public class HotelApp extends javax.swing.JFrame {
         try {
             return LocalDate.parse(d);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Wrong date format entered!");
+            JOptionPane.showMessageDialog(null, java.util.ResourceBundle.getBundle("texts").getString("WRONG DATE FORMAT ENTERED!"));
         }
         return null;
     }

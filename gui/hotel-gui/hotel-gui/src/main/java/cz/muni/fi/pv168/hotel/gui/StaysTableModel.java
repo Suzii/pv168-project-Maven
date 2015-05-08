@@ -66,19 +66,19 @@ public class StaysTableModel extends AbstractTableModel {
     public String getColumnName(int columnIndex) {
         switch (columnIndex) {
             case 0:
-                return "Id";
+                return java.util.ResourceBundle.getBundle("texts").getString("ID");
             case 1:
-                return "Start date";
+                return java.util.ResourceBundle.getBundle("texts").getString("START DATE");
             case 2:
-                return "Expected end date";
+                return java.util.ResourceBundle.getBundle("texts").getString("EXPECTED END DATE");
             case 3:
-                return "Real end date";
+                return java.util.ResourceBundle.getBundle("texts").getString("REAL END DATE");
             case 4:
-                return "Guest name";
+                return java.util.ResourceBundle.getBundle("texts").getString("GUEST NAME");
             case 5:
-                return "Room number";
+                return java.util.ResourceBundle.getBundle("texts").getString("ROOM NUMBER");
             case 6:
-                return "Minibar costs";
+                return java.util.ResourceBundle.getBundle("texts").getString("MINIBAR COSTS");
             default:
                 throw new IllegalArgumentException("columnIndex");
         }
