@@ -10,10 +10,13 @@ import cz.muni.fi.pv168.project.*;
 import cz.muni.fi.pv168.project.StayManager;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
+import org.jdatepicker.impl.JDatePickerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +33,9 @@ public class StayCreationFrame extends javax.swing.JFrame {
     private String action;
     private Stay stay;
     private int rowIndex;
+    private JDatePickerImpl datePickerStart;
+    private JDatePickerImpl datePickerExpected;
+    private JDatePickerImpl datePickerReal;
 
     /**
      * Creates new form StayCreationFrame
@@ -41,6 +47,22 @@ public class StayCreationFrame extends javax.swing.JFrame {
         this.rowIndex = rowIndex;
         this.context = context;
         staysModel = context.getStaysModel();
+
+        datePickerStart = this.context.setDatePickerStay();
+        datePickerStart.setVisible(true);
+        datePickerStart.setBounds(165, 20, 200, 30);
+        jPanelStayCreation.add(datePickerStart);
+
+        datePickerExpected = this.context.setDatePickerStay();
+        datePickerExpected.setVisible(true);
+        datePickerExpected.setBounds(165, 60, 200, 30);
+        jPanelStayCreation.add(datePickerExpected);
+
+        datePickerReal = this.context.setDatePickerStay();
+        datePickerReal.setVisible(true);
+        datePickerReal.setBounds(165, 100, 200, 30);
+        jPanelStayCreation.add(datePickerReal);
+
         jButtonCreateStay.setText(action);
         jComboBoxStayCreation_guests.setModel(context.getGuestsComboBoxModel());
         jComboBoxStayCreation_room.setModel(context.getRoomsComboBoxModel());
@@ -76,11 +98,11 @@ public class StayCreationFrame extends javax.swing.JFrame {
         protected void done() {
             try {
                 Stay s = get();
-                
+
                 staysModel.addStay(s);
                 log.info("Stay " + s + " created.");
                 StayCreationFrame.this.dispose();
-            }  catch (IllegalArgumentException ex) {
+            } catch (IllegalArgumentException ex) {
                 warning(ex.getMessage());
                 return;
             } catch (ExecutionException ex) {
@@ -109,11 +131,11 @@ public class StayCreationFrame extends javax.swing.JFrame {
         protected void done() {
             try {
                 Stay s = get();
-                
+
                 staysModel.updateStay(s, rowIndex);
                 log.info("Stay " + s + " updated.");
                 StayCreationFrame.this.dispose();
-            }  catch (IllegalArgumentException ex) {
+            } catch (IllegalArgumentException ex) {
                 warning(ex.getMessage());
                 return;
             } catch (ExecutionException ex) {
@@ -127,10 +149,24 @@ public class StayCreationFrame extends javax.swing.JFrame {
 
     private Stay getStayFromCreateForm() {
         //TODO pickers
-        LocalDate start = null;
-        LocalDate exEnd = null;
-        LocalDate rEnd = null;
-        
+        Date startD = (Date) datePickerStart.getModel().getValue();
+        LocalDate ld = startD.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        String dateStart = ld.toString();
+
+        LocalDate start = LocalDate.parse(dateStart);
+
+        Date endD = (Date) datePickerExpected.getModel().getValue();
+        LocalDate ldE = endD.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        String dateEnd = ldE.toString();
+
+        LocalDate exEnd = LocalDate.parse(dateEnd);
+
+        Date realD = (Date) datePickerReal.getModel().getValue();
+        LocalDate ldR = realD.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        String dateReal = ldR.toString();
+
+        LocalDate rEnd = LocalDate.parse(dateReal);
+        // REAL MUST BE SETTED ???? 
         //expected End date specified and not greater then start date
         if ((exEnd != null) && (start.compareTo(exEnd) == 1)) {
             throw new IllegalArgumentException(java.util.ResourceBundle.getBundle("texts").getString("EXPECTED END DATE MUST BE AFTER START DATE"));
@@ -139,17 +175,18 @@ public class StayCreationFrame extends javax.swing.JFrame {
         if ((rEnd != null) && (start.compareTo(rEnd) == 1)) {
             throw new IllegalArgumentException(java.util.ResourceBundle.getBundle("texts").getString("REAL END DATE MUST BE AFTER START DATE"));
         }
-        
+
         BigDecimal minibar = null;
-        try{
+        try {
             minibar = new BigDecimal(jTextFieldMinibarCosts.getText());
-            if(minibar.signum() == -1)
+            if (minibar.signum() == -1) {
                 throw new IllegalArgumentException(java.util.ResourceBundle.getBundle("texts").getString("PRICE MUST NOT BE NEGATIVE."));
-        }catch (Exception ex) {
+            }
+        } catch (Exception ex) {
             log.debug(java.util.ResourceBundle.getBundle("texts").getString("WRONG PRICE ENTERED"));
             warning(java.util.ResourceBundle.getBundle("texts").getString("PRICE MUST BE A NUMBER!"));
         }
-        
+
         if (stay == null) {
             stay = new Stay();
         }
@@ -167,7 +204,7 @@ public class StayCreationFrame extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(rootPane, msg,
                 null, JOptionPane.INFORMATION_MESSAGE);
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -188,9 +225,6 @@ public class StayCreationFrame extends javax.swing.JFrame {
         jTextFieldMinibarCosts = new javax.swing.JTextField();
         jComboBoxStayCreation_room = new javax.swing.JComboBox();
         jComboBoxStayCreation_guests = new javax.swing.JComboBox();
-        jTextFieldRealEndDate = new javax.swing.JTextField();
-        jTextFieldExpectedEndDate = new javax.swing.JTextField();
-        jTextFieldStartDate = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -218,12 +252,6 @@ public class StayCreationFrame extends javax.swing.JFrame {
 
         jComboBoxStayCreation_guests.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jTextFieldRealEndDate.setText("jTextField2");
-
-        jTextFieldExpectedEndDate.setText("jTextField3");
-
-        jTextFieldStartDate.setText("jTextField4");
-
         javax.swing.GroupLayout jPanelStayCreationLayout = new javax.swing.GroupLayout(jPanelStayCreation);
         jPanelStayCreation.setLayout(jPanelStayCreationLayout);
         jPanelStayCreationLayout.setHorizontalGroup(
@@ -238,7 +266,7 @@ public class StayCreationFrame extends javax.swing.JFrame {
                             .addComponent(jLabel21))
                         .addGap(50, 50, 50)
                         .addGroup(jPanelStayCreationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jComboBoxStayCreation_guests, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jComboBoxStayCreation_guests, 0, 248, Short.MAX_VALUE)
                             .addComponent(jComboBoxStayCreation_room, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jTextFieldMinibarCosts)))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanelStayCreationLayout.createSequentialGroup()
@@ -246,11 +274,7 @@ public class StayCreationFrame extends javax.swing.JFrame {
                             .addComponent(jLabel20)
                             .addComponent(jLabel19)
                             .addComponent(jLabel18))
-                        .addGap(21, 21, 21)
-                        .addGroup(jPanelStayCreationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextFieldExpectedEndDate, javax.swing.GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE)
-                            .addComponent(jTextFieldStartDate, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jTextFieldRealEndDate)))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanelStayCreationLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jButtonCreateStay)))
@@ -259,18 +283,12 @@ public class StayCreationFrame extends javax.swing.JFrame {
         jPanelStayCreationLayout.setVerticalGroup(
             jPanelStayCreationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelStayCreationLayout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addGroup(jPanelStayCreationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel18)
-                    .addComponent(jTextFieldStartDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(31, 31, 31)
+                .addComponent(jLabel18)
                 .addGap(18, 18, 18)
-                .addGroup(jPanelStayCreationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel19)
-                    .addComponent(jTextFieldExpectedEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jLabel19)
                 .addGap(18, 18, 18)
-                .addGroup(jPanelStayCreationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel20)
-                    .addComponent(jTextFieldRealEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jLabel20)
                 .addGap(18, 18, 18)
                 .addGroup(jPanelStayCreationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel21)
@@ -283,7 +301,7 @@ public class StayCreationFrame extends javax.swing.JFrame {
                 .addGroup(jPanelStayCreationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel23)
                     .addComponent(jTextFieldMinibarCosts, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
                 .addComponent(jButtonCreateStay)
                 .addContainerGap())
         );
@@ -324,9 +342,6 @@ public class StayCreationFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JPanel jPanelStayCreation;
-    private javax.swing.JTextField jTextFieldExpectedEndDate;
     private javax.swing.JTextField jTextFieldMinibarCosts;
-    private javax.swing.JTextField jTextFieldRealEndDate;
-    private javax.swing.JTextField jTextFieldStartDate;
     // End of variables declaration//GEN-END:variables
 }
