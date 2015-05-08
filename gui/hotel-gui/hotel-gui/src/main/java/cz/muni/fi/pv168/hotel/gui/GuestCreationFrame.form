@@ -58,8 +58,7 @@
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jTextFieldPhone" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jTextFieldDateOfBirth" alignment="0" pref="229" max="32767" attributes="0"/>
+                              <Component id="jTextFieldPhone" alignment="0" pref="229" max="32767" attributes="0"/>
                               <Component id="jTextFieldPassportNumber" alignment="0" max="32767" attributes="0"/>
                               <Component id="jTextFieldEmail" alignment="0" max="32767" attributes="0"/>
                               <Component id="jTextFieldGuestName" alignment="0" max="32767" attributes="0"/>
@@ -98,11 +97,8 @@
                       <Component id="jTextFieldPhone" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="jTextFieldDateOfBirth" alignment="0" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace pref="268" max="32767" attributes="0"/>
+                  <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="274" max="32767" attributes="0"/>
                   <Component id="jButtonCreateGuest" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -162,13 +158,6 @@
         <Component class="javax.swing.JTextField" name="jTextFieldPassportNumber">
         </Component>
         <Component class="javax.swing.JTextField" name="jTextFieldPhone">
-        </Component>
-        <Component class="javax.swing.JTextField" name="jTextFieldDateOfBirth">
-          <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="texts.properties" key="YYYY-MM-DD" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-            </Property>
-          </Properties>
         </Component>
       </SubComponents>
     </Container>

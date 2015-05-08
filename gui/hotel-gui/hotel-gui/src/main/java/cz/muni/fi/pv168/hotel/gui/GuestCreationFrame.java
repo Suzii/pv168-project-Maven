@@ -7,8 +7,12 @@ package cz.muni.fi.pv168.hotel.gui;
 
 import cz.muni.fi.pv168.project.Guest;
 import cz.muni.fi.pv168.project.GuestManager;
+import java.text.ParseException;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
+import java.util.Date;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import javax.swing.JFrame;
@@ -34,6 +38,8 @@ public class GuestCreationFrame extends javax.swing.JFrame {
     private Guest guest;
     private String action;
     private int rowIndex;
+    private JDatePickerImpl datePicker;
+    private DataLabelFormater formater = new DataLabelFormater();
 
     /**
      * Creates new form GuestCreationFrame
@@ -46,31 +52,30 @@ public class GuestCreationFrame extends javax.swing.JFrame {
         this.action = action;
         this.guestsModel = context.getGuestsModel();
         jButtonCreateGuest.setText(action);
+        
+        datePicker = this.context.setDatePickerBirth();
+        datePicker.setVisible(true);
+        datePicker.setBounds(142, 208, 200,30);
+       // datePicker.getModel().getValue();
+        jPanelGuestCreation.add(datePicker);
         //initialize values for edit
         //beware of NULLpointer exception when converting to string!!!
         if (guest != null) {
             jTextFieldGuestName.setText(guest.getName());
             //TODO picker
-            //jTextFieldDateOfBirth.setText(guest.getDateOfBirth().toString());
+             LocalDate ld = guest.getDateOfBirth();
+             Instant instant = ld.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
+             Date time = Date.from(instant);
+             Object o = (Object) time;
+            datePicker.getModel().setDate(guest.getDateOfBirth().getYear(), guest.getDateOfBirth().getMonthValue(),guest.getDateOfBirth().getDayOfMonth());
+            //formater.stringToValue();
+           // jTextFieldDateOfBirth.setText(guest.getDateOfBirth().toString());
             jTextFieldEmail.setText(guest.getEmail());
             jTextFieldPassportNumber.setText(guest.getPassportNo());
             jTextFieldPhone.setText(guest.getPhone());
         }
 
-        UtilDateModel model = new UtilDateModel();
-        model.setDate(2014, 04, 01);
-        // Need this...
-        Properties p = new Properties();
-        p.put("text.today", java.util.ResourceBundle.getBundle("texts").getString("TODAY"));
-        p.put("text.month", java.util.ResourceBundle.getBundle("texts").getString("MONTH"));
-        p.put("text.year", java.util.ResourceBundle.getBundle("texts").getString("YEAR"));
-        JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
-        // Don't know about the formatter, but there it is...
-        JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DataLabelFormater());
-        datePicker.setVisible(true);
-        datePicker.setBounds(100, 100, 100, 100);
-        datePicker.getModel().getValue();
-        jPanelGuestCreation.add(datePicker);
+
 
         /* JFrame f = new JFrame();
          f.add(datePicker);
@@ -158,9 +163,14 @@ public class GuestCreationFrame extends javax.swing.JFrame {
         String email = jTextFieldEmail.getText();
         String phone = jTextFieldPhone.getText();
         //TODO picker
-        String dateStr = jTextFieldDateOfBirth.getText();
+        
         LocalDate date;
         try {
+            Date d = (Date)datePicker.getModel().getValue();
+            LocalDate ld = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            String dateStr = ld.toString();
+            //log.debug(dateStr);
+            
             date = LocalDate.parse(dateStr);
         } catch (DateTimeParseException ex) {
             log.debug("Error why parsing date in bad format");
@@ -206,7 +216,6 @@ public class GuestCreationFrame extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jTextFieldPassportNumber = new javax.swing.JTextField();
         jTextFieldPhone = new javax.swing.JTextField();
-        jTextFieldDateOfBirth = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -230,8 +239,6 @@ public class GuestCreationFrame extends javax.swing.JFrame {
 
         jLabel6.setText(bundle.getString("DATE OF BIRTH:")); // NOI18N
 
-        jTextFieldDateOfBirth.setText(bundle.getString("YYYY-MM-DD")); // NOI18N
-
         javax.swing.GroupLayout jPanelGuestCreationLayout = new javax.swing.GroupLayout(jPanelGuestCreation);
         jPanelGuestCreation.setLayout(jPanelGuestCreationLayout);
         jPanelGuestCreationLayout.setHorizontalGroup(
@@ -244,13 +251,12 @@ public class GuestCreationFrame extends javax.swing.JFrame {
                             .addGroup(jPanelGuestCreationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 98, Short.MAX_VALUE)
                                 .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addComponent(jLabel5))
                         .addGap(18, 18, 18)
                         .addGroup(jPanelGuestCreationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextFieldPhone)
-                            .addComponent(jTextFieldDateOfBirth, javax.swing.GroupLayout.DEFAULT_SIZE, 229, Short.MAX_VALUE)
+                            .addComponent(jTextFieldPhone, javax.swing.GroupLayout.DEFAULT_SIZE, 229, Short.MAX_VALUE)
                             .addComponent(jTextFieldPassportNumber)
                             .addComponent(jTextFieldEmail)
                             .addComponent(jTextFieldGuestName)))
@@ -279,10 +285,8 @@ public class GuestCreationFrame extends javax.swing.JFrame {
                     .addComponent(jLabel5)
                     .addComponent(jTextFieldPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanelGuestCreationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6)
-                    .addComponent(jTextFieldDateOfBirth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 268, Short.MAX_VALUE)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 274, Short.MAX_VALUE)
                 .addComponent(jButtonCreateGuest)
                 .addContainerGap())
         );
@@ -319,7 +323,6 @@ public class GuestCreationFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanelGuestCreation;
-    private javax.swing.JTextField jTextFieldDateOfBirth;
     private javax.swing.JTextField jTextFieldEmail;
     private javax.swing.JTextField jTextFieldGuestName;
     private javax.swing.JTextField jTextFieldPassportNumber;
