@@ -124,10 +124,6 @@ public class RoomsTableModel extends AbstractTableModel {
             default:
                 throw new IllegalArgumentException("columnIndex");
         }
-        
-        UpdateRoomSwingWorker updateRoomSW = new UpdateRoomSwingWorker(r);
-        updateRoomSW.execute();
-        fireTableCellUpdated(rowIndex, columnIndex);
     }
 
     @Override
@@ -138,7 +134,6 @@ public class RoomsTableModel extends AbstractTableModel {
             case 3:
             case 4:
             case 5:
-                return true;
             case 0:
                 return false;
             default:
@@ -146,6 +141,10 @@ public class RoomsTableModel extends AbstractTableModel {
         }
     }
 
+    public void updateRoom(Room r, int rowIndex){
+        rooms.set(rowIndex, r);
+        fireTableRowsUpdated(rowIndex, rowIndex);
+    }
     
     public void addRoom(Room r) {
         rooms.add(r);
@@ -167,21 +166,6 @@ public class RoomsTableModel extends AbstractTableModel {
         Integer[] indexes = AppCommons.getSortedDesc(selectedRows);
         for (int i : indexes) {
             deleteRoom(i);
-        }
-    }
-    
-    private class UpdateRoomSwingWorker extends SwingWorker<Void, Void> {
-
-        private final Room room;
-
-        public UpdateRoomSwingWorker(Room r) {
-            room = r;
-        }
-
-        @Override
-        protected Void doInBackground() {
-            AppCommons.getRoomManager().updateRoom(room);
-            return null;
         }
     }
 }

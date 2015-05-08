@@ -5,7 +5,6 @@
  */
 package cz.muni.fi.pv168.hotel.gui;
 
-import static cz.muni.fi.pv168.hotel.gui.HotelApp.guestManager;
 import cz.muni.fi.pv168.project.Guest;
 import cz.muni.fi.pv168.project.GuestManager;
 import java.time.LocalDate;
@@ -32,36 +31,53 @@ public class GuestCreationFrame extends javax.swing.JFrame {
     private static GuestManager guestManager = AppCommons.getGuestManager();
     private HotelApp context;
     private GuestsTableModel guestsModel;
+    private Guest guest;
+    private String action;
+    private int rowIndex;
 
     /**
      * Creates new form GuestCreationFrame
      */
-    public GuestCreationFrame(HotelApp context) {
+    public GuestCreationFrame(HotelApp context, Guest guest, int rowIndex, String action) {
         initComponents();
         this.context = context;
+        this.guest = guest;
+        this.rowIndex = rowIndex;
+        this.action = action;
+        this.guestsModel = context.getGuestsModel();
+        jButtonCreateGuest.setText(action);
+        //initialize values for edit
+        //beware of NULLpointer exception when converting to string!!!
+        if (guest != null) {
+            jTextFieldGuestName.setText(guest.getName());
+            //TODO picker
+            //jTextFieldDateOfBirth.setText(guest.getDateOfBirth().toString());
+            jTextFieldEmail.setText(guest.getEmail());
+            jTextFieldPassportNumber.setText(guest.getPassportNo());
+            jTextFieldPhone.setText(guest.getPhone());
+        }
+
         UtilDateModel model = new UtilDateModel();
-        model.setDate(2014,04,01);
-// Need this...
+        model.setDate(2014, 04, 01);
+        // Need this...
         Properties p = new Properties();
         p.put("text.today", "Today");
         p.put("text.month", "Month");
         p.put("text.year", "Year");
         JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
-// Don't know about the formatter, but there it is...
+        // Don't know about the formatter, but there it is...
         JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DataLabelFormater());
-         datePicker.setVisible(true);
+        datePicker.setVisible(true);
         datePicker.setBounds(100, 100, 100, 100);
         datePicker.getModel().getValue();
         jPanelGuestCreation.add(datePicker);
-       
-       /* JFrame f = new JFrame();
-                f.add(datePicker);
-                f.setVisible(true);*/
-        guestsModel = context.getGuestsModel();
 
+        /* JFrame f = new JFrame();
+         f.add(datePicker);
+         f.setVisible(true);*/
         //context.setVisible(false);
-        this.setVisible(true);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        this.setVisible(true);
     }
 
     private class CreateGuestWorker extends SwingWorker<Guest, Integer> {
@@ -70,29 +86,25 @@ public class GuestCreationFrame extends javax.swing.JFrame {
         protected Guest doInBackground() throws Exception {
             Guest g = getGuestFromCreateForm();
             if (g == null) {
-                return g;
+                    log.error("Wrong data entered :");
+                throw new IllegalArgumentException("Wrong data entered!");
             }
-            try {
-                guestManager.createGuest(g);
-                return g;
-            } catch (Exception ex) {
-                log.error("Exception thrown in doInBackground of CreateGuest: " + ex.getCause());
-                throw ex;
-            }
+            guestManager.createGuest(g);
+            return g;
         }
 
         @Override
         protected void done() {
             try {
                 Guest g = get();
-                if (g == null) {
-                    log.error("Wrong data entered :");
-                    JOptionPane.showMessageDialog(null, "Wrong date format entered! Supported format is YYYY-MM-DD");
-                    return;
-                }
+                
                 guestsModel.addGuest(g);
                 log.info("Guest " + g + " created");
+                context.refreshComboBoxesGuests();
                 GuestCreationFrame.this.dispose();
+            } catch (IllegalArgumentException ex) {
+                warning(ex.getMessage());
+                return;
             } catch (ExecutionException ex) {
                 log.error("Exception thrown in doInBackground of CreateGuest: " + ex.getCause());
             } catch (InterruptedException ex) {
@@ -102,33 +114,76 @@ public class GuestCreationFrame extends javax.swing.JFrame {
         }
     }
 
+    private class UpdateGuestWorker extends SwingWorker<Guest, Void> {
+
+        @Override
+        protected Guest doInBackground() {
+            Guest g = getGuestFromCreateForm();
+            if (g == null) {
+                    log.error("Wrong data entered :");
+                throw new IllegalArgumentException("Wrong data entered!");
+            }
+            guestManager.updateGuest(g);
+            return g;
+        }
+
+        @Override
+        protected void done() {
+            try {
+                Guest g = get();
+                
+                guestsModel.updateGuest(g, rowIndex);
+                log.info("Guest " + g + " updated");
+                GuestCreationFrame.this.dispose();
+            } catch (IllegalArgumentException ex) {
+                warning(ex.getMessage());
+                return;
+            } catch (ExecutionException ex) {
+                log.error("Exception thrown in doInBackground of UpdateGuest: " + ex.getCause());
+            } catch (InterruptedException ex) {
+                log.error("doInBackground of UpdateGuest interrupted: " + ex.getCause());
+                throw new RuntimeException("Operation interrupted.. UpdateGuest");
+            }
+        }
+    }
+
     private Guest getGuestFromCreateForm() {
+        //retrieve data
         String name = jTextFieldGuestName.getText();
         if (name == null || name.trim().length() == 0) {
+            warning("Name is required!");
             return null;
         }
         String pass = jTextFieldPassportNumber.getText();
         String email = jTextFieldEmail.getText();
         String phone = jTextFieldPhone.getText();
+        //TODO picker
         String dateStr = jTextFieldDateOfBirth.getText();
         LocalDate date;
         try {
             date = LocalDate.parse(dateStr);
         } catch (DateTimeParseException ex) {
-            log.error("Error why parsing date in bad format");
+            log.debug("Error why parsing date in bad format");
+            warning("Wrong date format entered! Supported format is YYYY-MM-DD");
             date = null;
+            return null;
         }
-        if (date != null) {
-            Guest g = new Guest();
-            g.setName(name);
-            g.setPassportNo(pass);
-            g.setEmail(email);
-            g.setPhone(phone);
-            LocalDate d = date;
-            g.setDateOfBirth(d);
-            return g;
+
+        //create guest
+        if (this.guest == null) {
+            this.guest = new Guest();
         }
-        return null;
+        guest.setName(name);
+        guest.setPassportNo(pass);
+        guest.setEmail(email);
+        guest.setPhone(phone);
+        guest.setDateOfBirth(date);
+        return guest;
+    }
+
+    private void warning(String msg) {
+        JOptionPane.showMessageDialog(rootPane, msg,
+                null, JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
@@ -246,11 +301,13 @@ public class GuestCreationFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonCreateGuestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateGuestActionPerformed
-
-        CreateGuestWorker createGuestWorker = new CreateGuestWorker();
-        createGuestWorker.execute();
-
-        //jFrameGuestCreation.setVisible(false);
+        if (action.equals("Create")) {
+            CreateGuestWorker w = new CreateGuestWorker();
+            w.execute();
+        } else if (action.equals("Update")) {
+            UpdateGuestWorker w = new UpdateGuestWorker();
+            w.execute();
+        }
     }//GEN-LAST:event_jButtonCreateGuestActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

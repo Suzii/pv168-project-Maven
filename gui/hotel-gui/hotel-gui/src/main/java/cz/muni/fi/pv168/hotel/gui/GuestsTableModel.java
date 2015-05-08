@@ -5,7 +5,6 @@
  */
 package cz.muni.fi.pv168.hotel.gui;
 
-import static cz.muni.fi.pv168.hotel.gui.HotelApp.guestManager;
 import cz.muni.fi.pv168.project.*;
 import cz.muni.fi.pv168.project.common.SpringConfig;
 import java.time.LocalDate;
@@ -126,10 +125,6 @@ public class GuestsTableModel extends AbstractTableModel {
             default:
                 throw new IllegalArgumentException("columnIndex");
         }
-
-        UpdateGuestSwingWorker updateGuestSW = new UpdateGuestSwingWorker(g);
-        updateGuestSW.execute();
-        fireTableCellUpdated(rowIndex, columnIndex);
     }
 
     @Override
@@ -138,7 +133,6 @@ public class GuestsTableModel extends AbstractTableModel {
             case 3:
             case 2:
             case 4:
-                return true;
             case 0:
             case 1:
             case 5:
@@ -146,6 +140,11 @@ public class GuestsTableModel extends AbstractTableModel {
             default:
                 throw new IllegalArgumentException("columnIndex");
         }
+    }
+    
+    public void updateGuest(Guest g, int rowIndex){
+        guests.set(rowIndex, g);
+        fireTableRowsUpdated(rowIndex, rowIndex);
     }
 
     public void addGuest(Guest g) {
@@ -155,7 +154,6 @@ public class GuestsTableModel extends AbstractTableModel {
     }
 
     public void deleteGuest(int rowIndex) {
-
         guests.remove(rowIndex);
         fireTableRowsDeleted(rowIndex, rowIndex);
     }
@@ -167,25 +165,9 @@ public class GuestsTableModel extends AbstractTableModel {
 
     void deleteGuests(int[] selectedRows) {
         Integer[] indexes = AppCommons.getSortedDesc(selectedRows);
-        System.out.println(indexes.toString());
         for (int i : indexes) {
-            System.out.println(i + " ");
+            //System.out.println(i + " ");
             deleteGuest(i);
-        }
-    }
-
-    private class UpdateGuestSwingWorker extends SwingWorker<Void, Void> {
-
-        private final Guest guest;
-
-        public UpdateGuestSwingWorker(Guest g) {
-            guest = g;
-        }
-
-        @Override
-        protected Void doInBackground() {
-            guestManager.updateGuest(guest);
-            return null;
         }
     }
 }

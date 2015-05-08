@@ -70,7 +70,7 @@ public class Room {
 
     @Override
     public String toString() {
-        return "Room{" + "id=" + id + ", number=" + number + '}';
+        return id + ": " + number;
     }
 
     @Override

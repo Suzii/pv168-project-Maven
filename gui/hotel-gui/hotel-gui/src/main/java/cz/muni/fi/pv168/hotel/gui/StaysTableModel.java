@@ -20,7 +20,7 @@ import javax.swing.table.AbstractTableModel;
 public class StaysTableModel extends AbstractTableModel {
 
     private List<Stay> stays = new ArrayList<Stay>();
-    private static final int STAYS_PARAMS = 9;
+    private static final int STAYS_PARAMS = 7;
 
     @Override
     public int getRowCount() {
@@ -52,14 +52,10 @@ public class StaysTableModel extends AbstractTableModel {
             case 3:
                 return s.getRealEndDate();
             case 4:
-                return s.getGuest().getId();
-            case 5:
                 return s.getGuest().getName();
-            case 6:
-                return s.getRoom().getId();
-            case 7:
+            case 5:
                 return s.getRoom().getNumber();
-            case 8:
+            case 6:
                 return s.getMinibarCosts();
             default:
                 throw new IllegalArgumentException("columnIndex");
@@ -78,14 +74,10 @@ public class StaysTableModel extends AbstractTableModel {
             case 3:
                 return "Real end date";
             case 4:
-                return "Guest id";
-            case 5:
                 return "Guest name";
-            case 6:
-                return "Room id";
-            case 7:
+            case 5:
                 return "Room number";
-            case 8:
+            case 6:
                 return "Minibar costs";
             default:
                 throw new IllegalArgumentException("columnIndex");
@@ -102,14 +94,10 @@ public class StaysTableModel extends AbstractTableModel {
             case 3:
                 return LocalDate.class;
             case 4:
-                return Integer.class;
+                return String.class;
             case 5:
                 return String.class;
             case 6:
-                return Integer.class;
-            case 7:
-                return String.class;
-            case 8:
                 return BigDecimal.class;
             default:
                 throw new IllegalArgumentException("columnIndex");
@@ -133,16 +121,12 @@ public class StaysTableModel extends AbstractTableModel {
                 s.setRealEndDate((LocalDate) aValue);
                 break;
 
-            case 8:
+            case 6:
                 s.setMinibarCosts((BigDecimal) aValue);
                 break;
             default:
                 throw new IllegalArgumentException("columnIndex");
         }
-        
-        UpdateStaySwingWorker w = new UpdateStaySwingWorker(s);
-        w.execute();
-        fireTableCellUpdated(rowIndex, columnIndex);
     }
 
     @Override
@@ -151,21 +135,22 @@ public class StaysTableModel extends AbstractTableModel {
             case 1:
             case 2:
             case 3:
-            case 8:
-                return true;
             case 0:
             case 4:
             case 5:
             case 6:
-            case 7:
                 return false;
             default:
                 throw new IllegalArgumentException("columnIndex");
         }
     }
 
+    public void updateStay(Stay s, int rowIndex){
+        stays.set(rowIndex, s);
+        fireTableCellUpdated(rowIndex, rowIndex);
+    }
+    
     public void addStay(Stay s) {
-        //System.out.println(r);
         stays.add(s);
         int lastRow = stays.size() - 1;
         fireTableRowsInserted(lastRow, lastRow);
@@ -185,21 +170,6 @@ public class StaysTableModel extends AbstractTableModel {
         Integer[] indexes = AppCommons.getSortedDesc(selectedRows);
         for (int i : indexes) {
             deleteStay(i);
-        }
-    }
-    
-    private class UpdateStaySwingWorker extends SwingWorker<Void, Void> {
-
-        private final Stay stay;
-
-        public UpdateStaySwingWorker(Stay s) {
-            stay = s;
-        }
-
-        @Override
-        protected Void doInBackground() {
-            AppCommons.getStayManager().updateStay(stay);
-            return null;
         }
     }
 }

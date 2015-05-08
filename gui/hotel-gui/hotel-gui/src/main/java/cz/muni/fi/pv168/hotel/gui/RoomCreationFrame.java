@@ -5,7 +5,6 @@
  */
 package cz.muni.fi.pv168.hotel.gui;
 
-import static cz.muni.fi.pv168.hotel.gui.HotelApp.roomManager;
 import cz.muni.fi.pv168.project.Room;
 import cz.muni.fi.pv168.project.RoomManager;
 import cz.muni.fi.pv168.project.RoomType;
@@ -27,18 +26,32 @@ public class RoomCreationFrame extends javax.swing.JFrame {
     private static RoomManager roomManager = AppCommons.getRoomManager();
     private HotelApp context;
     private RoomsTableModel roomsModel;
+    private String action;
+    private Room room;
+    private int rowIndex;
 
     /**
      * Creates new form RoomCreationFrame
      */
-    public RoomCreationFrame(HotelApp context) {
+    public RoomCreationFrame(HotelApp context, Room room, int rowIndex, String action) {
         log.debug("Room creation frame initialized.");
         initComponents();
+        this.action = action;
+        this.room = room;
+        this.rowIndex = rowIndex;
         this.context = context;
-        roomsModel = context.getRoomsModel();
+        this.roomsModel = context.getRoomsModel();
 
-        this.setVisible(true);
+        if (room != null) {
+            jTextFieldRoomNumber.setText(room.getNumber());
+            jTextFieldPricePerNight.setText(room.getPricePerNight().toString());
+            jTextFieldCapacity.setText("" + room.getCapacity());
+            jComboBoxRoomType.setSelectedItem(room.getType());
+        }
+
+        jButtonRoomCreate.setText(action);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        this.setVisible(true);
     }
 
     private class CreateRoomWorker extends SwingWorker<Room, Integer> {
@@ -46,27 +59,26 @@ public class RoomCreationFrame extends javax.swing.JFrame {
         @Override
         protected Room doInBackground() throws Exception {
             Room r = getRoomFromCreateForm();
-            try {
-                roomManager.createRoom(r);
-                return r;
-            } catch (Exception ex) {
-                log.error("Exception thrown in doInBackground of CreateRoom: " + ex.getCause());
-                throw ex;
+            if (r == null) {
+                log.error("Wrong data entered.");
+                throw new IllegalArgumentException("Wrong data entered!");
             }
+            roomManager.createRoom(r);
+            return r;
         }
 
         @Override
         protected void done() {
             try {
                 Room r = get();
-                if (r == null) {
-                    //do not close the winfow
-                    log.error("Wrong number entered :");
-                    JOptionPane.showMessageDialog(null, "Wrong number entered!");
-                }
+
                 roomsModel.addRoom(r);
                 log.info("Room " + r + " created");
+                context.refreshComboBoxesRooms();
                 RoomCreationFrame.this.dispose();
+            } catch (IllegalArgumentException ex) {
+                warning(ex.getMessage());
+                return;
             } catch (ExecutionException ex) {
                 log.error("Exception thrown in doInBackground of CreateRoom: " + ex.getCause());
             } catch (InterruptedException ex) {
@@ -76,16 +88,81 @@ public class RoomCreationFrame extends javax.swing.JFrame {
         }
     }
 
+    private class UpdateRoomWorker extends SwingWorker<Room, Integer> {
+
+        @Override
+        protected Room doInBackground() throws Exception {
+            Room r = getRoomFromCreateForm();
+            if (r == null) {
+                log.error("Wrong data entered.");
+                throw new IllegalArgumentException("Wrong data entered!");
+            }
+            roomManager.updateRoom(r);
+            return r;
+        }
+
+        @Override
+        protected void done() {
+            try {
+                Room r = get();
+
+                roomsModel.updateRoom(r, rowIndex);
+                log.info("Room " + r + " updated");
+                RoomCreationFrame.this.dispose();
+            } catch (IllegalArgumentException ex) {
+                warning(ex.getMessage());
+                return;
+            } catch (ExecutionException ex) {
+                log.error("Exception thrown in doInBackground of UpdateRoom: " + ex.getCause());
+            } catch (InterruptedException ex) {
+                log.error("doInBackground of CreateRoom interrupted: " + ex.getCause());
+                throw new RuntimeException("Operation interrupted.. UpdateRoom");
+            }
+        }
+    }
+
     private Room getRoomFromCreateForm() {
         // TODO add validation, if invalid, return null
+        String number = jTextFieldRoomNumber.getText();
+        if (number == null || number.trim().length() < 4) {
+            warning("Number is required, at least 4 characters long!");
+            return null;
+        }
+        int capacity = 0;
+        try {
+            capacity = Integer.parseInt(jTextFieldCapacity.getText());
+            if (capacity <= 0) {
+                throw new IllegalArgumentException("arg");
+            }
+        } catch (Exception ex) {
+            log.debug("Wrong capacity entered");
+            warning("Capacity must be a positive number!");
+        }
+        BigDecimal price = null;
+        try{
+            price = new BigDecimal(jTextFieldPricePerNight.getText());
+            if(price.signum() < 1)
+                throw new IllegalArgumentException("Price must be positive.");
+        }catch (Exception ex) {
+            log.debug("Wrong price entered");
+            warning("Price must be a number!");
+        }
+        
         //number conversion must be in try-catch
-        Room r = new Room();
-        r.setNumber((String) jTextFieldRoomNumber.getText());
-        r.setCapacity(Integer.parseInt(jTextFieldCapacity.getText()));
-        r.setPricePerNight(new BigDecimal(jTextFieldPricePerNight.getText()));
-        r.setType((RoomType) jComboBoxRoomType.getSelectedItem());
-        r.setBathroom((Boolean) jRadioButton1.isSelected());
-        return r;
+        if (this.room == null) {
+            this.room = new Room();
+        }
+        room.setNumber(number);
+        room.setCapacity(capacity);
+        room.setPricePerNight(price);
+        room.setType((RoomType) jComboBoxRoomType.getSelectedItem());
+        room.setBathroom((Boolean) jRadioButton1.isSelected());
+        return room;
+    }
+
+    private void warning(String msg) {
+        JOptionPane.showMessageDialog(rootPane, msg,
+                null, JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
@@ -217,9 +294,13 @@ public class RoomCreationFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonRoomCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRoomCreateActionPerformed
-
-        CreateRoomWorker w = new CreateRoomWorker();
-        w.execute();
+        if (action.equals("Create")) {
+            CreateRoomWorker w = new CreateRoomWorker();
+            w.execute();
+        } else if (action.equals("Update")) {
+            UpdateRoomWorker w = new UpdateRoomWorker();
+            w.execute();
+        }
     }//GEN-LAST:event_jButtonRoomCreateActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
