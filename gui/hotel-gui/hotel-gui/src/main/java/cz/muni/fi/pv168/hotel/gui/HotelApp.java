@@ -852,34 +852,32 @@ public class HotelApp extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanelGuestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelGuestsLayout.createSequentialGroup()
+                        .addComponent(jButtonFindAllGuests)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButtonTop3Guests)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButtonUpdateSelectedGuest)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButtonDeleteSelectedGuests))
+                    .addGroup(jPanelGuestsLayout.createSequentialGroup()
                         .addGroup(jPanelGuestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanelGuestsLayout.createSequentialGroup()
-                                .addComponent(jButtonFindAllGuests)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButtonTop3Guests)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButtonUpdateSelectedGuest)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButtonDeleteSelectedGuests))
                             .addGroup(jPanelGuestsLayout.createSequentialGroup()
                                 .addGroup(jPanelGuestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel7)
                                     .addComponent(jLabel13))
                                 .addGap(34, 34, 34)
-                                .addGroup(jPanelGuestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(jPanelGuestsLayout.createSequentialGroup()
-                                        .addGap(94, 94, 94)
-                                        .addComponent(jComboBoxFindGuestsFormRoomByDate_room, 0, 118, Short.MAX_VALUE))
-                                    .addComponent(jTextFieldSearchGuest))
+                                .addComponent(jTextFieldSearchGuest, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 135, Short.MAX_VALUE))
+                            .addGroup(jPanelGuestsLayout.createSequentialGroup()
+                                .addComponent(jLabel14)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jPanelGuestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButtonFindStayingGuestsByDate, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jButtonSerachGuestByName, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jButtonFindGuestsForRoomByDate, javax.swing.GroupLayout.Alignment.TRAILING))))
-                        .addContainerGap())
-                    .addGroup(jPanelGuestsLayout.createSequentialGroup()
-                        .addComponent(jLabel14)
-                        .addGap(0, 456, Short.MAX_VALUE))))
+                                .addComponent(jComboBoxFindGuestsFormRoomByDate_room, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(94, 94, 94)))
+                        .addGroup(jPanelGuestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButtonFindStayingGuestsByDate, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButtonSerachGuestByName, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButtonFindGuestsForRoomByDate, javax.swing.GroupLayout.Alignment.TRAILING))))
+                .addContainerGap())
         );
         jPanelGuestsLayout.setVerticalGroup(
             jPanelGuestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -997,17 +995,19 @@ public class HotelApp extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButtonFindRoomsForGuestByDate))
                     .addGroup(jPanelRoomsLayout.createSequentialGroup()
-                        .addGroup(jPanelRoomsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(jPanelRoomsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanelRoomsLayout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jTextFieldFindFreeRoomsByDateAndCapacity_capacity, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanelRoomsLayout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(jLabel8)
                                 .addGap(67, 67, 67)
                                 .addComponent(jTextFieldSearchRoomNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanelRoomsLayout.createSequentialGroup()
                                 .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(jPanelRoomsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanelRoomsLayout.createSequentialGroup()
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -1275,6 +1275,10 @@ public class HotelApp extends javax.swing.JFrame {
     private void jButtonFindStayingGuestsByDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFindStayingGuestsByDateActionPerformed
         //TODO picker
         Date d = (Date) datePicker.getModel().getValue();
+        if (d == null) {
+            warning(java.util.ResourceBundle.getBundle("texts").getString("SELECT THE DATE!"));
+            return;
+        }
         LocalDate ld = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         String dateStr = ld.toString();
         LocalDate date = parseDate(dateStr);
@@ -1292,6 +1296,10 @@ public class HotelApp extends javax.swing.JFrame {
     private void jButtonFindGuestsForRoomByDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFindGuestsForRoomByDateActionPerformed
         //TODO picker
         Date d = (Date) datePickerWithRoom.getModel().getValue();
+        if (d == null) {
+            warning(java.util.ResourceBundle.getBundle("texts").getString("SELECT THE DATE!"));
+            return;
+        }
         LocalDate ld = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         String dateStr = ld.toString();
         LocalDate date = parseDate(dateStr);
@@ -1311,6 +1319,10 @@ public class HotelApp extends javax.swing.JFrame {
     private void jButtonFindStaysForRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFindStaysForRoomActionPerformed
         Room room = (Room) jComboBoxFindStaysForRoom.getSelectedItem();
         Date d = (Date) datePickerstayForRoom.getModel().getValue();
+        if (d == null) {
+            warning(java.util.ResourceBundle.getBundle("texts").getString("SELECT THE DATE!"));
+            return;
+        }
         LocalDate ld = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         String dateStr = ld.toString();
         LocalDate date = parseDate(dateStr);
@@ -1327,12 +1339,20 @@ public class HotelApp extends javax.swing.JFrame {
 
     private void jButtonFindStaysByDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFindStaysByDateActionPerformed
         Date d = (Date) datePickerfrom.getModel().getValue();
+        if (d == null) {
+            warning(java.util.ResourceBundle.getBundle("texts").getString("SELECT THE DATE!"));
+            return;
+        }
         LocalDate ld = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         String dateStr = ld.toString();
         LocalDate from = parseDate(dateStr);
 
         //TODO picker
         Date t = (Date) datePickerto.getModel().getValue();
+        if (t == null) {
+            warning(java.util.ResourceBundle.getBundle("texts").getString("SELECT THE DATE!"));
+            return;
+        }
         LocalDate ldt = t.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         String dateStrTo = ldt.toString();
         LocalDate to = parseDate(dateStrTo);
@@ -1401,6 +1421,10 @@ public class HotelApp extends javax.swing.JFrame {
 
     private void jButtonFindFreeRoomsByDateAndLenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFindFreeRoomsByDateAndLenActionPerformed
         Date d = (Date) datePickerRL.getModel().getValue();
+        if (d == null) {
+            warning(java.util.ResourceBundle.getBundle("texts").getString("SELECT THE DATE!"));
+            return;
+        }
         LocalDate ld = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         String dateStr = ld.toString();
         LocalDate date = parseDate(dateStr);
@@ -1428,6 +1452,10 @@ public class HotelApp extends javax.swing.JFrame {
     private void jButtonFindFreeRoomByDateAndCapacityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFindFreeRoomByDateAndCapacityActionPerformed
 
         Date d = (Date) datePickerRC.getModel().getValue();
+        if (d == null) {
+            warning(java.util.ResourceBundle.getBundle("texts").getString("SELECT THE DATE!"));
+            return;
+        }
         LocalDate ld = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         String dateStr = ld.toString();
         LocalDate date = parseDate(dateStr);
@@ -1455,6 +1483,10 @@ public class HotelApp extends javax.swing.JFrame {
 
     private void jButtonFindRoomsForGuestByDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFindRoomsForGuestByDateActionPerformed
         Date d = (Date) datePickerRG.getModel().getValue();
+        if (d == null) {
+            warning(java.util.ResourceBundle.getBundle("texts").getString("SELECT THE DATE!"));
+            return;
+        }
         LocalDate ld = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         String dateStr = ld.toString();
         LocalDate date = parseDate(dateStr);
