@@ -141,7 +141,7 @@ public class RoomCreationFrame extends javax.swing.JFrame {
         BigDecimal price = null;
         try{
             String pr = jTextFieldPricePerNight.getText();
-            pr.replace(',', '.'); // why this doesnt WOKR ??????
+            pr= pr.replace(',', '.'); // why this doesnt WOKR ??????
             price = new BigDecimal(pr);
             if(price.signum() < 1)
                 throw new IllegalArgumentException(java.util.ResourceBundle.getBundle("texts").getString("PRICE MUST BE POSITIVE."));
