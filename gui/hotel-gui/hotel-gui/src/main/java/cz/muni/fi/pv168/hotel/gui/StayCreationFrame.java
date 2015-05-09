@@ -150,35 +150,40 @@ public class StayCreationFrame extends javax.swing.JFrame {
     private Stay getStayFromCreateForm() {
         //TODO pickers
         Date startD = (Date) datePickerStart.getModel().getValue();
-       /* if (startD == null) {
+        if (startD == null) {
             warning(java.util.ResourceBundle.getBundle("texts").getString("SELECT THE DATE!"));
             return null;
-        }*/
+        }
         LocalDate ld = startD.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         String dateStart = ld.toString();
 
         LocalDate start = LocalDate.parse(dateStart);
 
         Date endD = (Date) datePickerExpected.getModel().getValue();
-      /*  if (endD == null) {
+        if (endD == null) {
             warning(java.util.ResourceBundle.getBundle("texts").getString("SELECT THE DATE!"));
             return null;
-        }*/
+        }
         LocalDate ldE = endD.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         String dateEnd = ldE.toString();
 
         LocalDate exEnd = LocalDate.parse(dateEnd);
-
-        Date realD = (Date) datePickerReal.getModel().getValue();        
-      /*  if (realD == null) {
+        //real musi byt setted ??? 
+        Date realD = (Date) datePickerReal.getModel().getValue();
+        LocalDate rEnd = null;
+        if (realD == null) {
             warning(java.util.ResourceBundle.getBundle("texts").getString("SELECT THE DATE!"));
             return null;
-        }*/
-        
-        LocalDate ldR = realD.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        String dateReal = ldR.toString();
+            /*LocalDate ldR = realD.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+             String dateReal = ldR.toString();
 
-        LocalDate rEnd = LocalDate.parse(dateReal);
+             rEnd = LocalDate.parse(dateReal);*/
+        }
+             LocalDate ldR = realD.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+             String dateReal = ldR.toString();
+
+             rEnd = LocalDate.parse(dateReal);
+
         // REAL MUST BE SETTED ???? 
         //expected End date specified and not greater then start date
         if ((exEnd != null) && (start.compareTo(exEnd) == 1)) {
@@ -188,13 +193,17 @@ public class StayCreationFrame extends javax.swing.JFrame {
         if ((rEnd != null) && (start.compareTo(rEnd) == 1)) {
             throw new IllegalArgumentException(java.util.ResourceBundle.getBundle("texts").getString("REAL END DATE MUST BE AFTER START DATE"));
         }
-
+        // nemoze byt null?? problem s 0 
         BigDecimal minibar = null;
         try {
-            minibar = new BigDecimal(jTextFieldMinibarCosts.getText());
-            if (minibar.signum() == -1) {
-                throw new IllegalArgumentException(java.util.ResourceBundle.getBundle("texts").getString("PRICE MUST NOT BE NEGATIVE."));
-            }
+            //if (jTextFieldMinibarCosts.getText() != null) {
+                minibar = new BigDecimal(jTextFieldMinibarCosts.getText());
+           // }
+            //if (minibar != null) {
+                if (minibar.signum() == -1) {
+                    throw new IllegalArgumentException(java.util.ResourceBundle.getBundle("texts").getString("PRICE MUST NOT BE NEGATIVE."));
+                }
+            //}
         } catch (Exception ex) {
             log.debug(java.util.ResourceBundle.getBundle("texts").getString("WRONG PRICE ENTERED"));
             warning(java.util.ResourceBundle.getBundle("texts").getString("PRICE MUST BE A NUMBER!"));

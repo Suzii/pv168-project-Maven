@@ -122,8 +122,8 @@ public class RoomCreationFrame extends javax.swing.JFrame {
     }
 
     private Room getRoomFromCreateForm() {
-        // TODO add validation, if invalid, return null
-        String number = jTextFieldRoomNumber.getText();
+        // TODO add validation, if invalid, return null ?? to upper?
+        String number = jTextFieldRoomNumber.getText().toUpperCase();
         if (number == null || number.trim().length() < 4) {
             warning(java.util.ResourceBundle.getBundle("texts").getString("NUMBER IS REQUIRED, AT LEAST 4 CHARACTERS LONG!"));
             return null;
@@ -140,7 +140,9 @@ public class RoomCreationFrame extends javax.swing.JFrame {
         }
         BigDecimal price = null;
         try{
-            price = new BigDecimal(jTextFieldPricePerNight.getText());
+            String pr = jTextFieldPricePerNight.getText();
+            pr.replace(',', '.'); // why this doesnt WOKR ??????
+            price = new BigDecimal(pr);
             if(price.signum() < 1)
                 throw new IllegalArgumentException(java.util.ResourceBundle.getBundle("texts").getString("PRICE MUST BE POSITIVE."));
         }catch (Exception ex) {
