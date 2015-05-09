@@ -1274,20 +1274,14 @@ public class HotelApp extends javax.swing.JFrame {
 
     private void jButtonFindStayingGuestsByDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFindStayingGuestsByDateActionPerformed
         //TODO picker
-        Date d = (Date) datePicker.getModel().getValue();
-        if (d == null) {
-            warning(java.util.ResourceBundle.getBundle("texts").getString("SELECT THE DATE!"));
-            return;
-        }
-        LocalDate ld = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        String dateStr = ld.toString();
-        LocalDate date = parseDate(dateStr);
+        LocalDate date = transformDate((Date) datePicker.getModel().getValue());
         if (date == null) {
             warning(java.util.ResourceBundle.getBundle("texts").getString("SELECT THE DATE!"));
             return;
         }
         FindStayingGuestsByDateWorker w = new FindStayingGuestsByDateWorker(date);
         w.execute();
+        datePicker.getModel().setValue(null);
         //TODO
         //datePicker.getModel()
 
@@ -1295,14 +1289,7 @@ public class HotelApp extends javax.swing.JFrame {
 
     private void jButtonFindGuestsForRoomByDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFindGuestsForRoomByDateActionPerformed
         //TODO picker
-        Date d = (Date) datePickerWithRoom.getModel().getValue();
-        if (d == null) {
-            warning(java.util.ResourceBundle.getBundle("texts").getString("SELECT THE DATE!"));
-            return;
-        }
-        LocalDate ld = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        String dateStr = ld.toString();
-        LocalDate date = parseDate(dateStr);
+        LocalDate date = transformDate((Date) datePickerWithRoom.getModel().getValue());
         Room room = (Room) jComboBoxFindGuestsFormRoomByDate_room.getSelectedItem();
         if (date == null || room == null) {
             warning(java.util.ResourceBundle.getBundle("texts").getString("SPECIFY DATE AND ROOM"));
@@ -1312,20 +1299,13 @@ public class HotelApp extends javax.swing.JFrame {
         FindGuestsForRoomByDateWorker w = new FindGuestsForRoomByDateWorker(room, date);
         w.execute();
         //TODO
-
+        datePickerWithRoom.getModel().setValue(null);
         jComboBoxFindGuestsFormRoomByDate_room.setSelectedItem(null);
     }//GEN-LAST:event_jButtonFindGuestsForRoomByDateActionPerformed
 
     private void jButtonFindStaysForRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFindStaysForRoomActionPerformed
         Room room = (Room) jComboBoxFindStaysForRoom.getSelectedItem();
-        Date d = (Date) datePickerstayForRoom.getModel().getValue();
-        if (d == null) {
-            warning(java.util.ResourceBundle.getBundle("texts").getString("SELECT THE DATE!"));
-            return;
-        }
-        LocalDate ld = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        String dateStr = ld.toString();
-        LocalDate date = parseDate(dateStr);
+        LocalDate date = transformDate((Date) datePickerstayForRoom.getModel().getValue());
 
         if (room == null || date == null) {
             warning(java.util.ResourceBundle.getBundle("texts").getString("SPECIFY DATE AND ROOM!"));
@@ -1335,27 +1315,13 @@ public class HotelApp extends javax.swing.JFrame {
         w.execute();
         jComboBoxFindStaysForRoom.setSelectedItem(null);
         //TODO picker null
+        datePickerstayForRoom.getModel().setValue(null);
     }//GEN-LAST:event_jButtonFindStaysForRoomActionPerformed
 
     private void jButtonFindStaysByDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFindStaysByDateActionPerformed
-        Date d = (Date) datePickerfrom.getModel().getValue();
-        if (d == null) {
-            warning(java.util.ResourceBundle.getBundle("texts").getString("SELECT THE DATE!"));
-            return;
-        }
-        LocalDate ld = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        String dateStr = ld.toString();
-        LocalDate from = parseDate(dateStr);
+        LocalDate from = transformDate((Date) datePickerfrom.getModel().getValue());
 
-        //TODO picker
-        Date t = (Date) datePickerto.getModel().getValue();
-        if (t == null) {
-            warning(java.util.ResourceBundle.getBundle("texts").getString("SELECT THE DATE!"));
-            return;
-        }
-        LocalDate ldt = t.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        String dateStrTo = ldt.toString();
-        LocalDate to = parseDate(dateStrTo);
+        LocalDate to = transformDate((Date) datePickerto.getModel().getValue());
 
         if (from == null || to == null) {
             warning(java.util.ResourceBundle.getBundle("texts").getString("SPECIFY FROM AND TO DATES!"));
@@ -1364,6 +1330,8 @@ public class HotelApp extends javax.swing.JFrame {
         FindStaysByDateWorker w = new FindStaysByDateWorker(from, to);
         w.execute();
         //TODO null pickers
+        datePickerfrom.getModel().setValue(null);
+        datePickerto.getModel().setValue(null);
 
     }//GEN-LAST:event_jButtonFindStaysByDateActionPerformed
 
@@ -1420,14 +1388,7 @@ public class HotelApp extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonSearchRoomNumberActionPerformed
 
     private void jButtonFindFreeRoomsByDateAndLenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFindFreeRoomsByDateAndLenActionPerformed
-        Date d = (Date) datePickerRL.getModel().getValue();
-        if (d == null) {
-            warning(java.util.ResourceBundle.getBundle("texts").getString("SELECT THE DATE!"));
-            return;
-        }
-        LocalDate ld = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        String dateStr = ld.toString();
-        LocalDate date = parseDate(dateStr);
+        LocalDate date = transformDate((Date) datePickerRL.getModel().getValue());
         String l = jTextFieldFindFreeRoomsByDateAndLen_Len.getText();
         int len = 1;
         if (date == null || l == null || l.trim().length() == 0) {
@@ -1446,19 +1407,12 @@ public class HotelApp extends javax.swing.JFrame {
         FindFreeRoomsByDateAndLenWorker w = new FindFreeRoomsByDateAndLenWorker(date, len);
         w.execute();
         jTextFieldFindFreeRoomsByDateAndLen_Len.setText("");
+        datePickerRL.getModel().setValue(null);
         //TODO pickeer null
     }//GEN-LAST:event_jButtonFindFreeRoomsByDateAndLenActionPerformed
 
     private void jButtonFindFreeRoomByDateAndCapacityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFindFreeRoomByDateAndCapacityActionPerformed
-
-        Date d = (Date) datePickerRC.getModel().getValue();
-        if (d == null) {
-            warning(java.util.ResourceBundle.getBundle("texts").getString("SELECT THE DATE!"));
-            return;
-        }
-        LocalDate ld = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        String dateStr = ld.toString();
-        LocalDate date = parseDate(dateStr);
+        LocalDate date = transformDate((Date) datePickerRC.getModel().getValue());
         String c = jTextFieldFindFreeRoomsByDateAndCapacity_capacity.getText();
         int cap = 1;
         if (date == null || c == null || c.trim().length() == 0) {
@@ -1479,17 +1433,12 @@ public class HotelApp extends javax.swing.JFrame {
         w.execute();
         //TODO null picker
         jTextFieldFindFreeRoomsByDateAndCapacity_capacity.setText("");
+        datePickerRC.getModel().setValue(null);
     }//GEN-LAST:event_jButtonFindFreeRoomByDateAndCapacityActionPerformed
 
     private void jButtonFindRoomsForGuestByDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFindRoomsForGuestByDateActionPerformed
-        Date d = (Date) datePickerRG.getModel().getValue();
-        if (d == null) {
-            warning(java.util.ResourceBundle.getBundle("texts").getString("SELECT THE DATE!"));
-            return;
-        }
-        LocalDate ld = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        String dateStr = ld.toString();
-        LocalDate date = parseDate(dateStr);
+        // Date d = 
+        LocalDate date = transformDate((Date) datePickerRG.getModel().getValue());
         Guest g = (Guest) jComboBoxFindRoomsForGuestByDate_guest.getSelectedItem();
         if (date == null || g == null) {
             warning(java.util.ResourceBundle.getBundle("texts").getString("SPECIFY DATE AND GUEST"));
@@ -1499,6 +1448,7 @@ public class HotelApp extends javax.swing.JFrame {
         w.execute();
         jComboBoxFindRoomsForGuestByDate_guest.setSelectedItem(null);
         //TODO picker
+        datePickerRG.getModel().setValue(null);
     }//GEN-LAST:event_jButtonFindRoomsForGuestByDateActionPerformed
 
     private void jButtonUpdateSelectedGuestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonUpdateSelectedGuestActionPerformed
@@ -1553,7 +1503,7 @@ public class HotelApp extends javax.swing.JFrame {
 
     public JDatePickerImpl setDatePickerBirth() {
         UtilDateModel model = new UtilDateModel();
-        model.setDate(1914, 01, 01);
+        model.setDate(1954, 01, 01);
         // Need this...
         Properties p = new Properties();
         p.put("text.today", java.util.ResourceBundle.getBundle("texts").getString("TODAY"));
@@ -1586,6 +1536,15 @@ public class HotelApp extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, java.util.ResourceBundle.getBundle("texts").getString("WRONG DATE FORMAT ENTERED!"));
         }
         return null;
+    }
+
+    public LocalDate transformDate(Date d) {
+        if (d == null) {
+            return null;
+        }
+        LocalDate ld = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        String dateStr = ld.toString();
+        return parseDate(dateStr);
     }
 
     /**

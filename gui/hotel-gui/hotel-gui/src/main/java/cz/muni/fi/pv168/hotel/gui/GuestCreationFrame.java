@@ -177,6 +177,10 @@ public class GuestCreationFrame extends javax.swing.JFrame {
             warning(java.util.ResourceBundle.getBundle("texts").getString("WRONG DATE FORMAT ENTERED! SUPPORTED FORMAT IS YYYY-MM-DD"));
             date = null;
             return null;
+        }catch (NullPointerException ex){
+            warning(java.util.ResourceBundle.getBundle("texts").getString("WRONG DATE FORMAT ENTERED! SUPPORTED FORMAT IS YYYY-MM-DD"));
+            date = null;
+            return null;
         }
 
         //create guest
