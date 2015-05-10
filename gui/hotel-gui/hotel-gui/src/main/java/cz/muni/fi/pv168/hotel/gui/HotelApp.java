@@ -453,6 +453,7 @@ public class HotelApp extends javax.swing.JFrame {
                 guestsModel.setGuests(get());
             } catch (ExecutionException ex) {
                 log.error("Exception thrown in doInBackground of FindTop3Guests: " + ex.getCause());
+                ex.printStackTrace();
             } catch (InterruptedException ex) {
                 log.error("doInBackground of FindTop3Guests interrupted: " + ex.getCause());
                 throw new RuntimeException("Operation interrupted.. FindTop3Guests");

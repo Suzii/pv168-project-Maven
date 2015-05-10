@@ -46,11 +46,11 @@ public class StaysTableModel extends AbstractTableModel {
             case 0:
                 return s.getId();
             case 1:
-                return s.getStartDate().format(AppCommons.getDateTimeFormatter());
+                return (s.getStartDate() != null)? s.getStartDate().format(AppCommons.getDateTimeFormatter()) : null;
             case 2:
-                return s.getExpectedEndDate().format(AppCommons.getDateTimeFormatter());
+                return (s.getExpectedEndDate() != null)? s.getExpectedEndDate().format(AppCommons.getDateTimeFormatter()) : null;
             case 3:
-                return s.getRealEndDate().format(AppCommons.getDateTimeFormatter());
+                return (s.getRealEndDate() != null)? s.getRealEndDate().format(AppCommons.getDateTimeFormatter()) : null;
             case 4:
                 return s.getGuest().getName();
             case 5:

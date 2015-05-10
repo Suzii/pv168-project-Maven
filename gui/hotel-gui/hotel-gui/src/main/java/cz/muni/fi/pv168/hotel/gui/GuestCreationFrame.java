@@ -170,6 +170,7 @@ public class GuestCreationFrame extends javax.swing.JFrame {
         LocalDate date;
         try {
             Date d = (Date)datePicker.getModel().getValue();
+            
             LocalDate ld = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             String dateStr = ld.toString();
             //log.debug(dateStr);
@@ -181,7 +182,7 @@ public class GuestCreationFrame extends javax.swing.JFrame {
             date = null;
             return null;
         }catch (NullPointerException ex){
-            warning(java.util.ResourceBundle.getBundle("texts").getString("WRONG DATE FORMAT ENTERED! SUPPORTED FORMAT IS YYYY-MM-DD"));
+            warning(java.util.ResourceBundle.getBundle("texts").getString("SELECT THE DATE!"));
             date = null;
             return null;
         }

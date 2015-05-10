@@ -76,11 +76,15 @@ public class StayCreationFrame extends javax.swing.JFrame {
             datePickerStart.getModel().setDate(stay.getStartDate().getYear(), stay.getStartDate().getMonthValue(), stay.getStartDate().getDayOfMonth());
             datePickerStart.getModel().setSelected(true);
             //TODO picer end exp
-            datePickerExpected.getModel().setDate(stay.getExpectedEndDate().getYear(), stay.getExpectedEndDate().getMonthValue(), stay.getExpectedEndDate().getDayOfMonth());
-            datePickerExpected.getModel().setSelected(true);
+            if (stay.getExpectedEndDate() != null) {
+                datePickerExpected.getModel().setDate(stay.getExpectedEndDate().getYear(), stay.getExpectedEndDate().getMonthValue(), stay.getExpectedEndDate().getDayOfMonth());
+                datePickerExpected.getModel().setSelected(true);
+            }
             //TODO picer end real
-            datePickerReal.getModel().setDate(stay.getRealEndDate().getYear(), stay.getRealEndDate().getMonthValue(), stay.getRealEndDate().getDayOfMonth());
-            datePickerReal.getModel().setSelected(true);
+            if (stay.getRealEndDate() != null) {
+                datePickerReal.getModel().setDate(stay.getRealEndDate().getYear(), stay.getRealEndDate().getMonthValue(), stay.getRealEndDate().getDayOfMonth());
+                datePickerReal.getModel().setSelected(true);
+            }
             jComboBoxStayCreation_guests.setSelectedItem(stay.getGuest());
             jComboBoxStayCreation_room.setSelectedItem(stay.getRoom());
             jTextFieldMinibarCosts.setText("" + stay.getMinibarCosts());
@@ -108,15 +112,18 @@ public class StayCreationFrame extends javax.swing.JFrame {
         protected void done() {
             try {
                 Stay s = get();
-
                 staysModel.addStay(s);
                 log.info("Stay " + s + " created.");
                 StayCreationFrame.this.dispose();
             } catch (IllegalArgumentException ex) {
                 warning(ex.getMessage());
                 return;
+            } catch (NullPointerException ex) {
+                ex.printStackTrace();
+                return;
             } catch (ExecutionException ex) {
                 log.error("Exception thrown in doInBackground of CreateStay: " + ex.getCause());
+                ex.printStackTrace();
             } catch (InterruptedException ex) {
                 log.error("doInBackground of CreateRoom interrupted: " + ex.getCause());
                 throw new RuntimeException("Operation interrupted.. CreateStay");
@@ -170,31 +177,27 @@ public class StayCreationFrame extends javax.swing.JFrame {
         LocalDate start = LocalDate.parse(dateStart);
 
         Date endD = (Date) datePickerExpected.getModel().getValue();
-        if (endD == null) {
-            warning(java.util.ResourceBundle.getBundle("texts").getString("SELECT THE DATE!"));
-            return null;
-        }
-        LocalDate ldE = endD.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        String dateEnd = ldE.toString();
+        LocalDate ldE = null;
+        LocalDate exEnd = null;
+        if (endD != null) {
+            //warning(java.util.ResourceBundle.getBundle("texts").getString("SELECT THE DATE!"));
+            //return null;
+            ldE = endD.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            String dateEnd = ldE.toString();
+            exEnd = LocalDate.parse(dateEnd);
 
-        LocalDate exEnd = LocalDate.parse(dateEnd);
-        //real musi byt setted ??? 
+        }
+
         Date realD = (Date) datePickerReal.getModel().getValue();
         LocalDate rEnd = null;
-        if (realD == null) {
-            warning(java.util.ResourceBundle.getBundle("texts").getString("SELECT THE DATE!"));
-            return null;
-            /*LocalDate ldR = realD.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-             String dateReal = ldR.toString();
-
-             rEnd = LocalDate.parse(dateReal);*/
+        if (realD != null) {
+            //warning(java.util.ResourceBundle.getBundle("texts").getString("SELECT THE DATE!"));
+            //return null;
+            LocalDate ldR = realD.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            String dateReal = ldR.toString();
+            rEnd = LocalDate.parse(dateReal);
         }
-             LocalDate ldR = realD.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-             String dateReal = ldR.toString();
 
-             rEnd = LocalDate.parse(dateReal);
-
-        // REAL MUST BE SETTED ???? 
         //expected End date specified and not greater then start date
         if ((exEnd != null) && (start.compareTo(exEnd) == 1)) {
             throw new IllegalArgumentException(java.util.ResourceBundle.getBundle("texts").getString("EXPECTED END DATE MUST BE AFTER START DATE"));
@@ -207,12 +210,12 @@ public class StayCreationFrame extends javax.swing.JFrame {
         BigDecimal minibar = null;
         try {
             //if (jTextFieldMinibarCosts.getText() != null) {
-                minibar = new BigDecimal(jTextFieldMinibarCosts.getText());
-           // }
+            minibar = new BigDecimal(jTextFieldMinibarCosts.getText());
+            // }
             //if (minibar != null) {
-                if (minibar.signum() == -1) {
-                    throw new IllegalArgumentException(java.util.ResourceBundle.getBundle("texts").getString("PRICE MUST NOT BE NEGATIVE."));
-                }
+            if (minibar.signum() == -1) {
+                throw new IllegalArgumentException(java.util.ResourceBundle.getBundle("texts").getString("PRICE MUST NOT BE NEGATIVE."));
+            }
             //}
         } catch (Exception ex) {
             log.debug(java.util.ResourceBundle.getBundle("texts").getString("WRONG PRICE ENTERED"));
