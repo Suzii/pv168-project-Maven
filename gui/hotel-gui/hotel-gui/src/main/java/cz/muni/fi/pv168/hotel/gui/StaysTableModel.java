@@ -46,17 +46,17 @@ public class StaysTableModel extends AbstractTableModel {
             case 0:
                 return s.getId();
             case 1:
-                return s.getStartDate();
+                return s.getStartDate().format(AppCommons.getDateTimeFormatter());
             case 2:
-                return s.getExpectedEndDate();
+                return s.getExpectedEndDate().format(AppCommons.getDateTimeFormatter());
             case 3:
-                return s.getRealEndDate();
+                return s.getRealEndDate().format(AppCommons.getDateTimeFormatter());
             case 4:
                 return s.getGuest().getName();
             case 5:
                 return s.getRoom().getNumber();
             case 6:
-                return s.getMinibarCosts();
+                return AppCommons.getNumberFormatter().format(s.getMinibarCosts());
             default:
                 throw new IllegalArgumentException("columnIndex");
         }
@@ -147,7 +147,7 @@ public class StaysTableModel extends AbstractTableModel {
 
     public void updateStay(Stay s, int rowIndex){
         stays.set(rowIndex, s);
-        fireTableCellUpdated(rowIndex, rowIndex);
+        fireTableRowsUpdated(rowIndex, rowIndex);
     }
     
     public void addStay(Stay s) {

@@ -49,7 +49,7 @@ public class RoomsTableModel extends AbstractTableModel {
             case 2:
                 return r.getCapacity();
             case 3:
-                return r.getPricePerNight();
+                return AppCommons.getNumberFormatter().format(r.getPricePerNight());
             case 4:
                 return r.getType();
             case 5:

@@ -11,7 +11,9 @@ import cz.muni.fi.pv168.project.common.SpringConfig;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.format.FormatStyle;
 import java.util.concurrent.ExecutionException;
 import javax.management.RuntimeErrorException;
 import javax.swing.DefaultComboBoxModel;
@@ -19,6 +21,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
+import javax.swing.text.DateFormatter;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
@@ -103,45 +106,9 @@ public class HotelApp extends javax.swing.JFrame {
         refreshComboBoxesGuests();
         refreshComboBoxesRooms();
         //initialize datePickers
-        datePicker = setDatePickerStay();
-        datePicker.setVisible(true);
-        datePicker.setBounds(263, 340, 150, 30);
-        jPanelGuests.add(datePicker);
+        initializeDatePickers();
 
-        datePickerWithRoom = setDatePickerStay();
-        datePickerWithRoom.setVisible(true);
-        datePickerWithRoom.setBounds(213, 380, 150, 30);
-        jPanelGuests.add(datePickerWithRoom);
-
-        datePickerRL = setDatePickerStay();
-        datePickerRL.setVisible(true);
-        datePickerRL.setBounds(290, 350, 150, 30);
-        jPanelRooms.add(datePickerRL);
-
-        datePickerRC = setDatePickerStay();
-        datePickerRC.setVisible(true);
-        datePickerRC.setBounds(290, 430, 150, 30);
-        jPanelRooms.add(datePickerRC);
-
-        datePickerRG = setDatePickerStay();
-        datePickerRG.setVisible(true);
-        datePickerRG.setBounds(410, 390, 150, 30);
-        jPanelRooms.add(datePickerRG);
-
-        datePickerfrom = setDatePickerStay();
-        datePickerfrom.setVisible(true);
-        datePickerfrom.setBounds(210, 300, 150, 30);
-        jPanel4.add(datePickerfrom);
-
-        datePickerto = setDatePickerStay();
-        datePickerto.setVisible(true);
-        datePickerto.setBounds(370, 300, 150, 30);
-        jPanel4.add(datePickerto);
-
-        datePickerstayForRoom = setDatePickerStay();
-        datePickerstayForRoom.setVisible(true);
-        datePickerstayForRoom.setBounds(370, 350, 150, 30);
-        jPanel4.add(datePickerstayForRoom);
+        warning(Locale.getDefault().toString());
     }
 
     public DefaultComboBoxModel getGuestsComboBoxModel() {
@@ -172,6 +139,56 @@ public class HotelApp extends javax.swing.JFrame {
     private void setComboBoxModelRooms() {
         jComboBoxFindGuestsFormRoomByDate_room.setModel(roomsComboBoxModel);
         jComboBoxFindStaysForRoom.setModel(roomsComboBoxModel);
+    }
+
+    private void initializeDatePickers() {
+        datePicker = setDatePickerStay();
+        datePicker.setVisible(true);
+        datePicker.setBounds(263, 340, 150, 30);
+        datePicker.setLocale(Locale.getDefault());
+        jPanelGuests.add(datePicker);
+
+        datePickerWithRoom = setDatePickerStay();
+        datePickerWithRoom.setVisible(true);
+        datePickerWithRoom.setBounds(213, 380, 150, 30);
+        datePickerWithRoom.setLocale(Locale.getDefault());
+        jPanelGuests.add(datePickerWithRoom);
+
+        datePickerRL = setDatePickerStay();
+        datePickerRL.setVisible(true);
+        datePickerRL.setBounds(290, 350, 150, 30);
+        datePickerRL.setLocale(Locale.getDefault());
+        jPanelRooms.add(datePickerRL);
+
+        datePickerRC = setDatePickerStay();
+        datePickerRC.setVisible(true);
+        datePickerRC.setBounds(290, 430, 150, 30);
+        datePickerRC.setLocale(Locale.getDefault());
+        jPanelRooms.add(datePickerRC);
+
+        datePickerRG = setDatePickerStay();
+        datePickerRG.setVisible(true);
+        datePickerRG.setBounds(410, 390, 150, 30);
+        datePickerRG.setLocale(Locale.getDefault());
+        jPanelRooms.add(datePickerRG);
+
+        datePickerfrom = setDatePickerStay();
+        datePickerfrom.setVisible(true);
+        datePickerfrom.setBounds(210, 300, 150, 30);
+        datePickerfrom.setLocale(Locale.getDefault());
+        jPanel4.add(datePickerfrom);
+
+        datePickerto = setDatePickerStay();
+        datePickerto.setVisible(true);
+        datePickerto.setBounds(370, 300, 150, 30);
+        datePickerto.setLocale(Locale.getDefault());
+        jPanel4.add(datePickerto);
+
+        datePickerstayForRoom = setDatePickerStay();
+        datePickerstayForRoom.setVisible(true);
+        datePickerstayForRoom.setBounds(370, 350, 150, 30);
+        datePickerstayForRoom.setLocale(Locale.getDefault());
+        jPanel4.add(datePickerstayForRoom);
     }
 
     // ********************* WORKERS FOR COMBOBOX MODEL UPDATE *****************************
@@ -852,31 +869,34 @@ public class HotelApp extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanelGuestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelGuestsLayout.createSequentialGroup()
-                        .addComponent(jButtonFindAllGuests)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButtonTop3Guests)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonUpdateSelectedGuest)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButtonDeleteSelectedGuests))
-                    .addGroup(jPanelGuestsLayout.createSequentialGroup()
                         .addGroup(jPanelGuestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanelGuestsLayout.createSequentialGroup()
                                 .addGroup(jPanelGuestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel7)
                                     .addComponent(jLabel13))
                                 .addGap(34, 34, 34)
-                                .addComponent(jTextFieldSearchGuest, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 135, Short.MAX_VALUE))
+                                .addComponent(jTextFieldSearchGuest)
+                                .addGap(52, 52, 52))
                             .addGroup(jPanelGuestsLayout.createSequentialGroup()
                                 .addComponent(jLabel14)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jComboBoxFindGuestsFormRoomByDate_room, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(94, 94, 94)))
+                                .addGap(94, 410, Short.MAX_VALUE)))
                         .addGroup(jPanelGuestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButtonFindStayingGuestsByDate, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jButtonSerachGuestByName, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButtonFindGuestsForRoomByDate, javax.swing.GroupLayout.Alignment.TRAILING))))
+                            .addComponent(jButtonFindGuestsForRoomByDate, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelGuestsLayout.createSequentialGroup()
+                        .addGroup(jPanelGuestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanelGuestsLayout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jComboBoxFindGuestsFormRoomByDate_room, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanelGuestsLayout.createSequentialGroup()
+                                .addComponent(jButtonFindAllGuests)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButtonTop3Guests)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButtonUpdateSelectedGuest)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButtonDeleteSelectedGuests)))
                 .addContainerGap())
         );
         jPanelGuestsLayout.setVerticalGroup(
@@ -898,12 +918,17 @@ public class HotelApp extends javax.swing.JFrame {
                 .addGroup(jPanelGuestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel13)
                     .addComponent(jButtonFindStayingGuestsByDate))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanelGuestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel14)
-                    .addComponent(jComboBoxFindGuestsFormRoomByDate_room, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonFindGuestsForRoomByDate))
-                .addContainerGap(62, Short.MAX_VALUE))
+                .addGroup(jPanelGuestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelGuestsLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanelGuestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel14)
+                            .addComponent(jButtonFindGuestsForRoomByDate))
+                        .addContainerGap(65, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelGuestsLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jComboBoxFindGuestsFormRoomByDate_room, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(59, 59, 59))))
         );
 
         jTabbedPaneGuests.addTab("Guests", jPanelGuests);
@@ -1127,25 +1152,25 @@ public class HotelApp extends javax.swing.JFrame {
                 .addComponent(jButtonFindAllStays)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButtonUpdateSelectedStay)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonDeleteStay))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButtonDeleteStay)
+                .addGap(8, 8, 8))
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel15)
-                    .addComponent(jLabel16)
-                    .addComponent(jLabel17))
-                .addGap(86, 86, 86)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel17)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jComboBoxFindStaysForGuest, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel16)
+                        .addGap(40, 40, 40)
+                        .addComponent(jComboBoxFindStaysForRoom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jComboBoxFindStaysForGuest, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonFindStaysForGuest))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jComboBoxFindStaysForRoom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButtonFindStaysByDate, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButtonFindStaysForRoom, javax.swing.GroupLayout.Alignment.TRAILING))))
+                    .addComponent(jButtonFindStaysForGuest, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButtonFindStaysByDate, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButtonFindStaysForRoom, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -1500,6 +1525,7 @@ public class HotelApp extends javax.swing.JFrame {
     public JDatePickerImpl setDatePickerBirth() {
         UtilDateModel model = new UtilDateModel();
         model.setDate(1954, 01, 01);
+
         // Need this...
         Properties p = new Properties();
         p.put("text.today", java.util.ResourceBundle.getBundle("texts").getString("TODAY"));

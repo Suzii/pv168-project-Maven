@@ -9,8 +9,13 @@ import cz.muni.fi.pv168.project.GuestManager;
 import cz.muni.fi.pv168.project.RoomManager;
 import cz.muni.fi.pv168.project.StayManager;
 import cz.muni.fi.pv168.project.common.SpringConfig;
+import java.text.NumberFormat;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Currency;
+import java.util.Locale;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -29,6 +34,19 @@ public abstract class AppCommons {
     protected static GuestManager guestManager = appContext.getBean("guestManager", GuestManager.class);
     protected static RoomManager roomManager = appContext.getBean("roomManager", RoomManager.class);
     protected static StayManager stayManager = appContext.getBean("stayManager", StayManager.class);
+    protected static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
+    protected static Currency currency = Currency.getInstance("EUR");
+    protected static NumberFormat numberFormatter = NumberFormat.getCurrencyInstance(Locale.getDefault());
+
+    
+    public static NumberFormat getNumberFormatter() {
+        numberFormatter.setCurrency(currency);
+        return numberFormatter;
+    }    
+
+    public static DateTimeFormatter getDateTimeFormatter() {
+        return dateTimeFormatter;
+    }
 
     public static ApplicationContext getAppContext() {
         return appContext;

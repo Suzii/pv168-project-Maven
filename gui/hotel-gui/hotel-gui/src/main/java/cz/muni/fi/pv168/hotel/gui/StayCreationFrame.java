@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
 import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
@@ -51,16 +52,19 @@ public class StayCreationFrame extends javax.swing.JFrame {
         datePickerStart = this.context.setDatePickerStay();
         datePickerStart.setVisible(true);
         datePickerStart.setBounds(165, 20, 200, 30);
+        datePickerStart.setLocale(Locale.getDefault());
         jPanelStayCreation.add(datePickerStart);
 
         datePickerExpected = this.context.setDatePickerStay();
         datePickerExpected.setVisible(true);
         datePickerExpected.setBounds(165, 60, 200, 30);
+        datePickerExpected.setLocale(Locale.getDefault());
         jPanelStayCreation.add(datePickerExpected);
 
         datePickerReal = this.context.setDatePickerStay();
         datePickerReal.setVisible(true);
         datePickerReal.setBounds(165, 100, 200, 30);
+        datePickerReal.setLocale(Locale.getDefault());
         jPanelStayCreation.add(datePickerReal);
 
         jButtonCreateStay.setText(action);
@@ -69,8 +73,14 @@ public class StayCreationFrame extends javax.swing.JFrame {
 
         if (stay != null) {
             //TODO picker start
+            datePickerStart.getModel().setDate(stay.getStartDate().getYear(), stay.getStartDate().getMonthValue(), stay.getStartDate().getDayOfMonth());
+            datePickerStart.getModel().setSelected(true);
             //TODO picer end exp
+            datePickerExpected.getModel().setDate(stay.getExpectedEndDate().getYear(), stay.getExpectedEndDate().getMonthValue(), stay.getExpectedEndDate().getDayOfMonth());
+            datePickerExpected.getModel().setSelected(true);
             //TODO picer end real
+            datePickerReal.getModel().setDate(stay.getRealEndDate().getYear(), stay.getRealEndDate().getMonthValue(), stay.getRealEndDate().getDayOfMonth());
+            datePickerReal.getModel().setSelected(true);
             jComboBoxStayCreation_guests.setSelectedItem(stay.getGuest());
             jComboBoxStayCreation_room.setSelectedItem(stay.getRoom());
             jTextFieldMinibarCosts.setText("" + stay.getMinibarCosts());
@@ -120,7 +130,7 @@ public class StayCreationFrame extends javax.swing.JFrame {
         protected Stay doInBackground() throws Exception {
             Stay s = getStayFromCreateForm();
             if (s == null) {
-                log.error("Wrong data entered :");
+                log.error("Wrong data entered:");
                 throw new IllegalArgumentException(java.util.ResourceBundle.getBundle("texts").getString("WRONG DATA ENTERED!"));
             }
             stayManager.updateStay(s);

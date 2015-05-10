@@ -57,7 +57,7 @@ public class GuestsTableModel extends AbstractTableModel {
             case 4:
                 return g.getPhone();
             case 5:
-                return g.getDateOfBirth();
+                return g.getDateOfBirth().format(AppCommons.getDateTimeFormatter());
             default:
                 throw new IllegalArgumentException("columnIndex");
         }

@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import javax.swing.JFrame;
@@ -56,6 +57,7 @@ public class GuestCreationFrame extends javax.swing.JFrame {
         datePicker = this.context.setDatePickerBirth();
         datePicker.setVisible(true);
         datePicker.setBounds(142, 208, 200,30);
+        datePicker.setLocale(Locale.getDefault());
        // datePicker.getModel().getValue();
         jPanelGuestCreation.add(datePicker);
         //initialize values for edit
@@ -68,6 +70,7 @@ public class GuestCreationFrame extends javax.swing.JFrame {
              Date time = Date.from(instant);
              Object o = (Object) time;
             datePicker.getModel().setDate(guest.getDateOfBirth().getYear(), guest.getDateOfBirth().getMonthValue(),guest.getDateOfBirth().getDayOfMonth());
+            datePicker.getModel().setSelected(true);
             //formater.stringToValue();
            // jTextFieldDateOfBirth.setText(guest.getDateOfBirth().toString());
             jTextFieldEmail.setText(guest.getEmail());
