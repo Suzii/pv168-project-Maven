@@ -22,7 +22,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Checkovat ci je izba praznda , dorobit metodu na to +logging + presne kde pisat ten uvodny logger
+ * Checkovat ci je izba praznda , dorobit metodu na to +logging + presne kde
+ * pisat ten uvodny logger
+ *
  * @author Zuzana
  */
 public class StayManagerImpl implements StayManager {
@@ -151,7 +153,8 @@ public class StayManagerImpl implements StayManager {
             throw new ServiceFailureException("Error when updating stay", ex);
         }
     }
-      //pato  
+
+    //pato  
     @Override
     public void deleteStay(Stay stay) {
         logger.debug("Deleting stay : " + stay);
@@ -159,15 +162,15 @@ public class StayManagerImpl implements StayManager {
         if (stay.getId() == null) {
             throw new IllegalArgumentException("stay id must not be null when deleting");
         }
-        try (Connection conn = dataSource.getConnection()) {        
+        try (Connection conn = dataSource.getConnection()) {
             try (PreparedStatement st = conn.prepareStatement("DELETE FROM stay WHERE id = ?")) {
                 st.setLong(1, stay.getId());
                 int removedRows = st.executeUpdate();
                 if (removedRows != 1) {
                     throw new IllegalArgumentException("Internal Error: More rows removed when one was expected, id = " + stay.getId());
                 }
-            } 
-        }catch (SQLException ex) {
+            }
+        } catch (SQLException ex) {
             logger.error("db connection problem when deleting stay: " + stay, ex);
             throw new ServiceFailureException("Error when deleting stay", ex);
         }
@@ -188,22 +191,22 @@ public class StayManagerImpl implements StayManager {
             throw new ServiceFailureException("Error when retrieving all stays", ex);
         }
     }
-    
+
     // pato - ocekovat porovnavacky este!
     @Override
     public List<Stay> findStaysByDate(LocalDate from, LocalDate to) {
-        logger.debug("Finding stays by date from : " + from  + " to: " + to);
-        if (from == null || to == null){
+        logger.debug("Finding stays by date from : " + from + " to: " + to);
+        if (from == null || to == null) {
             throw new IllegalArgumentException("date must not be null.");
         }
         try (Connection conn = dataSource.getConnection()) {
             try (PreparedStatement st = conn.prepareStatement(
-                    "SELECT id, start_date, expected_end_date, real_end_date, guest_id, room_id, minibar_costs "
+                    "SELECT DISTINCT id, start_date, expected_end_date, real_end_date, guest_id, room_id, minibar_costs "
                     + "FROM stay "
-                    + "WHERE (start_date >= ?" 
+                    + "WHERE (start_date >= ?"
                     + "AND start_date <= ?) "
                     + "OR (expected_end_date >= ? "
-                    + "AND expected_end_date <= ? )")){
+                    + "AND expected_end_date <= ? )")) {
                 st.setDate(1, Date.valueOf(from));
                 st.setDate(2, Date.valueOf(to));
                 st.setDate(3, Date.valueOf(from));
@@ -212,7 +215,7 @@ public class StayManagerImpl implements StayManager {
             }
         } catch (SQLException ex) {
             logger.error("db connection problem when retrieving stays by date from: " + from + " to: " + to, ex);
-            throw new ServiceFailureException("Error when retrieving guests by date from: " + from + " to: " + to , ex);
+            throw new ServiceFailureException("Error when retrieving guests by date from: " + from + " to: " + to, ex);
         }
     }
 
@@ -227,7 +230,7 @@ public class StayManagerImpl implements StayManager {
         }
         try (Connection conn = dataSource.getConnection()) {
             try (PreparedStatement st = conn.prepareStatement(
-                    "SELECT guest_id AS id, name, passport_no, email, phone, date_of_birth "
+                    "SELECT DISTINCT guest_id AS id, name, passport_no, email, phone, date_of_birth "
                     + "FROM stay JOIN guest ON (guest.id = stay.guest_id)"
                     + "WHERE start_date <= ? "
                     + "AND (expected_end_date IS NULL OR expected_end_date >= ?) "
@@ -256,34 +259,26 @@ public class StayManagerImpl implements StayManager {
         }
         Date dateFrom = Date.valueOf(date);
         Date dateTo = Date.valueOf(date.plusDays(len));
-        logger.debug("Date from: " + dateFrom + "\n Date to: " + dateTo);
+        //logger.debug("Date from: " + dateFrom + "\n Date to: " + dateTo);
         try (Connection conn = dataSource.getConnection()) {
             try (PreparedStatement st = conn.prepareStatement(
-                     "SELECT room_id  AS id, number, capacity, price_per_night, bathroom, room_type "
-                    + "FROM stay JOIN room ON (room.id = stay.room_id)"
-                    + "WHERE (start_date >= ?) OR ((real_end_date IS NOT NULL AND real_end_date <= ?) OR (real_end_date IS NULL AND (expected_end_date IS NOT NULL AND expected_end_date <= ?)))")) {
+                    "SELECT  DISTINCT id, number, capacity, price_per_night, bathroom, room_type "
+                    + "FROM room "
+                    + "WHERE id NOT IN ("
+                    + "SELECT room_id "
+                    + "FROM stay "
+                    + "WHERE (start_date < ?) AND (expected_end_date IS NULL OR expected_end_date > ?) AND (real_end_date IS NULL OR real_end_date > ?))")) {
                 st.setDate(1, dateTo);
                 st.setDate(2, dateFrom);
                 st.setDate(3, dateFrom);
                 return executeQueryForMultipleRooms(st);
-/*
-                ResultSet rs = st.executeQuery();
-                List<Room> result = new ArrayList<Room>();
-                while (rs.next()) {
-                    Room r = rowToRoom(rs);
-                    result.add(r);
-                    logger.debug("Room + " + r.toString() + " startDate: " + rs.getDate("start_date") + " realEndDate: " + rs.getDate("real_end_date") + " expecEndDate " + rs.getDate("expected_end_date"));
-                }
-                for (Room r : result) {
-                    //logger.debug("Room + " + r.toString() + " startDate: " + rs.getDate("start_date") + " realEndDate: " + rs.getDate("real_end_date") + " expecEndDate " + rs.getDate("expected_end_date"));
-                }
-                return result;
-  */          }
+            }
         } catch (SQLException ex) {
             logger.error("db connection problem when retrieving rooms by date: " + date + "and len: " + len, ex);
             throw new ServiceFailureException("Error when retrieving rooms by date: " + date + "and len: " + len, ex);
         }
     }
+
     //pato
     @Override
     public List<Stay> findAllStaysForGuest(Guest guest) {
@@ -291,9 +286,9 @@ public class StayManagerImpl implements StayManager {
         validate(guest);
         try (Connection conn = dataSource.getConnection()) {
             try (PreparedStatement st = conn.prepareStatement(
-                      "SELECT id, start_date, expected_end_date, real_end_date, guest_id, room_id, minibar_costs "
+                    "SELECT DISTINCT id, start_date, expected_end_date, real_end_date, guest_id, room_id, minibar_costs "
                     + "FROM stay "
-                    + "WHERE guest_id = ?" )){
+                    + "WHERE guest_id = ?")) {
                 st.setLong(1, guest.getId());
                 return executeQueryForMultipleStays(st);
             }
@@ -313,7 +308,7 @@ public class StayManagerImpl implements StayManager {
         }
         try (Connection conn = dataSource.getConnection()) {
             try (PreparedStatement st = conn.prepareStatement(
-                    "SELECT room_id AS id, number, capacity, price_per_night, bathroom, room_type "
+                    "SELECT DISTINCT room_id AS id, number, capacity, price_per_night, bathroom, room_type "
                     + "FROM stay JOIN room ON (room.id = stay.room_id) JOIN guest ON (guest.id = stay.guest_id)"
                     + "WHERE stay.guest_id = ? "
                     + "AND start_date <= ? "
@@ -330,29 +325,29 @@ public class StayManagerImpl implements StayManager {
             throw new ServiceFailureException("Error when retrieving rooms for guest: " + guest + " by date: " + date, ex);
         }
     }
-    
+
     // pato
     @Override
     public List<Stay> findStaysForRoomByDate(Room room, LocalDate date) {
-        logger.debug("Finding stays for room : " + room  + " by date: " + date);
+        logger.debug("Finding stays for room : " + room + " by date: " + date);
         validate(room);
-        if (date == null){
+        if (date == null) {
             throw new IllegalArgumentException("date must not be null.");
         }
         Date dateFrom = Date.valueOf(date);
         logger.debug("Finding stays by room " + room + " and date: " + date);
         try (Connection conn = dataSource.getConnection()) {
             try (PreparedStatement st = conn.prepareStatement(
-                     "SELECT id, start_date, expected_end_date, real_end_date, guest_id, room_id, minibar_costs "
+                    "SELECT DISTINCT id, start_date, expected_end_date, real_end_date, guest_id, room_id, minibar_costs "
                     + "FROM stay "
                     + "WHERE ((start_date <= ?) AND (real_end_date IS NOT NULL AND real_end_date >= ?) OR (real_end_date IS NULL AND (expected_end_date IS NOT NULL AND expected_end_date >= ?))) "
                     + " AND room_id = ? ")) {
                 st.setDate(1, dateFrom);
                 st.setDate(2, dateFrom);
                 st.setDate(3, dateFrom);
-                st.setLong(4,room.getId());
+                st.setLong(4, room.getId());
                 return executeQueryForMultipleStays(st);
-         }
+            }
         } catch (SQLException ex) {
             logger.error("db connection problem when retrieving stays by room " + room + " and date: " + date, ex);
             throw new ServiceFailureException("Error when retrieving stays by room " + room + " and date: " + date, ex);
@@ -362,14 +357,14 @@ public class StayManagerImpl implements StayManager {
     //Zuzana
     @Override
     public List<Guest> findGuestsForRoomByDate(Room room, LocalDate date) {
-        logger.debug("Finding guests for room : " + room  + " by date: " + date);
+        logger.debug("Finding guests for room : " + room + " by date: " + date);
         validate(room);
         if (date == null) {
             throw new IllegalArgumentException("date must not be null");
         }
         try (Connection conn = dataSource.getConnection()) {
             try (PreparedStatement st = conn.prepareStatement(
-                    "SELECT guest_id AS id, name, passport_no, email, phone, date_of_birth "
+                    "SELECT DISTINCT guest_id AS id, name, passport_no, email, phone, date_of_birth "
                     + "FROM stay JOIN room ON (room.id = stay.room_id) JOIN guest ON (guest.id = stay.guest_id)"
                     + "WHERE stay.room_id = ? "
                     + "AND start_date <= ? "
@@ -386,61 +381,65 @@ public class StayManagerImpl implements StayManager {
             throw new ServiceFailureException("Error when retrieving guests for room: " + room + " by date: " + date, ex);
         }
     }
-    
-    
+
     /*
-    * pato nie je to asi az tak good metoda
-    * chyba tam ta dlzka najde to napr len pre jeden den volnu alebo current date?
-    * checknut porovnavanie date  
-    */
+     * pato nie je to asi az tak good metoda
+     * chyba tam ta dlzka najde to napr len pre jeden den volnu alebo current date?
+     * checknut porovnavanie date  
+     */
     @Override
     public List<Room> findFreeRoomByDateAndCapacity(LocalDate date, int capacity) {
         logger.debug("Finding room by date: " + date + " and capacity: " + capacity);
-        if (date == null){
+        if (date == null) {
             throw new IllegalArgumentException("date must not be null.");
         }
-        if (capacity <= 0){
+        if (capacity <= 0) {
             throw new IllegalArgumentException("capacity must be positive.");
         }
         Date dateFrom = Date.valueOf(date);
-        
+        Date dateTo = Date.valueOf(date.plusDays(1));
+
         try (Connection conn = dataSource.getConnection()) {
             try (PreparedStatement st = conn.prepareStatement(
-                     "SELECT id, number, capacity, price_per_night, bathroom, room_type "
+                    "SELECT  DISTINCT id, number, capacity, price_per_night, bathroom, room_type "
                     + "FROM room "
-                    + "WHERE id NOT IN (SELECT room_id FROM STAY WHERE ((start_date <= ?)"
-                    + " AND (real_end_date > ?) AND (expected_end_date > ?)) ) "
-                    + " AND capacity = ? ")) {
-                    /*+ "WHERE id NOT IN (SELECT room_id FROM STAY WHERE ((start_date <= ?)"
-                    + " AND ((real_end_date IS NOT NULL AND real_end_date > ?) OR (real_end_date IS NULL AND (expected_end_date IS NOT NULL AND expected_end_date > ?)) ))) "
-                    + " AND capacity = ? ")) {*/
-                st.setDate(1, dateFrom);
-                st.setDate(2, dateFrom);
+                    + "WHERE capacity = ? AND id NOT IN ("
+                    + "SELECT room_id "
+                    + "FROM stay "
+                    + "WHERE (start_date < ?) AND (expected_end_date IS NULL OR expected_end_date > ?) AND (real_end_date IS NULL OR real_end_date > ?))")) {
+
+                st.setInt(1, capacity);
+                st.setDate(2, dateTo);
                 st.setDate(3, dateFrom);
-                st.setInt(4,capacity);
+                st.setDate(4, dateFrom);
                 return executeQueryForMultipleRooms(st);
-         }
+            }
         } catch (SQLException ex) {
             logger.error("db connection problem when retrieving rooms by date: " + date + " and capacity: " + capacity, ex);
             throw new ServiceFailureException("Error when retrieving rooms by date: " + date + " and capacity: " + capacity, ex);
         }
-    }       
-    
+    }
 
     @Override
     public List<Guest> findTop3Guests() {
         logger.debug("Finding top 3 guests. ");
-         try (Connection conn = dataSource.getConnection()) {
+        try (Connection conn = dataSource.getConnection()) {
             try (PreparedStatement st = conn.prepareStatement(
                     "SELECT guest_id AS id, name, passport_no, email, phone, date_of_birth ,count(guest_id) as countStays"
-                    +" FROM stay join guest on (guest_id = guest.id) GROUP BY guest_id,name, passport_no, email, phone, date_of_birth"
-                    +" ORDER BY countStays DESC"
-                    )) {
+                    + " FROM stay join guest on (guest_id = guest.id) GROUP BY guest_id,name, passport_no, email, phone, date_of_birth"
+                    + " ORDER BY countStays DESC"
+            )) {
                 List<Guest> guests = executeQueryForMultipleGuests(st);
                 List<Guest> top3 = new ArrayList<Guest>();
-                if (guests.size()>0) top3.add(guests.get(0));
-                if (guests.size()>1) top3.add(guests.get(1));
-                if (guests.size()>2) top3.add(guests.get(2));
+                if (guests.size() > 0) {
+                    top3.add(guests.get(0));
+                }
+                if (guests.size() > 1) {
+                    top3.add(guests.get(1));
+                }
+                if (guests.size() > 2) {
+                    top3.add(guests.get(2));
+                }
                 return top3;
             }
         } catch (SQLException ex) {

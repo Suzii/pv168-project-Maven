@@ -767,27 +767,27 @@ public class StayManagerImplTest {
         manager.createStay(s3);
         manager.createStay(s4);
 
-        List<Room> expected = Arrays.asList(r2, r4);
+        List<Room> expected = Arrays.asList(r2, r4, goodRoom);
         List<Room> actual = manager.findFreeRoomsByDateAndLen(LocalDate.of(2015, 1, 3), 2);
         //assertEquals(expected, actual);
         assertDeepEqualsRooms(expected, actual);
 
-        expected = Arrays.asList(r1, r2, r3);
+        expected = Arrays.asList(r1, r2, r3, goodRoom);
         actual = manager.findFreeRoomsByDateAndLen(LocalDate.of(2015, 1, 5), 5);
         //assertEquals(expected, actual);
         assertDeepEqualsRooms(expected, actual);
 
-        expected = Arrays.asList(r4);
+        expected = Arrays.asList(r4, goodRoom);
         actual = manager.findFreeRoomsByDateAndLen(LocalDate.of(2015, 1, 2), 2);
         //assertEquals(expected, actual);
         assertDeepEqualsRooms(expected, actual);
 
-        expected = Arrays.asList(r1, r2, r3, r4);
+        expected = Arrays.asList(r1, r2, r3, r4, goodRoom);
         actual = manager.findFreeRoomsByDateAndLen(LocalDate.of(2015, 1, 10), 5);
         //assertEquals(expected, actual);
         assertDeepEqualsRooms(expected, actual);
 
-        assertTrue(manager.findFreeRoomsByDateAndLen(LocalDate.of(2015, 1, 1), 10).isEmpty());
+        assertTrue(manager.findFreeRoomsByDateAndLen(LocalDate.of(2015, 1, 1), 10).size() == 1);
     }
 
     /**
@@ -1583,10 +1583,6 @@ public class StayManagerImplTest {
         room.setBathroom(bath);
         room.setType(type);
         return room;
-
-
-
-
     }
 
     /**
