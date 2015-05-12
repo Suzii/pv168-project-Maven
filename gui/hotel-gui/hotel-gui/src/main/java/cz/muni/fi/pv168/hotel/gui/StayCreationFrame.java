@@ -209,10 +209,9 @@ public class StayCreationFrame extends javax.swing.JFrame {
         // nemoze byt null?? problem s 0 
         BigDecimal minibar = null;
         try {
-            //if (jTextFieldMinibarCosts.getText() != null) {
-            minibar = new BigDecimal(jTextFieldMinibarCosts.getText());
-            // }
-            //if (minibar != null) {
+            String pr = jTextFieldMinibarCosts.getText();
+            pr= pr.replace(',', '.'); // why this doesnt WOKR ??????
+            minibar = new BigDecimal(pr);
             if (minibar.signum() == -1) {
                 throw new IllegalArgumentException(java.util.ResourceBundle.getBundle("texts").getString("PRICE MUST NOT BE NEGATIVE."));
             }

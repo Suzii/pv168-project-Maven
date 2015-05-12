@@ -311,17 +311,32 @@ public class HotelApp extends javax.swing.JFrame {
     }
 
 // ********************* WORKERS FOR DELETE*****************************
+    private int[] convert(List<Integer> o) {
+        int[] result = new int[o.size()];
+        for (int i = 0; i < o.size(); i++) {
+            result[i] = o.get(i);
+        }
+        return result;
+    }
+
     private class DeleteGuestWorker extends SwingWorker<int[], Void> {
 
         @Override
         protected int[] doInBackground() {
             int[] selectedRows = jTableGuests.getSelectedRows();
+            List<Integer> toDeleteRows = new ArrayList<>();
             if (selectedRows.length >= 0) {
                 for (int selectedRow : selectedRows) {
                     Guest g = guestsModel.getGuest(selectedRow);
-                    guestManager.deleteGuest(g);
+                    try {
+                        guestManager.deleteGuest(g);
+                        toDeleteRows.add(selectedRow);
+                    } catch (Exception ex) {
+                        warning("Cannot delete " + guestsModel.getGuest(selectedRow) + " who has already visited the hotel.");
+                        //result = result
+                    }
                 }
-                return selectedRows;
+                return convert(toDeleteRows);
             }
             return null;
         }
@@ -348,12 +363,19 @@ public class HotelApp extends javax.swing.JFrame {
         @Override
         protected int[] doInBackground() {
             int[] selectedRows = jTableRooms.getSelectedRows();
+            List<Integer> toDeleteRows = new ArrayList<>();
+
             if (selectedRows.length >= 0) {
                 for (int selectedRow : selectedRows) {
                     Room r = roomsModel.getRoom(selectedRow);
-                    roomManager.deleteRoom(r);
+                    try{
+                        roomManager.deleteRoom(r);
+                        toDeleteRows.add(selectedRow);
+                    } catch (Exception ex) {
+                        warning("Cannot delete " + guestsModel.getGuest(selectedRow) + " it was already occupied.");
+                    }
                 }
-                return selectedRows;
+                return convert(toDeleteRows);
             }
             return null;
         }

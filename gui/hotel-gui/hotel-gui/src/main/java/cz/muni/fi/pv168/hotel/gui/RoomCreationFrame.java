@@ -47,6 +47,7 @@ public class RoomCreationFrame extends javax.swing.JFrame {
             jTextFieldPricePerNight.setText(room.getPricePerNight().toString());
             jTextFieldCapacity.setText("" + room.getCapacity());
             jComboBoxRoomType.setSelectedItem(room.getType());
+            jRadioButton1.setSelected(room.hasBathroom());
         }
 
         jButtonRoomCreate.setText(action);
@@ -147,7 +148,7 @@ public class RoomCreationFrame extends javax.swing.JFrame {
                 throw new IllegalArgumentException(java.util.ResourceBundle.getBundle("texts").getString("PRICE MUST BE POSITIVE."));
         }catch (Exception ex) {
             log.debug("Wrong price entered");
-            warning(java.util.ResourceBundle.getBundle("texts").getString("PRICE MUST BE A NUMBER!"));
+            warning(java.util.ResourceBundle.getBundle("texts").getString("PRICE MUST BE POSITIVE!"));
         }
         
         //number conversion must be in try-catch
