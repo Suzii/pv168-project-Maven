@@ -22,6 +22,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import javax.swing.text.DateFormatter;
+//import org.apache.log4j.PropertyConfigurator;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
@@ -82,6 +83,7 @@ public class HotelApp extends javax.swing.JFrame {
      */
     public HotelApp() {
         initComponents();
+//        PropertyConfigurator.configure("log4j.properties");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         //init guest table
         guestsModel = (GuestsTableModel) jTableGuests.getModel();
@@ -439,10 +441,8 @@ public class HotelApp extends javax.swing.JFrame {
 
         @Override
         protected List<Guest> doInBackground() throws Exception {
-            List<Guest> result;
             log.debug("WORKER: Searching for guests: " + name);
-            result = guestManager.findGuestByName(name);
-            return result;
+            return guestManager.findGuestByName(name);
         }
 
         @Override
@@ -452,9 +452,9 @@ public class HotelApp extends javax.swing.JFrame {
                 guestsModel.setGuests(get());
                 jTextFieldSearchGuest.setText("");
             } catch (ExecutionException ex) {
-                log.error("Exception thrown in doInBackground of FindGuestByName: " + ex.getCause());
+                log.error("Exception thrown in doInBackground of FindGuestByName: ", ex.getCause());
             } catch (InterruptedException ex) {
-                log.error("doInBackground of FindGuestByName interrupted: " + ex.getCause());
+                log.error("doInBackground of FindGuestByName interrupted: ",ex);
                 throw new RuntimeException("Operation interrupted.. FindGuestByName");
             }
         }
